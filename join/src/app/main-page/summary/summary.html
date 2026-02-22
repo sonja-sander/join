@@ -163,8 +163,7 @@
             <p class="desktop-only">{{ greeting }}!</p>
           } @else {
             <p class="desktop-only">{{ greeting }},</p>
-            <!-- <p class="user-name desktop-only">{{ getGreetingName(user.email, user.displayName) }}</p> -->
-            <p class="user-name desktop-only">{{ getGreetingName(user.email) }}</p>
+            <p class="user-name desktop-only">{{ user.displayName }}</p>
           }
         }
       </div>
