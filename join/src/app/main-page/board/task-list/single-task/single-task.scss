@@ -180,11 +180,10 @@ article{
   .assignees{
     @include styles.setFlex();
 
-    div{
+    .avatar{
       @include styles.setFlex();
       width: 32px;
       height: 32px;
-      padding: 8px;
       margin-left: -8px;
       border: 1px solid white;
       border-radius: 50%;
@@ -194,6 +193,13 @@ article{
       &:first-child{
         margin-left: 0;
       }
+
+      .avatar-img{
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        object-fit: cover;
+      }
     }
 
     .more-contacts-sign{
@@ -201,7 +207,6 @@ article{
       background-color: transparent;
       
       span{
-        margin-left: 4px;
         color: black;
         white-space: nowrap;
       }

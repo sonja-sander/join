@@ -149,6 +149,13 @@ header {
     padding: 0 6%;
   }
 
+
+  .avatar-wrapper{
+    @include styles.up-xxl{
+      margin-bottom: 40px;
+    }
+  }
+
   .avatar{
     @include styles.setFlex();
     width: 100px;
@@ -170,11 +177,13 @@ header {
       height: 80px;
     }
 
-    @include styles.up-xxl{
-      margin-bottom: 40px;
+    .avatar-img{
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
     }
 
-    >img{
+    .avatar-placeholder-img{
       width: 50px;
       height: 50px;
     }
@@ -182,7 +191,17 @@ header {
     .initials{
       @include styles.setFont($size: 2.4em, $weight: 700, $color: styles.$white);
     }
+
+    .avatarUpload{
+      position: absolute;
+      bottom: -12px;
+      right: -10px;
+      width: 40px;
+      height: 40px;
+      cursor: pointer;
+    }
   }
+
 
   .form{
     @include styles.setFlex($d: column, $ai: center);

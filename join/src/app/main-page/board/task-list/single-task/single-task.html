@@ -95,8 +95,20 @@
     <div class="assigned-info">
       <div class="assignees" aria-label="Assignees" role="group">
         @for (assignee of task.assignees.slice(0, 3); track $index) {
-          <div [style.backgroundColor]="getUserColor(assignee)" aria-label="Assigned to {{ getAssigneeInitials(assignee) }}">
-            <span>{{ getAssigneeInitials(assignee) }}</span>
+
+          <div class="avatar" [style.backgroundColor]="getUserColor(assignee)" aria-label="Assigned to {{ getAssigneeInitials(assignee) }}">
+            @if (getAssigneeAvatar(assignee)) {
+              <img
+                class="avatar-img"
+                [src]="getAssigneeAvatar(assignee)!"
+                alt=""
+                aria-hidden="true"
+              />
+            } @else {
+              <span class="initials">
+                {{ getAssigneeInitials(assignee) }}
+              </span>
+            }
           </div>
         }
         @if(task.assignees.length > 3){

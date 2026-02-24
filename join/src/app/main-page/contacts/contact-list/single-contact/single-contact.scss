@@ -21,6 +21,13 @@
     background-color: styles.$purple-accent;
   }
 
+  &__avatar-img{
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: contain;
+  }
+
   &__initials {
     @include styles.setFont($size: 1em, $weight: 700, $color: #ffffff);
   }

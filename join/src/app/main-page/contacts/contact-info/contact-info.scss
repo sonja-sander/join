@@ -74,6 +74,13 @@
     box-shadow: 0 4px 12px #0000001a;
   }
 
+  &__avatar-img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: contain;
+  }
+
   &__initials {
     @include styles.setFont($size: clamp(1.5em, 2.5vw, 2.5em), $weight: 700, $color: styles.$white);
   }

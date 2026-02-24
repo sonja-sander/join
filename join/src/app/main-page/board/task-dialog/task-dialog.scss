@@ -171,31 +171,37 @@ dialog {
     &::-webkit-scrollbar-thumb {
       background: styles.$gray-light;
     }
+  }
+}
 
-    .assignee-item{
-      @include styles.setFlex($ai: center, $gap: 10px);
-      margin-left: 16px;
-      padding-right: 8px;
+.assignee-item{
+  @include styles.setFlex($ai: center, $gap: 10px);
+  margin-left: 16px;
+  padding-right: 8px;
 
-      @include styles.up-xxl{
-        gap: 16px;
-      }
+  @include styles.up-xxl{
+    gap: 16px;
+  }
 
-      .initials{
-        @include styles.setFlex();
-        width: 36px;
-        height: 36px;
-        padding: 8px;
-        border: 1px solid white;
-        border-radius: 50%;
-        color: white;
-        word-break: normal;
-  
-        @include styles.up-xxl{
-          width: 40px;
-          height: 40px;
-        }
-      }
+  .avatar{
+    @include styles.setFlex();
+    width: 36px;
+    height: 36px;
+    border: 1px solid white;
+    border-radius: 50%;
+    color: white;
+    word-break: normal;
+
+    @include styles.up-xxl{
+      width: 40px;
+      height: 40px;
+    }
+
+    .avatar-img{
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
     }
   }
 }

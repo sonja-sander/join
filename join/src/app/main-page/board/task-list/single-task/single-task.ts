@@ -153,4 +153,12 @@ export class SingleTask implements OnInit {
 
     return contact?.userColor || '#9327ff';
   }
+
+  getAssigneeAvatar(id: string): string | null {
+    const contact = this.contactService.contacts.find((c) => {
+      return c.id === id;
+    });
+    
+    return contact?.avatar?.base64 || null;
+  }
 }

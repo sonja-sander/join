@@ -159,6 +159,14 @@ export class TaskDialog {
     return contact?.name || 'Unknown';
   }
 
+  getAssigneeAvatar(id: string): string | null {
+    const contact = this.contactService.contacts.find((c) => {
+      return c.id === id;
+    });
+    
+    return contact?.avatar?.base64 || null;
+  }
+
   /**
    * Retrieves the display color of an assignee by contact ID.
    *

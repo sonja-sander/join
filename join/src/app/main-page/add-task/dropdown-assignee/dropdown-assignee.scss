@@ -76,6 +76,13 @@
   flex: 0 0 auto;
 }
 
+.avatar-img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
 .dropdown {
   width: 100%;
   max-height: clamp(12rem, 35vw, 18rem);

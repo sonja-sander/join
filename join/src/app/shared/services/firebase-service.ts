@@ -79,6 +79,7 @@ export class FirebaseService {
       phone: obj.phone || '',
       isAvailable: obj.isAvailable || false,
       userColor: obj.userColor ?? setUserColor(),
+      avatar: obj.avatar || null
     };
   }
 
@@ -129,6 +130,7 @@ export class FirebaseService {
       phone: contact.phone,
       isAvailable: contact.isAvailable,
       userColor: contact.userColor,
+      avatar: contact.avatar
     };
   }
 

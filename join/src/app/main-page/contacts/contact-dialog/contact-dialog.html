@@ -53,17 +53,32 @@
     </button>
 
     <section class="form-section">
-      @if (dialogMode === 'add') {
-        <div class="avatar" aria-hidden="true">
-          <img src="assets/img/icons/forms/contact-white.svg" alt="" />
-        </div>
-      } @else {
+      <div class="avatar-wrapper">
         <div class="avatar" [style.backgroundColor]="userColor" aria-hidden="true">
-          <span class="initials">
-            {{ getTwoInitials(contactData.name) }}
-          </span>
+          @if(avatarImg){
+          <!-- @if(avatarImg || contactData.avatar?.base64){ -->
+            <img class="avatar-img" [src]="avatarImg" alt="Contact profile picture" />
+          }
+          @else if (dialogMode === 'add') {
+            <img class="avatar-placeholder-img" src="assets/img/icons/forms/contact-white.svg" alt="" />
+          } @else {
+            <span class="initials">
+              {{ getTwoInitials(contactData.name) }}
+            </span> 
+          }
+          <img class="avatarUpload" src="assets/img/icons/forms/add-avatar.svg" onclick="avatarFilePicker.click()">
         </div>
-      }
+          
+        <input
+          id="avatarFilePicker"
+          class="avatarFilePicker"
+          type="file"
+          accept="image/png, image/jpeg"
+          (change)="onAvatarSelected($event)"
+          hidden
+        />
+        <div id="avatarError" class="error"></div>
+      </div>
 
       <form
         class="form"

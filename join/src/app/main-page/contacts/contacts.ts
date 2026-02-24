@@ -167,6 +167,7 @@ export class Contacts implements DoCheck {
       phone: data.phone,
       isAvailable: true,
       userColor: setUserColor(),
+      avatar: data.avatar
     };
 
     const newContactId = await this.firebaseService.addDocument(contact);
@@ -203,6 +204,7 @@ export class Contacts implements DoCheck {
       phone: data.phone,
       isAvailable: this.activeContact.isAvailable,
       userColor: this.activeContact.userColor,
+      avatar: data.avatar
     };
 
     this.firebaseService.updateDocument(contact, 'contacts');

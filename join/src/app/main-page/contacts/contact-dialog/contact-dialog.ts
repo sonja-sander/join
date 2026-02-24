@@ -2,7 +2,7 @@ import { Component, ElementRef, EventEmitter, HostListener, Input, Output, ViewC
 import { FormsModule, NgForm } from '@angular/forms';
 import { Contact } from '../../../shared/interfaces/contact';
 import { ContactFormData } from '../../../shared/interfaces/contact-form-data';
-import { getTwoInitials } from '../../../shared/utilities/utils';
+import { blobToBase64, getTwoInitials } from '../../../shared/utilities/utils';
 
 @Component({
   selector: 'app-contact-dialog',
@@ -22,18 +22,19 @@ export class ContactDialog {
   @ViewChild('contactForm') contactForm!: NgForm;
   @Input() canDelete = true;
   dialogMode: 'add' | 'edit' = 'add';
+  avatarImg: string | null = null;
   readonly getTwoInitials = getTwoInitials;
   userColor: string | null = null;
   showDeleteConfirm: boolean = false;
 
   @Output() saveContact = new EventEmitter<ContactFormData>();
-  // @Output() deleteContact = new EventEmitter<string>();
   @Output() requestDelete = new EventEmitter<void>();
 
   contactData: ContactFormData = {
     name: '',
     email: '',
     phone: '',
+    avatar: null
   };
 
   // #region Methods
@@ -54,7 +55,11 @@ export class ContactDialog {
       name: '',
       email: '',
       phone: '',
+      avatar: null
     };
+
+    this.userColor = null;
+    this.avatarImg = null;
 
     this.openDialog();
   }
@@ -71,11 +76,15 @@ export class ContactDialog {
   openEditDialog(contact: Contact): void {
     this.dialogMode = 'edit';
 
-    this.contactData.name = contact.name;
-    this.contactData.email = contact.email;
-    this.contactData.phone = String(contact.phone);
-    this.userColor = contact.userColor ?? null;
+    this.contactData = {
+      name: contact.name,
+      email: contact.email,
+      phone: String(contact.phone),
+      avatar: contact.avatar
+    };
 
+    this.userColor = contact.userColor ?? null;
+    this.avatarImg = contact.avatar?.base64 ?? null;
     this.openDialog();
   }
 
@@ -113,6 +122,7 @@ export class ContactDialog {
       name: this.contactData.name,
       email: this.contactData.email,
       phone: this.contactData.phone,
+      avatar: this.contactData.avatar
     });
 
     this.closeDialog();
@@ -122,6 +132,7 @@ export class ContactDialog {
         name: '',
         email: '',
         phone: '',
+        avatar: null,
       });
     }
   }
@@ -157,6 +168,7 @@ export class ContactDialog {
         name: '',
         email: '',
         phone: '',
+        avatar: null
       });
     });
   }
@@ -199,4 +211,25 @@ export class ContactDialog {
     event.preventDefault();
   }
   // #endregion
+
+  
+  async onAvatarSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    if (!file) return;
+
+    const blobUrl = URL.createObjectURL(file);
+    this.avatarImg = blobUrl;
+
+    const base64 = await blobToBase64(file);
+    // const base64 = await this.compressImage(file, 800, 800, 0.7);
+
+    this.contactData.avatar = {
+      fileName: file.name,
+      fileType: file.type,
+      fileSize: file.size,
+      base64: base64
+    };
+
+  }
 }

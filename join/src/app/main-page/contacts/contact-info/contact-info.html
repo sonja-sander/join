@@ -18,9 +18,13 @@
         <div
           class="contact-info__avatar"
           [style.backgroundColor]="activeContact.userColor"
-          aria-hidden="true"
+          aria-hidden="true" 
         >
-          <span class="contact-info__initials">{{ getTwoInitials(activeContact.name) }}</span>
+          @if (activeContact.avatar?.base64) {
+            <img class="contact-info__avatar-img" [src]="activeContact.avatar?.base64" alt="Contact profile picture">
+          } @else {
+            <span class="contact-info__initials">{{ getTwoInitials(activeContact.name) }}</span>
+          }
         </div>
         <div class="contact-info__identity">
           <h2 class="contact-info__name">{{ activeContact.name }}</h2>

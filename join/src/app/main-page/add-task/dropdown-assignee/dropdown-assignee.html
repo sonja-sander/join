@@ -37,7 +37,16 @@
           [style.backgroundColor]="contact.userColor ?? '#cccccc'"
           aria-hidden="true"
         >
-          {{ getTwoInitials(contact.name) }}
+          @if (contact.avatar?.base64) {
+            <img
+              class="avatar-img"
+              [src]="contact.avatar?.base64"
+              alt=""
+              aria-hidden="true"
+            />
+          } @else {
+            {{ getTwoInitials(contact.name) }}
+          }
         </span>
       }
     </div>
@@ -64,7 +73,16 @@
               [style.backgroundColor]="contact.userColor ?? '#cccccc'"
               aria-hidden="true"
             >
-              {{ getTwoInitials(contact.name) }}
+              @if (contact.avatar?.base64) {
+                <img
+                  class="avatar-img"
+                  [src]="contact.avatar?.base64"
+                  alt=""
+                  aria-hidden="true"
+                />
+              } @else {
+                {{ getTwoInitials(contact.name) }}
+              }
             </span>
             <span class="dropdown__name">{{ contact.name }}</span>
             <span class="dropdown__checkbox" aria-hidden="true"></span>
