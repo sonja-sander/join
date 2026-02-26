@@ -55,9 +55,8 @@
     <section class="form-section">
       <div class="avatar-wrapper">
         <div class="avatar" [style.backgroundColor]="userColor" aria-hidden="true">
-          @if(avatarImg){
-          <!-- @if(avatarImg || contactData.avatar?.base64){ -->
-            <img class="avatar-img" [src]="avatarImg" alt="Contact profile picture" />
+          @if(contactData.avatar?.base64){
+            <img class="avatar-img" [src]="contactData.avatar?.base64" alt="Contact profile picture" />
           }
           @else if (dialogMode === 'add') {
             <img class="avatar-placeholder-img" src="assets/img/icons/forms/contact-white.svg" alt="" />

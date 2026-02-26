@@ -106,66 +106,61 @@ export function getGreeting(): string {
   }
 }
 
+export async function compressImage(file: File | Blob, maxWidth = 800, maxHeight = 800, quality = 0.7): Promise<string> {
+  const img = await blobToImage(file);
+  const { width, height } = calculateImageSize(img, maxWidth, maxHeight);
+  return drawAndExportBase64(img, width, height, quality);
+}
 
-export function blobToBase64(file: File | Blob): Promise<string> {
+function blobToImage(file: File | Blob): Promise<HTMLImageElement> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
 
-    reader.onloadend = () => resolve(reader.result as string);
-    reader.onerror = () => reject('Failed to convert Blob to Base64');
+    reader.onload = (event) => {
+      if (!event.target?.result) {
+        reject('No file result');
+        return;
+      }
 
+      const img = new Image();
+      img.onload = () => resolve(img);
+      img.onerror = () => reject('Error while loading image');
+      img.src = event.target.result as string;
+    };
+
+    reader.onerror = () => reject('Error while reading file');
     reader.readAsDataURL(file);
   });
 }
 
-/**
- * Komprimiert ein Bild auf eine Zielgröße oder -qualität
- * @param {File} file - Die Bilddatei, die komprimiert werden soll
- * @param {number} maxWidth - Die maximale Breite des Bildes
- * @param {number} maxHeight - Die maximale Höhe des Bildes
- * @param {number} quality - Qualität des komprimierten Bildes (zwischen 0 und 1)
- * @returns {Promise<string>} - Base64-String des komprimierten Bildes
- */
-// export function compressImage(file: File | Blob, maxWidth = 800, maxHeight = 800, quality = 0.8): Promise<string> {
-//     return new Promise((resolve, reject) => {
-//         const reader = new FileReader();
+function calculateImageSize(img: HTMLImageElement, maxWidth: number, maxHeight: number): { width: number; height: number } {
+  let width = img.width;
+  let height = img.height;
 
-//         reader.onload = (event) => {
-//             const img = new Image();
-//             img.onload = () => {
-//                 const canvas = document.createElement('canvas');
-//                 const ctx = canvas.getContext('2d');
+  if (width > maxWidth || height > maxHeight) {
+    if (width > height) {
+      height = (height * maxWidth) / width;
+      width = maxWidth;
+    } else {
+      width = (width * maxHeight) / height;
+      height = maxHeight;
+    }
+  }
 
-//                 // Berechnung der neuen Größe, um die Proportionen beizubehalten
-//                 let width = img.width;
-//                 let height = img.height;
+  return { width, height };
+}
 
-//                 if (width > maxWidth || height > maxHeight) {
-//                     if (width > height) {
-//                         height = (height * maxWidth) / width;
-//                         width = maxWidth;
-//                     } else {
-//                         width = (width * maxHeight) / height;
-//                         height = maxHeight;
-//                     }
-//                 }
+function drawAndExportBase64(img: HTMLImageElement, width: number, height: number, quality: number): string {
+  const canvas = document.createElement('canvas');
+  const ctx = canvas.getContext('2d');
 
-//                 canvas.width = width;
-//                 canvas.height = height;
+  if (!ctx) {
+    throw new Error('No canvas context');
+  }
 
-//                 // Zeichne das Bild in das Canvas
-//                 ctx.drawImage(img, 0, 0, width, height);
+  canvas.width = width;
+  canvas.height = height;
+  ctx.drawImage(img, 0, 0, width, height);
 
-//                 // Exportiere das Bild als Base64
-//                 const compressedBase64 = canvas.toDataURL('image/jpeg', quality);
-//                 resolve(compressedBase64);
-//             };
-
-//             img.onerror = () => reject('Fehler beim Laden des Bildes.');
-//             img.src = event.target.result;
-//         };
-
-//         reader.onerror = () => reject('Fehler beim Lesen der Datei.');
-//         reader.readAsDataURL(file);
-//     });
-// }
+  return canvas.toDataURL('image/jpeg', quality);
+}

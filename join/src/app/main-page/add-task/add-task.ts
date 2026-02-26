@@ -11,7 +11,7 @@ import {
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { Contact } from '../../shared/interfaces/contact';
-import { Subtask, Task } from '../../shared/interfaces/task';
+import { Attachment, Subtask, Task } from '../../shared/interfaces/task';
 import { TaskCategoryOption, TaskService } from '../../shared/services/task-service';
 import { DropdownAssignee } from './dropdown-assignee/dropdown-assignee';
 import { DropdownCategory } from './dropdown-category/dropdown-category';
@@ -21,6 +21,7 @@ import { TaskFormField } from './task-form-field/task-form-field';
 import { Timestamp } from '@angular/fire/firestore';
 import { getTodayDateString } from '../../shared/utilities/utils';
 import { FirebaseService } from '../../shared/services/firebase-service';
+import { Attachments } from './attachments/attachments';
 
 /**
  * Manages task creation and editing, including form state, validation and persistence.
@@ -33,6 +34,7 @@ import { FirebaseService } from '../../shared/services/firebase-service';
     PrioritySelector,
     DropdownAssignee,
     DropdownCategory,
+    Attachments,
     SubtaskComposer,
   ],
   templateUrl: './add-task.html',
@@ -77,6 +79,7 @@ export class AddTask implements OnChanges, OnDestroy {
   isTitleTouched = false;
   isDueDateTouched = false;
   isCategoryTouched = false;
+  attachments: Array<Attachment> = [];
   // #endregion
 
   // #region UI State
@@ -234,6 +237,7 @@ export class AddTask implements OnChanges, OnDestroy {
     this.activePriority = 'medium';
     this.activeAssignees = [];
     this.activeCategory = null;
+    this.attachments = [];
     this.activeSubtasks = [];
     this.isTitleTouched = false;
     this.isDueDateTouched = false;
@@ -256,6 +260,7 @@ export class AddTask implements OnChanges, OnDestroy {
       .filter((contact): contact is Contact => Boolean(contact));
     this.activeCategory =
       this.taskService.taskCategories.find((category) => category.value === task.category) ?? null;
+    this.attachments = Array.from(task.attachments ?? []);
     this.activeSubtasks = task.subtasks.map((subtask) => ({ ...subtask }));
     this.isTitleTouched = false;
     this.isDueDateTouched = false;
@@ -322,6 +327,7 @@ export class AddTask implements OnChanges, OnDestroy {
       priority: this.activePriority,
       assignees,
       category,
+      attachments: this.attachments,
       subtasks: [...this.activeSubtasks],
     };
   }
@@ -408,5 +414,10 @@ export class AddTask implements OnChanges, OnDestroy {
 
   cancelClose(): void {
     this.showCloseConfirm = false;
+  }
+
+  onDeleteAllAttachments(): void {
+    this.attachments = [];
+    this.markAsEdited();
   }
 }

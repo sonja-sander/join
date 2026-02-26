@@ -72,6 +72,18 @@
       </div>
     }
 
+    <div class="attachments">
+      <p class="subtitle">Attachments:</p>
+      <div class="gallery">
+        @for (attachment of task.attachments; track attachment.fileName) {
+          <figure class="attachment">
+            <img [src]="attachment.base64" [alt]="attachment.fileName">
+            <figcaption>{{ attachment.fileName }}</figcaption>
+          </figure>
+        }
+      </div>
+    </div>
+
     @if (task.subtasks.length > 0) {
       <div class="subtasks">
         <p class="subtitle">Subtasks:</p>

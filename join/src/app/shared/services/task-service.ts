@@ -120,6 +120,7 @@ export class TaskService {
       priority: obj.priority || '',
       assignees: obj.assignees || [],
       category: obj.category || '',
+      attachments: obj.attachments || [],
       subtasks: obj.subtasks || [],
     };
   }
@@ -174,6 +175,7 @@ export class TaskService {
       priority: task.priority,
       assignees: task.assignees,
       category: task.category,
+      attachments: task. attachments,
       subtasks: task.subtasks,
     };
   }
@@ -204,6 +206,35 @@ export class TaskService {
   getCleanJsonSubtasks(task: Task): {} {
     return {
       subtasks: task.subtasks
+    };
+  }
+
+  /**
+   * Updates only the attachments of a task in Firestore.
+   *
+   * @param task The task whose attachments should be updated
+   * @returns A promise that resolves when the update completes
+   */
+  async updateAttachments(task: Task): Promise<void> {
+    if (task.id) {
+      const docRef = this.getSingleDocRef('tasks', task.id);
+      await updateDoc(docRef, this.getCleanJsonAttachments(task))
+        .catch((err) => {
+          console.log(err);
+        })
+        .then();
+    }
+  }
+
+  /**
+   * Creates a clean JSON object containing only attachments.
+   *
+   * @param task The task containing attachments
+   * @returns A plain JSON object with attachments only
+   */
+  getCleanJsonAttachments(task: Task): {} {
+    return {
+      attachments: task.attachments ?? []
     };
   }
 

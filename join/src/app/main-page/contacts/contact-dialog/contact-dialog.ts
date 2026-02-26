@@ -2,7 +2,7 @@ import { Component, ElementRef, EventEmitter, HostListener, Input, Output, ViewC
 import { FormsModule, NgForm } from '@angular/forms';
 import { Contact } from '../../../shared/interfaces/contact';
 import { ContactFormData } from '../../../shared/interfaces/contact-form-data';
-import { blobToBase64, getTwoInitials } from '../../../shared/utilities/utils';
+import { compressImage, getTwoInitials } from '../../../shared/utilities/utils';
 
 @Component({
   selector: 'app-contact-dialog',
@@ -37,7 +37,6 @@ export class ContactDialog {
     avatar: null
   };
 
-  // #region Methods
   // #region Opening dialog
 
   /**
@@ -202,34 +201,23 @@ export class ContactDialog {
     this.closeDialog();
   }
   // #endregion
-
-  @HostListener('contextmenu', ['$event'])
-  /**
-   * Prevents the default context menu on the contacts page.
-   */
-  onContextMenu(event: Event): void {
-    event.preventDefault();
-  }
-  // #endregion
-
   
-  async onAvatarSelected(event: Event) {
-    const input = event.target as HTMLInputElement;
-    const file = input.files?.[0];
+  async onAvatarSelected(event: Event): Promise<void> {
+    const filePicker = event.target as HTMLInputElement;
+    const file = filePicker.files?.[0];
     if (!file) return;
+    if (file.type !== 'image/png' && file.type !== 'image/jpeg') {
+      console.error(`Only PNG and JPEG are allowed.`);
+      return;
+    }
 
-    const blobUrl = URL.createObjectURL(file);
-    this.avatarImg = blobUrl;
-
-    const base64 = await blobToBase64(file);
-    // const base64 = await this.compressImage(file, 800, 800, 0.7);
+    const compressedBase64 = await compressImage(file, 250, 250, 0.7);
 
     this.contactData.avatar = {
       fileName: file.name,
       fileType: file.type,
       fileSize: file.size,
-      base64: base64
+      base64: compressedBase64 
     };
-
   }
 }

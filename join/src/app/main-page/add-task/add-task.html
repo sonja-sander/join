@@ -59,6 +59,11 @@
         <span class="add-task__field-error" [class.is-visible]="showCategoryError">
           This field is required
         </span>
+        <app-attachments
+          [attachments]="attachments"
+          (attachmentsChange)="attachments = $event; markAsEdited()"
+          (deleteAll)="onDeleteAllAttachments()"
+        ></app-attachments>
         <app-subtask-composer [(subtasks)]="activeSubtasks"></app-subtask-composer>
         @if (showSubtaskHint) {
           <span class="add-task__subtask-hint"> Either add no subtasks or at least two.</span>

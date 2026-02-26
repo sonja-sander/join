@@ -1,0 +1,58 @@
+<section>
+  <p class="title">Attachments</p>
+
+  <div class="description">
+    <p>Allowed file types are JPEG and PNG</p>
+    @if (attachments.length > 0) {
+      <button type="button" (click)="onDeleteClick()">
+        <img class="icon icon--default" src="assets/img/icons/buttons/delete.svg" alt="" aria-hidden="true">
+        <img class="icon icon--hover" src="assets/img/icons/buttons/delete-hover.svg" alt="" aria-hidden="true">
+        Delete all
+      </button>
+    }
+  </div>
+
+  <!-- @if(showDeleteConfirm){
+      <div class="confirm-backdrop">
+        <div class="confirm-box" role="dialog" aria-modal="true">
+          <p><span class="delete-highlight">Delete </span>"{{ task.title }}"?</p>
+
+          <div class="confirm-actions">
+            <button class="button button--primary delete-btn" type="button" (click)="confirmDelete()">Delete</button>
+            <button class="button button--secondary" type="button" (click)="cancelDelete()">Cancel</button>
+          </div>
+        </div>
+      </div> 
+    } -->
+
+  <div class="drag-area" 
+    [class.drag-area--active]="isDragging"
+    onclick="filePicker.click()" 
+    (dragover)="onDragOver($event)"
+    (dragleave)="onDragLeave($event)"
+    (drop)="onDrop($event)"
+  >
+    <p>Drag file or browse</p>
+    <img src="assets/img/icons/add-task/add-attachment.svg" alt="">
+  </div>
+
+  <input
+    id="filePicker"
+    class="filePicker"
+    type="file"
+    accept="image/png, image/jpeg"
+    (change)="onFileSelect($event)"
+    multiple
+    hidden
+  />
+    
+  <div class="gallery">
+    @for (attachment of attachments; track attachment.fileName) {
+      <figure class="attachment">
+        <img [src]="attachment.base64" [alt]="attachment.fileName">
+        <figcaption>{{ attachment.fileName }}</figcaption>
+      </figure>
+    }
+  </div>
+
+</section>
