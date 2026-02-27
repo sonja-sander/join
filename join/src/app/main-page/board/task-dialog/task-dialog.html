@@ -77,7 +77,17 @@
       <div class="gallery">
         @for (attachment of task.attachments; track attachment.fileName) {
           <figure class="attachment">
-            <img [src]="attachment.base64" [alt]="attachment.fileName">
+            <div class="image-wrapper">
+              <img class="attachment-img" [src]="attachment.base64" [alt]="attachment.fileName">
+              <button
+                class="download-btn"
+                type="button"
+                (click)="this.fileService.downloadAttachment(attachment)"
+                aria-label="Download {{ attachment.fileName }}"
+              >
+                <img class="download-icon" src="assets/img/icons/add-task/download-white.svg" alt="" aria-hidden="true">
+              </button>
+            </div>
             <figcaption>{{ attachment.fileName }}</figcaption>
           </figure>
         }

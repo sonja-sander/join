@@ -180,7 +180,7 @@ header {
     @include styles.up-xxl{
       &:hover{
         .avatar-img {
-          filter: grayscale(0.8);
+          filter: grayscale(0.8) brightness(0.5);
         }
 
         .avatar-delete-wrapper{

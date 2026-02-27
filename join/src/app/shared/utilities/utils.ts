@@ -1,4 +1,5 @@
 import { Contact } from '../interfaces/contact';
+import { Attachment } from '../interfaces/task';
 
 /**
  * Capitalizes a full name.
@@ -106,84 +107,3 @@ export function getGreeting(): string {
   }
 }
 
-// #region Image upload
-export async function compressImage(file: File | Blob, maxWidth = 800, maxHeight = 800, quality = 0.7): Promise<string> {
-  const img = await blobToImage(file);
-  const { width, height } = calculateImageSize(img, maxWidth, maxHeight);
-  return drawAndExportBase64(img, width, height, quality);
-}
-
-function blobToImage(file: File | Blob): Promise<HTMLImageElement> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-
-    reader.onload = (event) => {
-      if (!event.target?.result) {
-        reject('No file result');
-        return;
-      }
-
-      const img = new Image();
-      img.onload = () => resolve(img);
-      img.onerror = () => reject('Error while loading image');
-      img.src = event.target.result as string;
-    };
-
-    reader.onerror = () => reject('Error while reading file');
-    reader.readAsDataURL(file);
-  });
-}
-
-function calculateImageSize(img: HTMLImageElement, maxWidth: number, maxHeight: number): { width: number; height: number } {
-  let width = img.width;
-  let height = img.height;
-
-  if (width > maxWidth || height > maxHeight) {
-    if (width > height) {
-      height = (height * maxWidth) / width;
-      width = maxWidth;
-    } else {
-      width = (width * maxHeight) / height;
-      height = maxHeight;
-    }
-  }
-
-  return { width, height };
-}
-
-function drawAndExportBase64(img: HTMLImageElement, width: number, height: number, quality: number): string {
-  const canvas = document.createElement('canvas');
-  const ctx = canvas.getContext('2d');
-
-  if (!ctx) {
-    throw new Error('No canvas context');
-  }
-
-  canvas.width = width;
-  canvas.height = height;
-  ctx.drawImage(img, 0, 0, width, height);
-
-  return canvas.toDataURL('image/jpeg', quality);
-}
-
-export function base64SizeInBytes(base64: string): number {
-  const b64 = base64.split(',')[1] ?? base64;
-  return Math.floor((b64.length * 3) / 4);
-}
-
-export function isValidFileType(file: File, errorMessage: string | null): boolean {
-  if (file.type !== 'image/png' && file.type !== 'image/jpeg') {
-    errorMessage = `Only PNG and JPEG are allowed.`;
-    return false;
-  }
-  return true;
-}
-
-export function isWithinSizeLimit(sizeInBytes: number, errorMessage: string | null): boolean {
-  if (sizeInBytes > 1_000_000) {
-    errorMessage = 'Image is too large. Max allowed is 1 MB.';
-    return false;
-  }
-  return true;
-}
-// #endregion

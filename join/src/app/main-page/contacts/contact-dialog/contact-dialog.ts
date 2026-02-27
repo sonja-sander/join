@@ -1,8 +1,9 @@
-import { Component, ElementRef, EventEmitter, HostListener, Input, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, inject, Input, Output, ViewChild } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { Contact } from '../../../shared/interfaces/contact';
 import { ContactFormData } from '../../../shared/interfaces/contact-form-data';
-import { base64SizeInBytes, compressImage, getTwoInitials, isValidFileType, isWithinSizeLimit } from '../../../shared/utilities/utils';
+import { getTwoInitials } from '../../../shared/utilities/utils';
+import { FileService } from '../../../shared/services/file-service';
 
 @Component({
   selector: 'app-contact-dialog',
@@ -18,6 +19,7 @@ import { base64SizeInBytes, compressImage, getTwoInitials, isValidFileType, isWi
  * such as saving or deleting a contact.
  */
 export class ContactDialog {
+  fileService = inject(FileService);
   @ViewChild('contactDialog') dialog!: ElementRef<HTMLDialogElement>;
   @ViewChild('contactForm') contactForm!: NgForm;
   @Input() canDelete = true;
@@ -26,7 +28,8 @@ export class ContactDialog {
   readonly getTwoInitials = getTwoInitials;
   userColor: string | null = null;
   showDeleteConfirm: boolean = false;
-  avatarUploadError: string | null = null;
+  imageTypeError: boolean = false;
+  imageSizeError: boolean = false;
 
   @Output() saveContact = new EventEmitter<ContactFormData>();
   @Output() requestDelete = new EventEmitter<void>();
@@ -208,21 +211,43 @@ export class ContactDialog {
   // #endregion
   
   async onAvatarSelected(event: Event): Promise<void> {
-    this.avatarUploadError = null;
-    const filePicker = event.target as HTMLInputElement;
-    const file = filePicker.files?.[0];
-    if (!file) return;
-    if (!isValidFileType(file, this.avatarUploadError)) return;
+    this.imageTypeError = false;
+    this.imageSizeError = false;
 
-    const compressedBase64 = await compressImage(file, 250, 250, 0.7);
-    const sizeInBytes = base64SizeInBytes(compressedBase64);
-    if (!isWithinSizeLimit(sizeInBytes, this.avatarUploadError)) return;
+    const file = this.extractFile(event);
+    if (!file) return;
+    if (this.hasInvalidFileType(file)) return;
+
+    const compressedBase64 = await this.fileService.compressImage(file, 250, 250, 0.7);
+    const sizeInBytes = this.fileService.base64SizeInBytes(compressedBase64);
+    if (this.exceedsSizeLimit(sizeInBytes)) return;
     
-    this.contactData.avatar = {
+    this.contactData.avatar = this.createAvatarObject(file, sizeInBytes, compressedBase64);
+  }
+
+  extractFile(event: Event): File | null {
+    const inputElement = event.target as HTMLInputElement;
+    return inputElement.files?.[0] ?? null;
+  }
+
+  hasInvalidFileType(file: File): boolean {
+    const isInvalid = !this.fileService.isValidFileType(file);
+    this.imageTypeError = isInvalid;
+    return isInvalid;
+  }
+
+  exceedsSizeLimit(size: number): boolean {
+    const exceeds = !this.fileService.isWithinSizeLimit(size);
+    this.imageSizeError = exceeds;
+    return exceeds;
+  }
+
+  createAvatarObject(file: File, sizeInBytes: number, base64: string) {
+    return {
       fileName: file.name,
       fileType: file.type,
       base64Size: sizeInBytes,
-      base64: compressedBase64 
+      base64: base64
     };
   }
 

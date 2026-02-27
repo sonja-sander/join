@@ -225,22 +225,59 @@ dialog {
     border-radius: 8px;
     cursor: pointer;
 
-    img{
+    &:hover{
+      .attachment-img{
+        filter: grayscale(0.8) brightness(0.5);
+      }
+    }
+
+    .image-wrapper{
+      position: relative;
       width: 100%;
-      height: 58px;
-      object-fit: cover;
+
+      &:hover .download-btn{
+        opacity: 1;
+      }
+      
+      .attachment-img{
+        width: 100%;
+        height: 58px;
+        object-fit: cover;
+      }
+
+      .download-btn{
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        @include styles.setFlex();
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        background-color: transparent;
+        opacity: 0;
+        transition: opacity 0.2s ease;
+
+        &:hover{
+          background-color: styles.$blue-sky;
+        }
+
+        .download-icon{
+          width: 24px;
+          height: 24px;
+          object-fit: contain;
+        }
+      }
     }
 
     figcaption{
+      width: 112px;
       padding: 2px 4px;
       color: #A8A8A8;
-
-      width: 112px;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
     }
-
   }
 }
 

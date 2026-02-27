@@ -1,9 +1,10 @@
 import { Component, ElementRef, EventEmitter, inject, Input, Output, ViewChild } from '@angular/core';
 import { getTwoInitials } from '../../../shared/utilities/utils';
 import { DatePipe, NgClass } from '@angular/common';
-import { Task } from '../../../shared/interfaces/task';
+import { Attachment, Task } from '../../../shared/interfaces/task';
 import { TaskService } from '../../../shared/services/task-service';
 import { FirebaseService } from '../../../shared/services/firebase-service';
+import { FileService } from '../../../shared/services/file-service';
 
 @Component({
   selector: 'app-task-dialog',
@@ -22,6 +23,7 @@ export class TaskDialog {
   @ViewChild('taskDialog') dialog!: ElementRef<HTMLDialogElement>;
   taskService = inject(TaskService);
   contactService = inject(FirebaseService);
+  fileService = inject(FileService);
   readonly getTwoInitials = getTwoInitials;
   userColor: string | null = null;
   @Input() task!: Task;
