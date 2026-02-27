@@ -54,7 +54,7 @@
 
     <section class="form-section">
       <div class="avatar-wrapper">
-        <div class="avatar" [style.backgroundColor]="userColor" aria-hidden="true">
+        <div class="avatar" [style.backgroundColor]="userColor">
           @if(contactData.avatar?.base64){
             <img class="avatar-img" [src]="contactData.avatar?.base64" alt="Contact profile picture" />
           }
@@ -65,7 +65,21 @@
               {{ getTwoInitials(contactData.name) }}
             </span> 
           }
-          <img class="avatarUpload" src="assets/img/icons/forms/add-avatar.svg" onclick="avatarFilePicker.click()">
+          <div class="avatar-upload-wrapper">
+            <button class="upload-btn" type="button" onclick="avatarFilePicker.click()" aria-label="Upload profile picture" aria-controls="avatarFilePicker">
+              <img class="upload-icon icon--default" src="assets/img/icons/forms/add-avatar.svg">
+              <img class="upload-icon icon--hover desktop-only" src="assets/img/icons/forms/add-avatar-hover.svg">
+            </button>
+          </div>
+
+          @if (contactData.avatar?.base64) {
+            <div class="avatar-delete-wrapper">
+              <button class="delete-btn" type="button" (click)="onAvatarDelete()" aria-label="Delete profile picture">
+                <img class="delete-icon icon--default" src="assets/img/icons/add-task/delete-white.svg" >
+                <img class="delete-icon icon--hover desktop-only" src="assets/img/icons/add-task/delete-white-hover.svg" >
+              </button>
+            </div>
+          }
         </div>
           
         <input
@@ -75,8 +89,11 @@
           accept="image/png, image/jpeg"
           (change)="onAvatarSelected($event)"
           hidden
+          aria-describedby="avatarError"
         />
-        <div id="avatarError" class="error"></div>
+        @if (avatarUploadError) {
+          <div id="avatarError" class="error" role="alert"> {{ avatarUploadError }} </div>
+        }
       </div>
 
       <form

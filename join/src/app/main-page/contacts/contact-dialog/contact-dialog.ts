@@ -2,7 +2,7 @@ import { Component, ElementRef, EventEmitter, HostListener, Input, Output, ViewC
 import { FormsModule, NgForm } from '@angular/forms';
 import { Contact } from '../../../shared/interfaces/contact';
 import { ContactFormData } from '../../../shared/interfaces/contact-form-data';
-import { compressImage, getTwoInitials } from '../../../shared/utilities/utils';
+import { base64SizeInBytes, compressImage, getTwoInitials, isValidFileType, isWithinSizeLimit } from '../../../shared/utilities/utils';
 
 @Component({
   selector: 'app-contact-dialog',
@@ -22,10 +22,11 @@ export class ContactDialog {
   @ViewChild('contactForm') contactForm!: NgForm;
   @Input() canDelete = true;
   dialogMode: 'add' | 'edit' = 'add';
-  avatarImg: string | null = null;
+  // avatarImg: string | null = null;
   readonly getTwoInitials = getTwoInitials;
   userColor: string | null = null;
   showDeleteConfirm: boolean = false;
+  avatarUploadError: string | null = null;
 
   @Output() saveContact = new EventEmitter<ContactFormData>();
   @Output() requestDelete = new EventEmitter<void>();
@@ -58,7 +59,7 @@ export class ContactDialog {
     };
 
     this.userColor = null;
-    this.avatarImg = null;
+    // this.avatarImg = null;
 
     this.openDialog();
   }
@@ -83,7 +84,7 @@ export class ContactDialog {
     };
 
     this.userColor = contact.userColor ?? null;
-    this.avatarImg = contact.avatar?.base64 ?? null;
+    // this.avatarImg = contact.avatar?.base64 ?? null;
     this.openDialog();
   }
 
@@ -197,27 +198,40 @@ export class ContactDialog {
    * @returns void
    */
   onEsc(event: Event): void {
-    event.preventDefault();
-    this.closeDialog();
+    if ((event as KeyboardEvent).key === 'Escape') {
+      event.preventDefault();
+      this.closeDialog();
+    } else {
+      event.preventDefault();
+    }
   }
   // #endregion
   
   async onAvatarSelected(event: Event): Promise<void> {
+    this.avatarUploadError = null;
     const filePicker = event.target as HTMLInputElement;
     const file = filePicker.files?.[0];
     if (!file) return;
-    if (file.type !== 'image/png' && file.type !== 'image/jpeg') {
-      console.error(`Only PNG and JPEG are allowed.`);
-      return;
-    }
+    if (!isValidFileType(file, this.avatarUploadError)) return;
 
     const compressedBase64 = await compressImage(file, 250, 250, 0.7);
-
+    const sizeInBytes = base64SizeInBytes(compressedBase64);
+    if (!isWithinSizeLimit(sizeInBytes, this.avatarUploadError)) return;
+    
     this.contactData.avatar = {
       fileName: file.name,
       fileType: file.type,
-      fileSize: file.size,
+      base64Size: sizeInBytes,
       base64: compressedBase64 
+    };
+  }
+
+  onAvatarDelete() {
+    this.contactData.avatar = {
+      fileName: '',
+      fileType: '',
+      base64Size: 0,
+      base64: '' 
     };
   }
 }

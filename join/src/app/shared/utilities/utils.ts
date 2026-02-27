@@ -106,6 +106,7 @@ export function getGreeting(): string {
   }
 }
 
+// #region Image upload
 export async function compressImage(file: File | Blob, maxWidth = 800, maxHeight = 800, quality = 0.7): Promise<string> {
   const img = await blobToImage(file);
   const { width, height } = calculateImageSize(img, maxWidth, maxHeight);
@@ -164,3 +165,25 @@ function drawAndExportBase64(img: HTMLImageElement, width: number, height: numbe
 
   return canvas.toDataURL('image/jpeg', quality);
 }
+
+export function base64SizeInBytes(base64: string): number {
+  const b64 = base64.split(',')[1] ?? base64;
+  return Math.floor((b64.length * 3) / 4);
+}
+
+export function isValidFileType(file: File, errorMessage: string | null): boolean {
+  if (file.type !== 'image/png' && file.type !== 'image/jpeg') {
+    errorMessage = `Only PNG and JPEG are allowed.`;
+    return false;
+  }
+  return true;
+}
+
+export function isWithinSizeLimit(sizeInBytes: number, errorMessage: string | null): boolean {
+  if (sizeInBytes > 1_000_000) {
+    errorMessage = 'Image is too large. Max allowed is 1 MB.';
+    return false;
+  }
+  return true;
+}
+// #endregion
