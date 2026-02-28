@@ -242,11 +242,11 @@ export class ContactDialog {
     return exceeds;
   }
 
-  createAvatarObject(file: File, sizeInBytes: number, base64: string) {
+  createAvatarObject(file: File, size: number, base64: string) {
     return {
       fileName: file.name,
       fileType: file.type,
-      base64Size: sizeInBytes,
+      base64Size: size,
       base64: base64
     };
   }

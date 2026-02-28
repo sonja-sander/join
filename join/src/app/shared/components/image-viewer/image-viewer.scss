@@ -1,0 +1,191 @@
+@use '../../../../styles/index.scss' as styles;
+
+dialog {
+  // margin: auto;
+  // position: revert;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  border: none;
+  border-radius: 30px;
+  box-shadow: 0px 0px 4px 0px #0000001a;
+  z-index: 600;
+
+  @include styles.up-xxl{
+    border-radius: 0;
+  }
+
+  &.opened {
+    background: transparent;
+    border-radius: 30px;
+    border: none;
+
+    &::backdrop {
+      opacity: 0.7;
+      background: #b3b3b3;
+    }
+  }
+
+  .dialog-content {
+    @include styles.setGrid($rows: auto minmax(0, 1fr) auto, $columns: 1fr);
+    grid-template-areas: 
+    "header"
+    "image"
+    "footer";
+    width: 100dvw;
+    height: 100dvh;
+    border-radius: 30px;
+    background-color: white;
+
+    @include styles.up-xxl{
+      display: block;
+      border-radius: 0;
+      width: auto;
+      height: auto;
+      min-width: 40dvw;
+      min-height: 40dvh;
+      max-width: 90dvw;
+      max-height: 90dvh;
+      overflow: hidden;
+    }
+
+    &:hover {
+      header, .left, .right{
+        opacity: 1;
+      }
+    }
+  }
+}
+
+button{
+  @include styles.setFlex();
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: transparent;
+
+  >img{
+    width: 24px;
+    height: 24px;
+  }
+}
+
+header{
+  grid-area: header;
+  @include styles.setFlex();
+  width: 100%;
+  height: 50px;
+  background-color: styles.$blue-sky;
+
+  @include styles.up-xxl{
+    opacity: 0;
+  }
+  
+  @include styles.up-xxl{
+    background-color: rgba(42, 54, 71, 0.7);
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+  }
+}
+
+.header-content{
+  @include styles.setFlex($jc: space-between);
+  width: 93%;
+
+  .title{
+    max-width: 300px;
+    overflow-x: auto;
+    color: white;
+  }
+
+  .zoom{
+    @include styles.setFlex($gap: 4px);
+
+    @include styles.down-xxl{
+      display: none;
+    }
+  }
+
+  .header-actions{
+    @include styles.setFlex($gap: 4px);
+
+    @include styles.up-xxl{
+      gap: 8px;
+
+      .download-btn, .close-btn{
+        &:hover{
+          background-color: styles.$blue-sky;
+        }
+      }
+    }
+  }
+}
+
+.image-section{
+  grid-area: image;
+  min-height: 0;
+  height: 100%;
+
+  @include styles.up-xxl{
+    @include styles.setFlex();
+  }
+
+  .attachment-img{
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+
+    @include styles.up-xxl{
+      width: auto;
+      height: auto;
+      max-width: 90dvw;
+      max-height: 90dvh;
+      object-fit: contain;
+      display: block;
+    }
+  }
+
+  @include styles.up-xxl{
+    .left{
+      position: absolute;
+      top: 50%;
+      left: 5%;
+      transform: translate(-5%, -50%);
+      z-index: 1000;
+      opacity: 0;
+    }
+
+    .right{
+      position: absolute;
+      top: 50%;
+      right: 5%;
+      transform: translate(-5%, -50%);
+      z-index: 1000;
+      opacity: 0;
+    }
+  }
+}
+
+footer{
+  grid-area: footer;
+  @include styles.setFlex();
+  height: 50px;
+  background-color: styles.$blue-sky;
+
+  @include styles.up-xxl{
+    display: none;
+  }
+}
+
+.footer-content{
+  @include styles.setFlex($jc: space-between);
+  width: 93%;
+
+  .zoom{
+    @include styles.setFlex($gap: 4px);
+  }
+}

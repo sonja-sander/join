@@ -4,7 +4,7 @@
   <div class="description">
     <p>Allowed file types are JPEG and PNG</p>
     @if (attachments.length > 0) {
-      <button type="button" (click)="onDeleteClick()">
+      <button type="button" (click)="deleteAllAttachments()">
         <img class="icon icon--default" src="assets/img/icons/buttons/delete.svg" alt="" aria-hidden="true">
         <img class="icon icon--hover" src="assets/img/icons/buttons/delete-hover.svg" alt="" aria-hidden="true">
         Delete all
@@ -45,11 +45,27 @@
     multiple
     hidden
   />
+  @if (imageTypeError) {
+    <div id="avatarError" class="error" role="alert"> 'Only PNG and JPEG are allowed.' </div>
+  }
+  @if (taskSizeError) {
+    <div id="avatarError" class="error" role="alert"> 'Images are too large in total. Max allowed is 1 MB.' </div>
+  }
     
   <div class="gallery">
     @for (attachment of attachments; track attachment.fileName) {
       <figure class="attachment">
-        <img [src]="attachment.base64" [alt]="attachment.fileName">
+        <div class="image-wrapper">
+          <img class="attachment-img" [src]="attachment.base64" [alt]="attachment.fileName">
+          <button
+            class="delete-btn"
+            type="button"
+            (click)="deleteSingleAttachment(attachment)"
+            aria-label="Delete {{ attachment.fileName }}"
+          >
+            <img class="delete-icon" src="assets/img/icons/add-task/delete-white.svg" alt="" aria-hidden="true">
+          </button>
+        </div>
         <figcaption>{{ attachment.fileName }}</figcaption>
       </figure>
     }

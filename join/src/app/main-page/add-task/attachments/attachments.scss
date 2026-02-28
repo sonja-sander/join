@@ -72,35 +72,74 @@ section{
 }
 
 .gallery{
-    @include styles.setFlex($jc: flex-start, $gap: 8px);
-    width: 100%;
-    max-width: 100%;
-    margin: 8px 0;
-    overflow-x: auto;
+  @include styles.setFlex($jc: flex-start, $gap: 8px);
+  width: 100%;
+  max-width: 100%;
+  margin: 8px 0;
+  overflow-x: auto;
 
-    &::-webkit-scrollbar {
-      display: none;;
+  &::-webkit-scrollbar {
+    display: none;;
+  }
+}
+
+.attachment{
+  width: 112px;
+  border: 1px solid #D1D1D1;
+  border-radius: 8px;
+  cursor: pointer;
+
+  &:hover{
+    .attachment-img{
+      filter: grayscale(0.8) brightness(0.5);
     }
   }
 
-  .attachment{
-    width: 112px;
-    border: 1px solid #D1D1D1;
-    border-radius: 8px;
-    cursor: pointer;
+  .image-wrapper{
+    position: relative;
+    width: 100%;
 
-    img{
+    &:hover .delete-btn{
+      opacity: 1;
+    }
+    
+    .attachment-img{
       width: 100%;
       height: 58px;
       object-fit: cover;
     }
 
-    figcaption{
-      padding: 2px 4px;
-      color: #A8A8A8;
-      width: 112px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+    .delete-btn{
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      @include styles.setFlex();
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background-color: transparent;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+
+      &:hover{
+        background-color: styles.$blue-sky;
+      }
+
+      .delete-icon{
+        width: 24px;
+        height: 24px;
+        object-fit: contain;
+      }
     }
   }
+
+  figcaption{
+    width: 112px;
+    padding: 2px 4px;
+    color: #A8A8A8;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}

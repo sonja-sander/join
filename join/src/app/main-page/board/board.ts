@@ -6,10 +6,11 @@ import { FormsModule } from '@angular/forms';
 import { TaskDialog } from './task-dialog/task-dialog';
 import { Task } from '../../shared/interfaces/task';
 import { AddTask } from '../add-task/add-task';
+import { ImageViewer } from '../../shared/components/image-viewer/image-viewer';
 
 @Component({
   selector: 'app-board',
-  imports: [TaskList, FormsModule, TaskDialog, AddTask],
+  imports: [TaskList, FormsModule, TaskDialog, AddTask, ImageViewer ],
   templateUrl: './board.html',
   styleUrl: './board.scss',
 })

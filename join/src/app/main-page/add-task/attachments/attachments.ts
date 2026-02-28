@@ -14,10 +14,8 @@ export class Attachments {
   @Output() deleteAll = new EventEmitter<void>();
   @Output() attachmentsChange = new EventEmitter<Array<Attachment>>();
   isDragging = false;
-
-  onDeleteClick(): void {
-    this.deleteAll.emit();
-  }
+  imageTypeError: boolean = false;
+  taskSizeError: boolean = false;
 
   onDragOver(event: DragEvent): void {
     event.preventDefault();
@@ -46,24 +44,63 @@ export class Attachments {
   }
 
   async handleFiles(files: FileList): Promise<void> {
+    this.imageTypeError = false;
+    this.taskSizeError = false;
+
     const allImages = Array.from(this.attachments);
 
     for (const file of Array.from(files)) {
-      if (file.type !== 'image/png' && file.type !== 'image/jpeg') {
-          console.error(`Only PNG and JPEG are allowed.`);
-          return;
-      }
+      if (this.hasInvalidFileType(file)) return;
 
       const compressedBase64 = await this.fileService.compressImage(file, 800, 800, 0.7);
+      const sizeInBytes = this.fileService.base64SizeInBytes(compressedBase64);
+      // if (this.exceedsSizeLimit(sizeInBytes)) return;
 
-      allImages.push({
-        fileName: file.name,
-        fileType: file.type,
-        fileSize: file.size,
-        base64: compressedBase64
-      });
+      this.addToAttachmentArray(allImages, file, sizeInBytes, compressedBase64);
     }
 
+    const totalSize = this.getTotalAttachmentsSize(allImages);
+    if (this.exceedsTaskSizeLimit(totalSize)) return;
     this.attachmentsChange.emit(allImages);
+  }
+
+  hasInvalidFileType(file: File): boolean {
+    const isInvalid = !this.fileService.isValidFileType(file);
+    this.imageTypeError = isInvalid;
+    return isInvalid;
+  }
+
+  getTotalAttachmentsSize(attachments: Attachment[]): number {
+    return attachments.reduce(
+      (total, attachment) => total + attachment.base64Size,
+      0
+    );
+  }
+
+  exceedsTaskSizeLimit(totalSize: number): boolean {
+    const exceeds = !this.fileService.isWithinSizeLimit(totalSize);
+    this.taskSizeError = exceeds;
+    return exceeds;
+  }
+
+  addToAttachmentArray(arr: Array<Attachment>, file: File, size: number, base64: string) {
+    arr.push({
+      fileName: file.name,
+      fileType: file.type,
+      base64Size: size,
+      base64: base64
+    });
+  }
+
+  deleteAllAttachments(): void {
+    this.deleteAll.emit();
+  }
+
+  deleteSingleAttachment(attachmentToDelete: Attachment): void {
+    const updatedAttachments = this.attachments.filter(
+      attachment => attachment !== attachmentToDelete
+    );
+
+    this.attachmentsChange.emit(updatedAttachments);
   }
 }
