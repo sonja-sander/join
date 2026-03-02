@@ -78,7 +78,7 @@
         @for (attachment of task.attachments; track attachment.fileName) {
           <figure class="attachment">
             <div class="image-wrapper">
-              <img class="attachment-img" [src]="attachment.base64" [alt]="attachment.fileName">
+              <img class="attachment-img" [src]="attachment.base64" [alt]="attachment.fileName" (click)="openImageViewer($index)">
               <button
                 class="download-btn"
                 type="button"
@@ -137,6 +137,14 @@
       </div> 
     }
 
+    @if (showViewer) {
+      <app-image-viewer
+        [attachments]="viewerAttachments"
+        [startIndex]="viewerStartIndex"
+        (close)="showViewer = false"
+      >
+      </app-image-viewer>
+    }
   </div>
 </dialog>
 }

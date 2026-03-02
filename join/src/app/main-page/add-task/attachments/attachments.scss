@@ -75,11 +75,20 @@ section{
   @include styles.setFlex($jc: flex-start, $gap: 8px);
   width: 100%;
   max-width: 100%;
+  height: 120px;
   margin: 8px 0;
   overflow-x: auto;
 
   &::-webkit-scrollbar {
-    display: none;;
+    height: 4px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: white;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: styles.$gray-light;
   }
 }
 
@@ -89,9 +98,11 @@ section{
   border-radius: 8px;
   cursor: pointer;
 
-  &:hover{
-    .attachment-img{
-      filter: grayscale(0.8) brightness(0.5);
+  @include styles.up-xxl{
+    &:hover{
+      .attachment-img{
+        filter: grayscale(0.8) brightness(0.5);
+      }
     }
   }
 
@@ -106,24 +117,33 @@ section{
     .attachment-img{
       width: 100%;
       height: 58px;
+      border-radius: 7px 7px 0 0;
       object-fit: cover;
     }
 
     .delete-btn{
       position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
+      top: 0;
+      left: 0;
       @include styles.setFlex();
       width: 34px;
       height: 34px;
-      border-radius: 50%;
-      background-color: transparent;
-      opacity: 0;
-      transition: opacity 0.2s ease;
+      border-radius: 7px 1px 8px 1px;
+      background-color: styles.$blue-sky;
+      border: none;
 
-      &:hover{
-        background-color: styles.$blue-sky;
+      @include styles.up-xxl{
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        border-radius: 50%;
+        background-color: transparent;
+        opacity: 0;
+        transition: opacity 0.2s ease;
+
+        &:hover{
+          background-color: styles.$blue-sky;
+        }
       }
 
       .delete-icon{

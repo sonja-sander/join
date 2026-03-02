@@ -52,11 +52,11 @@
     <div id="avatarError" class="error" role="alert"> 'Images are too large in total. Max allowed is 1 MB.' </div>
   }
     
-  <div class="gallery">
+  <div class="gallery" #gallery>
     @for (attachment of attachments; track attachment.fileName) {
       <figure class="attachment">
         <div class="image-wrapper">
-          <img class="attachment-img" [src]="attachment.base64" [alt]="attachment.fileName">
+          <img class="attachment-img" [src]="attachment.base64" [alt]="attachment.fileName" (click)="openImageViewer($index)">
           <button
             class="delete-btn"
             type="button"
@@ -72,3 +72,12 @@
   </div>
 
 </section>
+
+@if (showViewer) {
+  <app-image-viewer
+    [attachments]="attachments"
+    [startIndex]="viewerStartIndex"
+    (close)="showViewer = false"
+  >
+  </app-image-viewer>
+}

@@ -1,35 +1,21 @@
 @use '../../../../styles/index.scss' as styles;
 
-dialog {
-  // margin: auto;
-  // position: revert;
+.viewer-overlay {
   position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-
+  @include styles.setFlex();
+  inset: 0;
+  background: rgba(0,0,0,0.8);
   border: none;
   border-radius: 30px;
   box-shadow: 0px 0px 4px 0px #0000001a;
-  z-index: 600;
+  z-index: 6000;
 
   @include styles.up-xxl{
     border-radius: 0;
   }
 
-  &.opened {
-    background: transparent;
-    border-radius: 30px;
-    border: none;
-
-    &::backdrop {
-      opacity: 0.7;
-      background: #b3b3b3;
-    }
-  }
-
-  .dialog-content {
-    @include styles.setGrid($rows: auto minmax(0, 1fr) auto, $columns: 1fr);
+  .viewer-content {
+    @include styles.setGrid($rows: auto minmax(0, 1fr) auto, $columns: minmax(0, 1fr));
     grid-template-areas: 
     "header"
     "image"
@@ -40,20 +26,16 @@ dialog {
     background-color: white;
 
     @include styles.up-xxl{
-      display: block;
+      @include styles.setFlex();
+      width: 80dvw;
+      height: 70dvh;
       border-radius: 0;
-      width: auto;
-      height: auto;
-      min-width: 40dvw;
-      min-height: 40dvh;
-      max-width: 90dvw;
-      max-height: 90dvh;
       overflow: hidden;
-    }
 
-    &:hover {
-      header, .left, .right{
-        opacity: 1;
+      &:hover {
+        header, .desktop-previous, .desktop-next{
+          opacity: 1;
+        }
       }
     }
   }
@@ -78,6 +60,7 @@ header{
   width: 100%;
   height: 50px;
   background-color: styles.$blue-sky;
+  z-index: 7000;
 
   @include styles.up-xxl{
     opacity: 0;
@@ -95,11 +78,30 @@ header{
 .header-content{
   @include styles.setFlex($jc: space-between);
   width: 93%;
+  
+  @include styles.up-xxl{
+    @include styles.setGrid($columns: 40% 20% 40%);
+  }
 
-  .title{
-    max-width: 300px;
-    overflow-x: auto;
+  .metadata{
     color: white;
+    font-size: 16px;
+
+    @include styles.up-xxl{
+      grid-column: 1/2;
+      justify-self: start;
+    }
+
+    .file-name{
+      max-width: 200px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+  
+      @include styles.up-xxl{
+        max-width: 300px;
+      }
+    }
   }
 
   .zoom{
@@ -108,12 +110,19 @@ header{
     @include styles.down-xxl{
       display: none;
     }
+
+    @include styles.up-xxl{
+      grid-column: 2/3;
+      justify-self: center;
+    }
   }
 
   .header-actions{
     @include styles.setFlex($gap: 4px);
 
     @include styles.up-xxl{
+      grid-column: 3/4;
+      justify-self: end;
       gap: 8px;
 
       .download-btn, .close-btn{
@@ -127,46 +136,45 @@ header{
 
 .image-section{
   grid-area: image;
+  @include styles.setFlex();
   min-height: 0;
   height: 100%;
 
-  @include styles.up-xxl{
-    @include styles.setFlex();
-  }
-
   .attachment-img{
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
+    width: auto;
+    height: auto;
 
     @include styles.up-xxl{
-      width: auto;
-      height: auto;
-      max-width: 90dvw;
-      max-height: 90dvh;
-      object-fit: contain;
       display: block;
     }
   }
+}
 
-  @include styles.up-xxl{
-    .left{
-      position: absolute;
-      top: 50%;
-      left: 5%;
-      transform: translate(-5%, -50%);
-      z-index: 1000;
-      opacity: 0;
-    }
+.desktop-previous, .desktop-next{
+  display: none;
+}
 
-    .right{
-      position: absolute;
-      top: 50%;
-      right: 5%;
-      transform: translate(-5%, -50%);
-      z-index: 1000;
-      opacity: 0;
-    }
+@include styles.up-xxl{
+  .desktop-previous, .desktop-next{
+    display: block;
+  }
+
+  .desktop-previous{
+    position: absolute;
+    top: 50%;
+    left: 5%;
+    transform: translate(-5%, -50%);
+    z-index: 7000;
+    opacity: 0;
+  }
+
+  .desktop-next{
+    position: absolute;
+    top: 50%;
+    right: 5%;
+    transform: translate(-5%, -50%);
+    z-index: 7000;
+    opacity: 0;
   }
 }
 

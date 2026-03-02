@@ -1,21 +1,25 @@
-import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
-import { Attachment } from '../../../shared/interfaces/task';
+import { Component, ElementRef, EventEmitter, inject, Input, Output, ViewChild } from '@angular/core';
+import { Attachment, Task } from '../../../shared/interfaces/task';
 import { FileService } from '../../../shared/services/file-service';
+import { ImageViewer } from '../../../shared/components/image-viewer/image-viewer';
 
 @Component({
   selector: 'app-attachments',
-  imports: [],
+  imports: [ImageViewer],
   templateUrl: './attachments.html',
   styleUrl: './attachments.scss',
 })
 export class Attachments {
+  @ViewChild('gallery') gallery!: ElementRef<HTMLDivElement>;
   fileService = inject(FileService);
-  @Input({ required: true }) attachments!: Attachment[];
+  @Input() attachments!: Attachment[];
   @Output() deleteAll = new EventEmitter<void>();
   @Output() attachmentsChange = new EventEmitter<Array<Attachment>>();
   isDragging = false;
   imageTypeError: boolean = false;
   taskSizeError: boolean = false;
+  showViewer = false;
+  viewerStartIndex = 0;
 
   onDragOver(event: DragEvent): void {
     event.preventDefault();
@@ -54,7 +58,6 @@ export class Attachments {
 
       const compressedBase64 = await this.fileService.compressImage(file, 800, 800, 0.7);
       const sizeInBytes = this.fileService.base64SizeInBytes(compressedBase64);
-      // if (this.exceedsSizeLimit(sizeInBytes)) return;
 
       this.addToAttachmentArray(allImages, file, sizeInBytes, compressedBase64);
     }
@@ -62,7 +65,9 @@ export class Attachments {
     const totalSize = this.getTotalAttachmentsSize(allImages);
     if (this.exceedsTaskSizeLimit(totalSize)) return;
     this.attachmentsChange.emit(allImages);
+    this.scrollToRight();
   }
+
 
   hasInvalidFileType(file: File): boolean {
     const isInvalid = !this.fileService.isValidFileType(file);
@@ -92,6 +97,13 @@ export class Attachments {
     });
   }
 
+  scrollToRight() {
+    setTimeout(() => {
+      this.gallery.nativeElement.scrollLeft =
+        this.gallery.nativeElement.scrollWidth;
+    });
+  }
+
   deleteAllAttachments(): void {
     this.deleteAll.emit();
   }
@@ -102,5 +114,10 @@ export class Attachments {
     );
 
     this.attachmentsChange.emit(updatedAttachments);
+  }
+
+  openImageViewer(index: number): void {
+    this.viewerStartIndex = index;
+    this.showViewer = true;
   }
 }

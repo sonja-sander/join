@@ -5,10 +5,11 @@ import { Attachment, Task } from '../../../shared/interfaces/task';
 import { TaskService } from '../../../shared/services/task-service';
 import { FirebaseService } from '../../../shared/services/firebase-service';
 import { FileService } from '../../../shared/services/file-service';
+import { ImageViewer } from '../../../shared/components/image-viewer/image-viewer';
 
 @Component({
   selector: 'app-task-dialog',
-  imports: [NgClass, DatePipe],
+  imports: [NgClass, DatePipe, ImageViewer],
   templateUrl: './task-dialog.html',
   styleUrl: './task-dialog.scss',
 })
@@ -30,6 +31,9 @@ export class TaskDialog {
   @Output() deleteTask = new EventEmitter<string>();
   @Output() editTask = new EventEmitter<Task>();
   showDeleteConfirm: boolean = false;
+  showViewer = false;
+  viewerAttachments: Array<Attachment> = [];
+  viewerStartIndex = 0;
 
   /**
    * Opens the task dialog.
@@ -195,5 +199,11 @@ export class TaskDialog {
   toggleSubtask(index: number): void {
     this.task.subtasks[index].done = !this.task.subtasks[index].done;
     this.taskService.updateSubtasks(this.task);
+  }
+
+  openImageViewer(index: number): void {
+    this.viewerAttachments = this.task.attachments;
+    this.viewerStartIndex = index;
+    this.showViewer = true;
   }
 }
