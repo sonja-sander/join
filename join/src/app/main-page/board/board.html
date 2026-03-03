@@ -113,23 +113,13 @@
   </div>
 </section>
 
-@if(showCloseConfirm){
-  <div class="confirm-backdrop">
-    <div class="confirm-box" role="dialog" aria-modal="true">
-      <p>
-        <span class="delete-highlight">Close </span>
-        @if (taskToEdit?.title) {
-          "{{ taskToEdit?.title }}?"
-        } @else {
-          this task?
-        }
-        Your changes will be lost.
-      </p>
-
-      <div class="confirm-actions">
-        <button class="button button--primary delete-btn" type="button" (click)="confirmClose()">Close</button>
-        <button class="button button--secondary" type="button" (click)="cancelClose()">Cancel</button>
-      </div>
-    </div>
-  </div>
-}
+<app-confirm-dialog
+  [open]="showCloseConfirm"
+  [highlight]="'Close'"
+  [highlightObject]="taskToEdit?.title ?? 'this task'"
+  [message]="'Your changes will be lost.'"
+  [confirmText]="'Close'"
+  [cancelText]="'Cancel'"
+  (confirm)="confirmClose()"
+  (cancel)="cancelClose()"
+></app-confirm-dialog>

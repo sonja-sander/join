@@ -72,27 +72,29 @@
       </div>
     }
 
-    <div class="attachments">
-      <p class="subtitle">Attachments:</p>
-      <div class="gallery">
-        @for (attachment of task.attachments; track attachment.fileName) {
-          <figure class="attachment">
-            <div class="image-wrapper">
-              <img class="attachment-img" [src]="attachment.base64" [alt]="attachment.fileName" (click)="openImageViewer($index)">
-              <button
-                class="download-btn"
-                type="button"
-                (click)="this.fileService.downloadAttachment(attachment)"
-                aria-label="Download {{ attachment.fileName }}"
-              >
-                <img class="download-icon" src="assets/img/icons/add-task/download-white.svg" alt="" aria-hidden="true">
-              </button>
-            </div>
-            <figcaption>{{ attachment.fileName }}</figcaption>
-          </figure>
-        }
+    @if (task.attachments.length > 0) {
+      <div class="attachments">
+        <p class="subtitle">Attachments:</p>
+        <div class="gallery">
+          @for (attachment of task.attachments; track attachment.fileName) {
+            <figure class="attachment">
+              <div class="image-wrapper">
+                <img class="attachment-img" [src]="attachment.base64" [alt]="attachment.fileName" (click)="openImageViewer($index)">
+                <button
+                  class="download-btn"
+                  type="button"
+                  (click)="this.fileService.downloadAttachment(attachment)"
+                  aria-label="Download {{ attachment.fileName }}"
+                >
+                  <img class="download-icon" src="assets/img/icons/add-task/download-white.svg" alt="" aria-hidden="true">
+                </button>
+              </div>
+              <figcaption>{{ attachment.fileName }}</figcaption>
+            </figure>
+          }
+        </div>
       </div>
-    </div>
+    }
 
     @if (task.subtasks.length > 0) {
       <div class="subtasks">
@@ -124,18 +126,16 @@
       </button>
     </footer>
 
-    @if(showDeleteConfirm){
-      <div class="confirm-backdrop">
-        <div class="confirm-box" role="dialog" aria-modal="true">
-          <p><span class="delete-highlight">Delete </span>"{{ task.title }}"?</p>
-
-          <div class="confirm-actions">
-            <button class="button button--primary delete-btn" type="button" (click)="confirmDelete()">Delete</button>
-            <button class="button button--secondary" type="button" (click)="cancelDelete()">Cancel</button>
-          </div>
-        </div>
-      </div> 
-    }
+    <app-confirm-dialog
+      [open]="showDeleteConfirm"
+      [highlight]="'Delete'"
+      [highlightObject]="task.title ? task.title : 'this task'"
+      [confirmText]="'Delete'"
+      [cancelText]="'Cancel'"
+      (confirm)="confirmDelete()"
+      (cancel)="cancelDelete()"
+    >
+    </app-confirm-dialog>
 
     @if (showViewer) {
       <app-image-viewer

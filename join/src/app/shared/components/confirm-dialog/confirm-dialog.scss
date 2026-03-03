@@ -1,0 +1,51 @@
+@use "../../../../styles/index.scss" as styles;
+
+.confirm-backdrop {
+  @include styles.setFlex();
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  z-index: 5000;
+}
+
+.confirm-box {
+  min-width: 250px;
+  max-width: 60dvw;
+  padding: 32px;
+  border-radius: 20px;
+  background: white;
+  word-break: break-word;
+  
+  @include styles.up-xxl{
+    min-width: 380px;
+    max-width: 40dvw;
+  }
+  
+  .confirm-text{
+    font-weight: 500;
+    
+    .confirm-highlight{
+      color: styles.$red-error;
+    }
+  }
+
+  .confirm-actions{
+    @include styles.setFlex($gap: 24px);
+    margin-top: 24px;
+
+    .button{
+      @include styles.up-xxl{
+        padding-left: 24px;
+        padding-right: 24px;
+      }
+    }
+
+    .confirm-btn{
+      background-color: styles.$red-error;
+
+      &:hover{
+        background-color: styles.$blue-sky;
+      }
+    }
+  }
+}

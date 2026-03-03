@@ -240,16 +240,12 @@
         <a routerLink="/imprint">Legal notice</a>
       </footer>
 
-      <div class="toast-wrapper">
-        <p
-          class="toast"
-          [class.toast--visible]="toastVisible"
-          role="status"
-          aria-live="polite"
+      <app-toast
+        [message]="'You signed up successfully'"
+        [type]="'info'"
+        [visible]="signUpSuccess"
         >
-          You signed up successfully
-        </p>
-      </div> 
+      </app-toast>
     }
     
     @if (showMobileGreeting) {

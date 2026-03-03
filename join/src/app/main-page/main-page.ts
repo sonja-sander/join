@@ -6,10 +6,11 @@ import { LogInFormData, SignUpFormData } from '../shared/interfaces/login-form-d
 import { AuthService } from '../shared/services/auth-service';
 import { AsyncPipe } from '@angular/common';
 import { getGreeting } from '../shared/utilities/utils';
+import { Toast } from '../shared/components/toast/toast';
 
 @Component({
   selector: 'app-main-page',
-  imports: [RouterLink, FormsModule, AsyncPipe],
+  imports: [RouterLink, FormsModule, AsyncPipe, Toast],
   templateUrl: './main-page.html',
   styleUrl: './main-page.scss',
 })
@@ -33,7 +34,7 @@ export class MainPage implements OnInit {
   loginError: boolean = false;
   isSigningUp: boolean = false;
   signUpError: boolean = false;
-  toastVisible: boolean = false;
+  signUpSuccess: boolean = false;
   showMobileGreeting: boolean = false;
 
   introActive: boolean = true;
@@ -308,10 +309,10 @@ export class MainPage implements OnInit {
    * @returns void
    */
   showToast(): void {
-    this.toastVisible = true;
+    this.signUpSuccess = true;
 
     setTimeout(() => {
-      this.toastVisible = false;
+      this.signUpSuccess = false;
     }, 2500);
   }
 

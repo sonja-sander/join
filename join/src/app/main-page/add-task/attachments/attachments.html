@@ -12,19 +12,6 @@
     }
   </div>
 
-  <!-- @if(showDeleteConfirm){
-      <div class="confirm-backdrop">
-        <div class="confirm-box" role="dialog" aria-modal="true">
-          <p><span class="delete-highlight">Delete </span>"{{ task.title }}"?</p>
-
-          <div class="confirm-actions">
-            <button class="button button--primary delete-btn" type="button" (click)="confirmDelete()">Delete</button>
-            <button class="button button--secondary" type="button" (click)="cancelDelete()">Cancel</button>
-          </div>
-        </div>
-      </div> 
-    } -->
-
   <div class="drag-area" 
     [class.drag-area--active]="isDragging"
     onclick="filePicker.click()" 
@@ -45,12 +32,6 @@
     multiple
     hidden
   />
-  @if (imageTypeError) {
-    <div id="avatarError" class="error" role="alert"> 'Only PNG and JPEG are allowed.' </div>
-  }
-  @if (taskSizeError) {
-    <div id="avatarError" class="error" role="alert"> 'Images are too large in total. Max allowed is 1 MB.' </div>
-  }
     
   <div class="gallery" #gallery>
     @for (attachment of attachments; track attachment.fileName) {

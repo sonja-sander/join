@@ -1,13 +1,14 @@
-import { Component, ElementRef, EventEmitter, inject, Input, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostListener, inject, Input, Output, ViewChild } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { Contact } from '../../../shared/interfaces/contact';
 import { ContactFormData } from '../../../shared/interfaces/contact-form-data';
 import { getTwoInitials } from '../../../shared/utilities/utils';
 import { FileService } from '../../../shared/services/file-service';
+import { Toast } from '../../../shared/components/toast/toast';
 
 @Component({
   selector: 'app-contact-dialog',
-  imports: [FormsModule],
+  imports: [FormsModule, Toast],
   templateUrl: './contact-dialog.html',
   styleUrl: './contact-dialog.scss',
 })
@@ -20,14 +21,12 @@ import { FileService } from '../../../shared/services/file-service';
  */
 export class ContactDialog {
   fileService = inject(FileService);
-  @ViewChild('contactDialog') dialog!: ElementRef<HTMLDialogElement>;
+  isOpen: boolean = false;
   @ViewChild('contactForm') contactForm!: NgForm;
   @Input() canDelete = true;
   dialogMode: 'add' | 'edit' = 'add';
-  // avatarImg: string | null = null;
   readonly getTwoInitials = getTwoInitials;
   userColor: string | null = null;
-  showDeleteConfirm: boolean = false;
   imageTypeError: boolean = false;
   imageSizeError: boolean = false;
 
@@ -62,8 +61,6 @@ export class ContactDialog {
     };
 
     this.userColor = null;
-    // this.avatarImg = null;
-
     this.openDialog();
   }
 
@@ -87,7 +84,6 @@ export class ContactDialog {
     };
 
     this.userColor = contact.userColor ?? null;
-    // this.avatarImg = contact.avatar?.base64 ?? null;
     this.openDialog();
   }
 
@@ -99,9 +95,7 @@ export class ContactDialog {
    * @returns void
    */
   openDialog(): void {
-    const el = this.dialog.nativeElement;
-    el.showModal();
-    el.classList.add('opened');
+    this.isOpen = true;
   }
   // #endregion
 
@@ -162,9 +156,7 @@ export class ContactDialog {
    * @returns void
    */
   closeDialog(): void {
-    const el = this.dialog.nativeElement;
-    el.classList.remove('opened');
-    el.close();
+    this.isOpen = false;
 
     queueMicrotask(() => {
       this.contactForm.resetForm({
@@ -186,34 +178,24 @@ export class ContactDialog {
    * @returns void
    */
   onBackdropClick(event: MouseEvent): void {
-    if (event.target === this.dialog.nativeElement) {
-      this.closeDialog();
-    }
+    this.closeDialog();
   }
 
-  /**
-   * Handles the Escape key interaction.
-   *
-   * Prevents the default browser behavior
-   * and closes the dialog manually.
-   *
-   * @param event The triggered escape event
-   * @returns void
-   */
+  @HostListener('document:keydown.escape', ['$event'])
   onEsc(event: Event): void {
-    if ((event as KeyboardEvent).key === 'Escape') {
-      event.preventDefault();
-      this.closeDialog();
-    } else {
-      event.preventDefault();
-    }
+    if (!this.isOpen) return;
+
+    event.preventDefault();
+    this.closeDialog();
   }
+
+  confirmDelete(): void {
+    this.requestDelete.emit();
+  }
+
   // #endregion
   
   async onAvatarSelected(event: Event): Promise<void> {
-    this.imageTypeError = false;
-    this.imageSizeError = false;
-
     const file = this.extractFile(event);
     if (!file) return;
     if (this.hasInvalidFileType(file)) return;
@@ -232,14 +214,30 @@ export class ContactDialog {
 
   hasInvalidFileType(file: File): boolean {
     const isInvalid = !this.fileService.isValidFileType(file);
-    this.imageTypeError = isInvalid;
+    this.showTypeErrorToast();
     return isInvalid;
   }
 
   exceedsSizeLimit(size: number): boolean {
     const exceeds = !this.fileService.isWithinSizeLimit(size);
-    this.imageSizeError = exceeds;
+    this.showSizeErrorToast();
     return exceeds;
+  }
+
+  showTypeErrorToast(): void {
+    this.imageTypeError = true;
+
+    setTimeout(() => {
+      this.imageTypeError = false;
+    }, 2500);
+  }
+
+  showSizeErrorToast(): void {
+    this.imageSizeError = true;
+
+    setTimeout(() => {
+      this.imageSizeError = false;
+    }, 2500);
   }
 
   createAvatarObject(file: File, size: number, base64: string) {

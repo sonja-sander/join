@@ -5,10 +5,11 @@ import { FormsModule } from '@angular/forms';
 import { TaskDialog } from './task-dialog/task-dialog';
 import { Task } from '../../shared/interfaces/task';
 import { AddTask } from '../add-task/add-task';
+import { ConfirmDialog } from '../../shared/components/confirm-dialog/confirm-dialog';
 
 @Component({
   selector: 'app-board',
-  imports: [TaskList, FormsModule, TaskDialog, AddTask ],
+  imports: [TaskList, FormsModule, TaskDialog, AddTask, ConfirmDialog ],
   templateUrl: './board.html',
   styleUrl: './board.scss',
 })

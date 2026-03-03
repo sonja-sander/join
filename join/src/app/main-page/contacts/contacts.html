@@ -25,25 +25,20 @@
   (requestDelete)="requestDelete(activeContact!)"
 />
 
-<div class="toast-wrapper">
-  <p
-    class="toast"
-    [class.toast--visible]="toastVisible"
-    role="status"
-    aria-live="polite"
+<app-toast
+  [message]="'Contact successfully created'"
+  [type]="'info'"
+  [visible]="addContactSuccess"
   >
-    Contact successfully created 
-  </p>
-</div>
+</app-toast>
 
-<dialog #confirmDialog class="confirm-dialog">
-  <div class="dialog-content">
-      <div class="confirm-box" role="dialog" aria-modal="true">
-        <p><span class="delete-highlight">Delete </span>"{{ contactToDelete?.name }}"?</p>
-        <div class="confirm-actions">
-          <button class="button button--primary delete-btn" type="button" (click)="confirmDelete()">Delete</button>
-          <button class="button button--secondary" type="button" (click)="cancelDelete()">Cancel</button>
-        </div>
-      </div>
-  </div>
-</dialog>
+<app-confirm-dialog
+  [open]="showDeleteConfirm"
+  [highlight]="'Delete'"
+  [highlightObject]="contactToDelete?.name ?? 'this task'"
+  [confirmText]="'Delete'"
+  [cancelText]="'Cancel'"
+  (confirm)="confirmDelete()"
+  (cancel)="cancelDelete()"
+>
+</app-confirm-dialog>

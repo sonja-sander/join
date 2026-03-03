@@ -7,10 +7,12 @@ import { Contact } from '../../shared/interfaces/contact';
 import { ContactFormData } from '../../shared/interfaces/contact-form-data';
 import { capitalizeFullname, setUserColor } from '../../shared/utilities/utils';
 import { AuthService } from '../../shared/services/auth-service';
+import { Toast } from '../../shared/components/toast/toast';
+import { ConfirmDialog } from '../../shared/components/confirm-dialog/confirm-dialog';
 
 @Component({
   selector: 'app-contacts',
-  imports: [ContactList, ContactInfo, ContactDialog],
+  imports: [ContactList, ContactInfo, ContactDialog, Toast, ConfirmDialog],
   templateUrl: './contacts.html',
   styleUrl: './contacts.scss',
 })
@@ -31,7 +33,7 @@ export class Contacts implements DoCheck {
   isDetailOpen: boolean = false;
   activeContactID: string | null = null;
   activeContact: Contact | null = null;
-  toastVisible: boolean = false;
+  addContactSuccess: boolean = false;
   showDeleteConfirm: boolean = false;
   contactToDelete: Contact | null = null;
 
@@ -224,8 +226,7 @@ export class Contacts implements DoCheck {
     if (!this.canDeleteContact(contact)) return;
 
     this.contactToDelete = contact;
-    this.confirmDialog.nativeElement.showModal();
-    this.confirmDialog.nativeElement.classList.add('opened');
+    this.showDeleteConfirm = true;
   }
 
   /**
@@ -244,9 +245,8 @@ export class Contacts implements DoCheck {
     this.activeContactID = null;
     this.isDetailOpen = false;
     this.contactToDelete = null;
-
-    this.confirmDialog.nativeElement.close();
-    this.confirmDialog.nativeElement.classList.remove('opened');
+    this.showDeleteConfirm = false;
+    this.dialog.closeDialog();
   }
 
   /**
@@ -256,8 +256,7 @@ export class Contacts implements DoCheck {
    */
   cancelDelete(): void {
     this.contactToDelete = null;
-    this.confirmDialog.nativeElement.close();
-    this.confirmDialog.nativeElement.classList.remove('opened');
+    this.showDeleteConfirm = false;
   }
 
   /**
@@ -296,10 +295,10 @@ export class Contacts implements DoCheck {
    * @returns void
    */
   showToast(): void {
-    this.toastVisible = true;
+    this.addContactSuccess = true;
 
     setTimeout(() => {
-      this.toastVisible = false;
+      this.addContactSuccess = false;
     }, 2000);
   }
 }

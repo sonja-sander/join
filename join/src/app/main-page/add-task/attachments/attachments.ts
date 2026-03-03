@@ -16,8 +16,8 @@ export class Attachments {
   @Output() deleteAll = new EventEmitter<void>();
   @Output() attachmentsChange = new EventEmitter<Array<Attachment>>();
   isDragging = false;
-  imageTypeError: boolean = false;
-  taskSizeError: boolean = false;
+  @Output() imageTypeError = new EventEmitter<void>();
+  @Output() taskSizeError = new EventEmitter<void>(); 
   showViewer = false;
   viewerStartIndex = 0;
 
@@ -48,9 +48,6 @@ export class Attachments {
   }
 
   async handleFiles(files: FileList): Promise<void> {
-    this.imageTypeError = false;
-    this.taskSizeError = false;
-
     const allImages = Array.from(this.attachments);
 
     for (const file of Array.from(files)) {
@@ -68,10 +65,11 @@ export class Attachments {
     this.scrollToRight();
   }
 
-
   hasInvalidFileType(file: File): boolean {
     const isInvalid = !this.fileService.isValidFileType(file);
-    this.imageTypeError = isInvalid;
+    if (isInvalid) {
+      this.imageTypeError.emit();
+    }
     return isInvalid;
   }
 
@@ -84,11 +82,13 @@ export class Attachments {
 
   exceedsTaskSizeLimit(totalSize: number): boolean {
     const exceeds = !this.fileService.isWithinSizeLimit(totalSize);
-    this.taskSizeError = exceeds;
+    if (exceeds) {
+      this.taskSizeError.emit();
+    }
     return exceeds;
   }
 
-  addToAttachmentArray(arr: Array<Attachment>, file: File, size: number, base64: string) {
+  addToAttachmentArray(arr: Array<Attachment>, file: File, size: number, base64: string): void {
     arr.push({
       fileName: file.name,
       fileType: file.type,
@@ -97,7 +97,7 @@ export class Attachments {
     });
   }
 
-  scrollToRight() {
+  scrollToRight(): void {
     setTimeout(() => {
       this.gallery.nativeElement.scrollLeft =
         this.gallery.nativeElement.scrollWidth;

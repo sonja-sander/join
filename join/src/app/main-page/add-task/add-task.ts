@@ -22,6 +22,8 @@ import { Timestamp } from '@angular/fire/firestore';
 import { getTodayDateString } from '../../shared/utilities/utils';
 import { FirebaseService } from '../../shared/services/firebase-service';
 import { Attachments } from './attachments/attachments';
+import { Toast } from '../../shared/components/toast/toast';
+import { ConfirmDialog } from '../../shared/components/confirm-dialog/confirm-dialog';
 
 /**
  * Manages task creation and editing, including form state, validation and persistence.
@@ -36,6 +38,8 @@ import { Attachments } from './attachments/attachments';
     DropdownCategory,
     Attachments,
     SubtaskComposer,
+    Toast, 
+    ConfirmDialog
   ],
   templateUrl: './add-task.html',
   styleUrl: './add-task.scss',
@@ -49,7 +53,7 @@ export class AddTask implements OnChanges, OnDestroy {
 
   // #region Inputs & Outputs
   /** Determines whether the form is rendered inside an overlay dialog. */
-  @Input() isOverlay = false;
+  @Input() isOverlay: boolean = false;
   /** Existing task to edit. If `null`, the component creates a new task. */
   @Input() taskToEdit: Task | null = null;
   /** Target status for newly created tasks. */
@@ -64,27 +68,29 @@ export class AddTask implements OnChanges, OnDestroy {
   readonly taskTitleMinLength = 3;
   readonly taskTitleMaxLength = 100;
   readonly taskTitleMinLetters = 3;
-  showCloseConfirm: boolean = false;
   hasUserEdited: boolean = false;
   // #endregion
 
   // #region Form State
   taskTitle: Task['title'] = '';
   taskDescription: Task['description'] = '';
-  taskDueDate = '';
+  taskDueDate: string = '';
   activePriority: Task['priority'] = 'medium';
   activeAssignees: Contact[] = [];
   activeCategory: TaskCategoryOption | null = null;
   activeSubtasks: Subtask[] = [];
-  isTitleTouched = false;
-  isDueDateTouched = false;
-  isCategoryTouched = false;
+  isTitleTouched: boolean = false;
+  isDueDateTouched: boolean = false;
+  isCategoryTouched: boolean = false; 
   attachments: Array<Attachment> = [];
   // #endregion
 
   // #region UI State
-  toastVisible = false;
+  addTaskSuccess: boolean = false;
   private toastTimer?: number;
+  imageTypeError: boolean = false;
+  taskSizeError: boolean = false; 
+  showDeleteAllConfirm: boolean = false;
   // #endregion
 
   // #region Lifecycle
@@ -105,6 +111,14 @@ export class AddTask implements OnChanges, OnDestroy {
   /** Indicates whether the form currently edits an existing task. */
   get isEditMode(): boolean {
     return Boolean(this.taskToEdit?.id);
+  }
+
+  get toastMessage(): string {
+    if(this.isEditMode){
+      return 'Task updated';
+    } else {
+      return 'Task created';
+    }
   }
 
   /** Returns the dynamic headline based on create or edit mode. */
@@ -378,12 +392,28 @@ export class AddTask implements OnChanges, OnDestroy {
     return (letterMatches?.length ?? 0) >= minLetters;
   }
 
+  showTypeErrorToast(): void {
+    this.imageTypeError = true;
+
+    setTimeout(() => {
+      this.imageTypeError = false;
+    }, 2500);
+  }
+
+  showSizeErrorToast(): void {
+    this.taskSizeError = true;
+
+    setTimeout(() => {
+      this.taskSizeError = false;
+    }, 2500);
+  }
+
   /** Shows a short toast and then exits add-task flow. */
   private showToast(): void {
-    this.toastVisible = true;
+    this.addTaskSuccess = true;
     if (this.toastTimer) clearTimeout(this.toastTimer);
     this.toastTimer = setTimeout(() => {
-      this.toastVisible = false;
+      this.addTaskSuccess = false;
       if (this.isOverlay) {
         this.closeDialogRequested.emit();
         return;
@@ -404,20 +434,9 @@ export class AddTask implements OnChanges, OnDestroy {
     this.dirtyChange.emit(false);
   }
 
-  onCloseAddTaskClick(): void {
-    this.showCloseConfirm = true;
-  }
-
-  confirmClose() {
-    this.showCloseConfirm = false;
-  }
-
-  cancelClose(): void {
-    this.showCloseConfirm = false;
-  }
-
-  onDeleteAllAttachments(): void {
+  confirmDeleteAllAttachments(): void {
     this.attachments = [];
     this.markAsEdited();
+    this.showDeleteAllConfirm = false;
   }
 }
