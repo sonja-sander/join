@@ -15,10 +15,12 @@
   border-radius: 20px;
   background: white;
   word-break: break-word;
+  font-size: 18px;
   
   @include styles.up-xxl{
     min-width: 380px;
     max-width: 40dvw;
+    font-size: 20px;
   }
   
   .confirm-text{
@@ -44,8 +46,13 @@
       background-color: styles.$red-error;
 
       &:hover{
-        background-color: styles.$blue-sky;
+        background-color: styles.$gray-dark;
       }
+    }
+
+    .cancel-btn:hover{
+      border-color: styles.$gray-dark;
+      color: styles.$gray-dark;
     }
   }
 }
