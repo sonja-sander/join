@@ -1,4 +1,4 @@
-import { Component, HostListener, inject, ViewChild } from '@angular/core';
+import { Component, EventEmitter, HostListener, inject, Output, ViewChild } from '@angular/core';
 import { TaskList } from './task-list/task-list';
 import { TaskService } from '../../shared/services/task-service';
 import { FormsModule } from '@angular/forms';
@@ -28,9 +28,10 @@ export class Board {
   taskToEdit: Task | null = null;
   addTaskStatus: Task['status'] = 'to-do';
   @ViewChild('taskDialog') taskDialog!: TaskDialog;
-  selectedTask!: Task;
+  selectedTask: Task | null = null;
   showCloseConfirm: boolean = false;
   isAddTaskDirty: boolean = false;
+  viewerOpen: boolean = false;
 
   /**
    * Performs a search based on the current search term.
@@ -54,10 +55,6 @@ export class Board {
    */
   openTask(task: Task): void {
     this.selectedTask = task;
-
-    setTimeout(() => {
-      this.taskDialog.openDialog();
-    });
   }
 
   /**
@@ -183,9 +180,9 @@ export class Board {
    */
   @HostListener('document:keydown.escape')
   onEscape(): void {
-    if (!this.isAddTaskOverlayOpen) return;
+    if (this.viewerOpen) return;
     if (this.showCloseConfirm) return;
-
+    if (!this.isAddTaskOverlayOpen) return;
     if (!this.isAddTaskDirty) {
       this.closeAddTaskOverlay();
       return;

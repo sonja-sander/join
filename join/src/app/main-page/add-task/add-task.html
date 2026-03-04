@@ -62,6 +62,7 @@
         <app-attachments
           [attachments]="attachments"
           (attachmentsChange)="attachments = $event; markAsEdited()"
+          (viewerStateChange)="viewerStateChange.emit($event)"
           (imageTypeError)="showTypeErrorToast()"
           (taskSizeError)="showSizeErrorToast()"
           (deleteAll)="this.showDeleteAllConfirm = true;"

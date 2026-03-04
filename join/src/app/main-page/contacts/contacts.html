@@ -21,6 +21,7 @@
 </div>
 <app-contact-dialog
   [canDelete]="canDeleteContact(activeContact)"
+  [confirmOpen]="showDeleteConfirm"
   (saveContact)="onSave($event)"
   (requestDelete)="requestDelete(activeContact!)"
 />

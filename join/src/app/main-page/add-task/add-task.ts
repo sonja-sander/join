@@ -61,6 +61,7 @@ export class AddTask implements OnChanges, OnDestroy {
   /** Requests closing the overlay once submit feedback has finished. */
   @Output() closeDialogRequested = new EventEmitter<void>();
   @Output() dirtyChange = new EventEmitter<boolean>();
+  @Output() viewerStateChange = new EventEmitter<boolean>();
   // #endregion
 
   // #region Constants

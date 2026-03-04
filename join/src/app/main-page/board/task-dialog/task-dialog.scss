@@ -1,50 +1,35 @@
 @use '../../../../styles/index.scss' as styles;
 
-dialog {
-  margin: auto;
-  position: revert;
-  border: none;
+.task-dialog-overlay {
+  position: fixed;
+  inset: 0;
+  @include styles.setFlex();
+  background: rgba(0,0,0,0.3);
+  z-index: 5000;
+}
+
+.dialog-content {
+  @include styles.setFlex($d: column, $ai: stretch, $jc: flex-start, $gap: 8px);
+  width: 93dvw;
+  max-width: 390px;
+  max-height: 90dvh;
+  background-color: white;
   border-radius: 24px;
-  box-shadow: 0px 0px 4px 0px #0000001a;
-  z-index: 6;
+  padding: 25px 20px 8px;
+  word-break: break-word;
+  opacity: 1;
+  z-index: 5001;
 
-  &.opened {
-    border: none;
-    border-radius: 24px;
-    background: transparent;
-
-    &::backdrop {
-      background: #b3b3b3;
-      opacity: 0.7;
-    }
+  @include styles.down-xs{
+    width: 88dvw;
   }
 
-  .dialog-content {
-    @include styles.setFlex($d: column, $ai: stretch, $jc: flex-start, $gap: 8px);
-    width: 93dvw;
-    max-width: 390px;
-    max-height: 90dvh;
-    background-color: white;
-    border-radius: 24px;
-    padding: 25px 20px;
-    word-break: break-word;
-    overflow-y: auto;
-
-    &::-webkit-scrollbar {
-      width: 0px;
-    }
-
-    @include styles.down-xs{
-      width: 88dvw;
-    }
-
-    @include styles.up-xxl{
-      width: 505px;
-      max-width: 550px;
-      padding: 46px 36px 36px;
-      gap: 21px;
-      font-size: 20px;
-    }
+  @include styles.up-xxl{
+    width: 505px;
+    max-width: 550px;
+    padding: 40px 36px 8px;
+    gap: 21px;
+    font-size: 20px;
   }
 }
 
@@ -96,6 +81,15 @@ dialog {
         display: block;
       }
     }
+  }
+}
+
+.dialog-body{
+  @include styles.setFlex($d: column, $ai: stretch, $jc: flex-start, $gap: 8px);
+  overflow-y: auto;
+  
+  &::-webkit-scrollbar {
+    width: 0px;
   }
 }
 
@@ -153,11 +147,11 @@ dialog {
   .assignee-list{
     @include styles.setFlex($d: column, $ai: flex-start, $jc: flex-start, $gap: 6px);
     width: 100%;
-    max-height: 135px;
+    max-height: 100px;
     overflow-y: auto;
 
     @include styles.up-xxl{
-      max-height: 150px;
+      max-height: 120px;
     }
 
     &::-webkit-scrollbar {
@@ -207,12 +201,12 @@ dialog {
 }
 
 .attachments{
-
   .gallery{
     @include styles.setFlex($jc: flex-start, $gap: 8px);
     max-width: 100%;
     max-height: 120px;
-    margin: 2px 0 8px 0;
+    margin: 8px 0 8px 0;
+    padding-bottom: 8px;
     overflow-x: auto;
 
     &::-webkit-scrollbar {
@@ -238,14 +232,14 @@ dialog {
       .attachment-img{
         filter: grayscale(0.8) brightness(0.5);
       }
+
+      .image-wrapper .download-btn{
+        opacity: 1;
+      }
     }
 
     .image-wrapper{
       width: 100%;
-
-      &:hover .download-btn{
-        opacity: 1;
-      }
       
       .attachment-img{
         width: 100%;

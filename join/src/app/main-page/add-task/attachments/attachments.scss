@@ -73,9 +73,10 @@ section{
 
 .gallery{
   @include styles.setFlex($jc: flex-start, $gap: 8px);
-  max-width: 100%;
+  width: 100%;
   max-height: 120px;
-  margin: 2px 0 8px 0;
+  margin: 8px 0 8px 0;
+  padding-bottom: 8px;
   overflow-x: auto;
 
   &::-webkit-scrollbar {
@@ -102,16 +103,16 @@ section{
       .attachment-img{
         filter: grayscale(0.8) brightness(0.5);
       }
+      
+      .image-wrapper .delete-btn{
+        opacity: 1;
+      }
     }
   }
 
   .image-wrapper{
     position: relative;
     width: 100%;
-
-    &:hover .delete-btn{
-      opacity: 1;
-    }
     
     .attachment-img{
       width: 100%;

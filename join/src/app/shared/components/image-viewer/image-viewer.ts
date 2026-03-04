@@ -11,19 +11,22 @@ import { FileService } from '../../services/file-service';
 export class ImageViewer implements OnInit {
   fileService = inject(FileService);
   @Input() attachments: Array<Attachment> = [];
-  @Input() startIndex = 0;
+  @Input() startIndex: number = 0;
+  @Output() viewerStateChange = new EventEmitter<boolean>();
   @Output() close = new EventEmitter<void>();
-  currentIndex = 0;
-  scale = 1;
-  minScale = 0.25;
-  maxScale = 3;
-  zoomStep = 0.25;
+  currentIndex: number = 0;
+  scale: number = 1;
+  minScale: number = 0.25;
+  maxScale: number = 3;
+  zoomStep: number = 0.25;
 
   ngOnInit(): void {
     this.currentIndex = this.startIndex;
+    this.viewerStateChange.emit(true);
   }
 
-  closeViewer() {
+  closeImageViewer() {
+    this.viewerStateChange.emit(false);
     this.close.emit();
   }
 
@@ -31,14 +34,15 @@ export class ImageViewer implements OnInit {
     const target = event.target as HTMLElement;
 
     if (target.classList.contains('viewer-overlay')) {
-      this.closeViewer();
+      this.closeImageViewer();
     }
   }
 
   @HostListener('document:keydown.escape', ['$event'])
   onEsc(event: Event): void {
+    event.stopPropagation();
     event.preventDefault();
-    this.closeViewer();
+    this.closeImageViewer();
   }
 
   get currentAttachment(): Attachment {

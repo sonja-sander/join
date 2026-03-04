@@ -70,12 +70,15 @@
       ></app-task-list>
     </div>
 
-    <app-task-dialog
-      #taskDialog
-      [task]="selectedTask"
-      (deleteTask)="deleteTask($event)"
-      (editTask)="openEditTaskOverlay($event)"
-    ></app-task-dialog>
+    @if (selectedTask) {
+      <app-task-dialog
+        #taskDialog
+        [task]="selectedTask"
+        (close)="selectedTask = null"
+        (deleteTask)="deleteTask($event)"
+        (editTask)="openEditTaskOverlay($event)"
+      ></app-task-dialog>
+    }
 
     @if (isAddTaskOverlayOpen) {
       <div
@@ -105,6 +108,7 @@
             [taskToEdit]="taskToEdit"
             [initialStatus]="addTaskStatus"
             (closeDialogRequested)="closeAddTaskOverlay()"
+            (viewerStateChange)="viewerOpen = $event"
             (dirtyChange)="onAddTaskDirtyChange($event)"
           ></app-add-task>
         </div>

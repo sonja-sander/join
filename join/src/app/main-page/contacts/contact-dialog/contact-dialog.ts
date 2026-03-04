@@ -24,6 +24,7 @@ export class ContactDialog {
   isOpen: boolean = false;
   @ViewChild('contactForm') contactForm!: NgForm;
   @Input() canDelete = true;
+  @Input() confirmOpen: boolean = false;
   dialogMode: 'add' | 'edit' = 'add';
   readonly getTwoInitials = getTwoInitials;
   userColor: string | null = null;
@@ -184,6 +185,7 @@ export class ContactDialog {
   @HostListener('document:keydown.escape', ['$event'])
   onEsc(event: Event): void {
     if (!this.isOpen) return;
+    if (this.confirmOpen) return;
 
     event.preventDefault();
     this.closeDialog();

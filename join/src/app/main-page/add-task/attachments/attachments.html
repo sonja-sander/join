@@ -35,13 +35,13 @@
     
   <div class="gallery" #gallery>
     @for (attachment of attachments; track attachment.fileName) {
-      <figure class="attachment">
+      <figure class="attachment" (click)="openImageViewer($index)">
         <div class="image-wrapper">
-          <img class="attachment-img" [src]="attachment.base64" [alt]="attachment.fileName" (click)="openImageViewer($index)">
+          <img class="attachment-img" [src]="attachment.base64" [alt]="attachment.fileName">
           <button
             class="delete-btn"
             type="button"
-            (click)="deleteSingleAttachment(attachment)"
+            (click)="deleteSingleAttachment($event, attachment)"
             aria-label="Delete {{ attachment.fileName }}"
           >
             <img class="delete-icon" src="assets/img/icons/add-task/delete-white.svg" alt="" aria-hidden="true">
@@ -58,7 +58,8 @@
   <app-image-viewer
     [attachments]="attachments"
     [startIndex]="viewerStartIndex"
-    (close)="showViewer = false"
+    (close)="closeImageViewer()"
+    (viewerStateChange)="viewerStateChange.emit($event)"
   >
   </app-image-viewer>
 }

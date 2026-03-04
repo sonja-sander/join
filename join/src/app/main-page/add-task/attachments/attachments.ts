@@ -15,6 +15,7 @@ export class Attachments {
   @Input() attachments!: Attachment[];
   @Output() deleteAll = new EventEmitter<void>();
   @Output() attachmentsChange = new EventEmitter<Array<Attachment>>();
+  @Output() viewerStateChange = new EventEmitter<boolean>();
   isDragging = false;
   @Output() imageTypeError = new EventEmitter<void>();
   @Output() taskSizeError = new EventEmitter<void>(); 
@@ -108,7 +109,9 @@ export class Attachments {
     this.deleteAll.emit();
   }
 
-  deleteSingleAttachment(attachmentToDelete: Attachment): void {
+  deleteSingleAttachment(event: MouseEvent, attachmentToDelete: Attachment): void {
+    event.stopPropagation();
+    
     const updatedAttachments = this.attachments.filter(
       attachment => attachment !== attachmentToDelete
     );
@@ -119,5 +122,9 @@ export class Attachments {
   openImageViewer(index: number): void {
     this.viewerStartIndex = index;
     this.showViewer = true;
+  }
+
+  closeImageViewer() {
+    this.showViewer = false;
   }
 }

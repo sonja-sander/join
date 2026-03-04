@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, inject, Input, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, HostListener, inject, Input, Output } from '@angular/core';
 import { getTwoInitials } from '../../../shared/utilities/utils';
 import { DatePipe, NgClass } from '@angular/common';
 import { Attachment, Task } from '../../../shared/interfaces/task';
@@ -22,7 +22,6 @@ import { ConfirmDialog } from '../../../shared/components/confirm-dialog/confirm
  * and dialog interactions.
  */
 export class TaskDialog {
-  @ViewChild('taskDialog') dialog!: ElementRef<HTMLDialogElement>;
   taskService = inject(TaskService);
   contactService = inject(FirebaseService);
   fileService = inject(FileService);
@@ -31,24 +30,11 @@ export class TaskDialog {
   @Input() task!: Task;
   @Output() deleteTask = new EventEmitter<string>();
   @Output() editTask = new EventEmitter<Task>();
+  @Output() close = new EventEmitter<void>();
   showDeleteConfirm: boolean = false;
   showViewer = false;
   viewerAttachments: Array<Attachment> = [];
-  viewerStartIndex = 0;
-
-  /**
-   * Opens the task dialog.
-   *
-   * Displays the dialog as a modal window
-   * and applies the active dialog styling.
-   *
-   * @returns void
-   */
-  openDialog(): void {
-    const el = this.dialog.nativeElement;
-    el.showModal();
-    el.classList.add('opened');
-  }
+  viewerStartIndex: number = 0;
 
   /**
    * Initiates the delete confirmation state.
@@ -104,9 +90,7 @@ export class TaskDialog {
    * @returns void
    */
   closeDialog(): void {
-    const el = this.dialog.nativeElement;
-    el.classList.remove('opened');
-    el.close();
+    this.close.emit();
   }
 
   /**
@@ -119,21 +103,19 @@ export class TaskDialog {
    * @returns void
    */
   onBackdropClick(event: MouseEvent): void {
-    if (event.target === this.dialog.nativeElement) {
+    const target = event.target as HTMLElement;
+
+    if (target.classList.contains('task-dialog-overlay')) {
       this.closeDialog();
     }
   }
 
-  /**
-   * Handles the Escape key interaction.
-   *
-   * Prevents the default browser behavior
-   * and closes the dialog manually.
-   *
-   * @param event The triggered escape event
-   * @returns void
-   */
+  @HostListener('document:keydown.escape', ['$event'])
   onEsc(event: Event): void {
+    if (this.showViewer) return;
+    if (this.showDeleteConfirm) return;
+
+    event.stopPropagation();
     event.preventDefault();
     this.closeDialog();
   }
@@ -206,5 +188,10 @@ export class TaskDialog {
     this.viewerAttachments = this.task.attachments;
     this.viewerStartIndex = index;
     this.showViewer = true;
+  }
+
+  downloadAttachment(event: MouseEvent, attachment: Attachment) {
+    event.stopPropagation();
+    this.fileService.downloadAttachment(attachment);
   }
 }
