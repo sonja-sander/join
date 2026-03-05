@@ -1,0 +1,275 @@
+@use "../../../styles/index.scss" as styles;
+
+section{
+  @include styles.setFlex($ai: flex-start);
+  min-height: calc(100dvh - styles.$header-height);
+
+  .content-wrapper{
+    width: 93%;
+    padding: 2rem 0 1rem;
+
+    @include styles.up-xxl{
+      width: 90%;
+      padding: 4rem 0 0;
+    }
+  }
+}
+
+.header{
+  @include styles.setFlex($d: column, $ai: flex-start, $gap: 5px);
+  margin-bottom: 20px;
+  
+  @include styles.up-xxl{
+    @include styles.setFlex($jc: flex-start, $gap: 30px);
+    margin-bottom: 40px;
+  }
+
+  h1{
+    font-size: 32px;
+  
+    @include styles.up-xxl{
+      font-size: 50px;
+    }
+  }
+
+  p{
+    font-size: 20px;
+
+    @include styles.up-xxl{
+      font-size: 24px;
+    }
+  }
+
+  .mobile-divider{
+    width: 80px;
+    height: 3px;
+    background-color: styles.$blue-sky;
+  }
+
+  .desktop-divider{
+    width: 3px;
+    height: 50px;
+    background-color: styles.$blue-sky;
+  }
+}
+
+.content{
+  @media(min-width: 550px){
+    @include styles.setFlex($jc: center, $gap: 24px);
+  }
+
+  @include styles.up-xxl{
+    @include styles.setFlex($jc: flex-start, $gap: 24px);
+  }
+
+  @media (min-width: 1200px) {
+    gap: 36px;
+  }
+}
+
+.boxes{
+  @include styles.setGrid($rows: 1fr 1fr 1fr, $row-gap: 16px);
+  width: 100%;
+  max-width: 500px;
+  height: 340px;
+    
+  @include styles.up-xxl{
+    row-gap: 24px;
+    width: 90%;
+    max-width: 500px;
+    height: 537px;
+  }
+
+  @media (min-width: 1200px) {
+    width: 100%;
+    max-width: 550px;
+  }
+}
+
+.box{
+  @include styles.setFlex($gap: 8px);
+  width: 100%;
+  height: 100%;
+  border-radius: 20px;
+  padding: 8px;
+  background-color: white;
+  box-shadow: 0px 0px 4px 0px #0000001A;
+  color: black;
+
+  transition: 
+    transform 0.15s ease,
+    background-color 0.15s ease,
+    color 0.15s ease;
+
+  @include styles.up-xxl{
+    gap: 24px;
+    padding: 26px 30px;
+  }
+
+  &:hover{
+    transform: scale(1.05);
+    background-color: styles.$gray-dark;
+    color: white;
+  }
+}
+
+.loading-spinner {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  margin-top: 12px;
+  border-top: 3px solid black;
+  border-right: 3px solid transparent;
+  border-radius: 50%;
+  animation-name: rotation;
+  animation-duration: 1s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+
+  @include styles.up-xxl{
+    width: 36px;
+    height: 36px;
+    margin-top: 16px;
+  }
+}
+
+.amount{
+  @include styles.setFlex($d: column, $jc: space-between);
+  min-height: 65px;
+
+  @include styles.up-xxl{
+    min-height: 87.5px;
+  }
+}
+
+.number{
+  font-size: 38px;
+  font-weight: 600;
+
+  @include styles.up-xxl{
+    font-size: 56px;
+  }
+}
+
+.status-amount{
+  grid-row: 1/2;
+  @include styles.setFlex($gap: 20px);
+
+  .icon{
+    width: 32px;
+    height: 32px;
+
+    @include styles.up-xxl{
+      width: 60px;
+      height: 60px;
+    }
+  }
+
+  .icon--hover{
+    display: none;
+  }
+
+  a:hover{
+    .icon--default{
+      display: none;
+    }
+
+    .icon--hover{
+      display: block;
+    }
+  }
+}
+
+.high-priority-amount{
+  grid-row: 2/3;
+  @include styles.setGrid($rows: auto, $columns: 35% 3% 1fr);
+  padding: 12px 0;
+
+  @include styles.up-xxl{
+    @include styles.setGrid($rows: auto, $columns: 46% 3% 1fr);
+    padding: 36px 8px;
+    gap: 0;
+  }
+
+  .urgent{
+    @include styles.setFlex($gap: 4px);
+    width: auto;
+    grid-area: 1/1/2/2;
+
+    @include styles.up-xxl{
+      gap: 20px;
+    }
+
+    .urgent-logo-circle{
+      @include styles.setFlex();
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background-color: styles.$red-accent;
+
+      @include styles.up-xxl{
+        width: 60px;
+        height: 60px;
+      }
+
+      img{
+        @include styles.up-xxl{
+          width: 58px;
+          height: auto;
+        }
+      }
+    }
+  }
+
+  .divider{
+    width: 2px;
+    height: 80%;
+    background-color: styles.$gray-light;
+    grid-area: 1/2/2/3;
+
+    @include styles.up-xxl{
+      height: 100%;
+    }
+  }
+
+  .priority-info{
+    grid-area: 1/3/2/4;
+
+    @include styles.up-xxl{
+      padding-left: 8px;
+    }
+
+    @media(min-width: 1200px){
+      padding-left: 16px;
+    }
+
+    .deadline{
+      font-weight: bold;
+      margin-bottom: 2px;
+
+      @include styles.up-xxl{
+        font-size: 21px;
+        margin-bottom: 8px;
+      }
+    }
+  }
+}
+
+.tasks-amount{
+  grid-row: 3/4;
+  @include styles.setFlex($gap: 20px);
+  
+  .box-amount{
+    @include styles.setFlex($d: column, $jc: space-between);
+    min-height: 102px;
+
+    @include styles.up-xxl{
+      padding: 28px 31px;
+    }
+
+    p{
+      text-align: center;
+      white-space: nowrap;
+    }
+  }
+}

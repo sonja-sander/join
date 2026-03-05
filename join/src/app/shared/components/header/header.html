@@ -1,0 +1,46 @@
+<header>
+  <div class="content-wrapper">
+    <div class="content-left">
+      <img class="mobile-logo mobile-only" src="assets/img/icons/logo-dark.svg" alt="Join" />
+      <p class="desktop-title desktop-only">Kanban Project Management Tool</p>
+    </div>
+    <div class="content-right">
+      @if (user$ | async; as user) {
+        <a
+          routerLink="/help"
+          class="desktop-help-link desktop-only"
+          title="Help"
+          aria-label="Open help page"
+        >
+          <img src="assets/img/icons/buttons/help.svg" alt="" aria-hidden="true" />
+        </a>
+        <button
+          class="user-menu-button"
+          [class.is-open]="menuOpen"
+          (click)="toggleMenu()"
+          aria-label="Open user menu"
+          aria-controls="user-menu"
+        >
+          @if (user$ | async; as user) {
+            @if (user.isAnonymous) {
+              <span aria-hidden="true">G</span>
+            } @else {
+              <span aria-hidden="true">
+                {{ getLoggedInUserInitials(user.displayName) }}
+              </span>
+            }
+          }
+        </button>
+        @if (menuOpen) {
+          <div class="menu-overlay" (click)="closeMenu()"></div>
+        }
+        <div id="user-menu" class="user-menu" [class.is-open]="menuOpen" role="menu">
+          <a routerLink="/help" class="mobile-only" (click)="closeMenu()" role="menuitem">Help</a>
+          <a routerLink="/imprint" (click)="closeMenu()" role="menuitem">Legal Notice</a>
+          <a routerLink="/privacy" (click)="closeMenu()" role="menuitem">Privacy Policy</a>
+          <button (click)="logout()" role="menuitem">Log out</button>
+        </div>
+      }
+    </div>
+  </div>
+</header>

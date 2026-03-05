@@ -1,0 +1,173 @@
+<section>
+  <div class="content-wrapper">
+    <div class="header">
+      <h1>Join 360</h1>
+      <div class="desktop-divider desktop-only" aria-hidden="true"></div>
+      <p>Key Metrics at a Glance</p>
+      <div class="mobile-divider mobile-only" aria-hidden="true"></div>
+    </div>
+
+    <div class="content">
+      <div class="boxes">
+        <div class="status-amount">
+          <a
+            routerLink="/board"
+            class="box"
+            aria-label="{{ taskService.getTaskCountByStatus('to-do') }} tasks in To-do. Open board."
+          >
+            <img
+              class="icon icon--default"
+              src="assets/img/icons/summary/to-do.svg"
+              alt=""
+              aria-hidden="true"
+            />
+            <img
+              class="icon icon--hover"
+              src="assets/img/icons/summary/to-do-hover.svg"
+              alt=""
+              aria-hidden="true"
+            />
+            <div class="amount">
+              @if (taskService.loading) {
+                <span class="loading-spinner"></span>
+              } @else {
+                <p class="number">{{ taskService.getTaskCountByStatus('to-do') }}</p>
+              }
+              <p>To-do</p>
+            </div>
+          </a>
+
+          <a
+            routerLink="/board"
+            class="box"
+            aria-label="{{ taskService.getTaskCountByStatus('done') }} tasks done. Open board."
+          >
+            <img
+              class="icon icon--default"
+              src="assets/img/icons/summary/done.svg"
+              alt=""
+              aria-hidden="true"
+            />
+            <img
+              class="icon icon--hover"
+              src="assets/img/icons/summary/done-hover.svg"
+              alt=""
+              aria-hidden="true"
+            />
+            <div class="amount">
+              @if (taskService.loading) {
+                <span class="loading-spinner"></span>
+              } @else {
+                <p class="number">{{ taskService.getTaskCountByStatus('done') }}</p>
+              }
+              <p>Done</p>
+            </div>
+          </a>
+        </div>
+
+        <a
+          routerLink="/board"
+          class="box high-priority-amount"
+          aria-label="{{ taskService.getUrgentTaskCount() }} urgent tasks and next Deadline on {{
+            taskService.getNextDeadline() | date: 'longDate'
+          }}. Open board."
+        >
+          <div class="urgent">
+            <div class="urgent-logo-circle">
+              <img
+                src="assets/img/icons/priority/priority-high-white.svg"
+                alt=""
+                aria-hidden="true"
+              />
+            </div>
+            <div class="amount">
+              @if (taskService.loading) {
+                <span class="loading-spinner"></span>
+              } @else {
+                <p class="number">{{ taskService.getUrgentTaskCount() }}</p>
+              }
+              <p>Urgent</p>
+            </div>
+          </div>
+          <div class="divider" aria-hidden="true"></div>
+          <div class="priority-info">
+            @if (taskService.loading) {
+              <span class="loading-spinner"></span>
+            } @else if (taskService.tasks.length === 0) {
+              <p>No upcoming deadline</p>
+            } @else {
+              <p class="deadline">{{ taskService.getNextDeadline() | date: 'longDate' }}</p>
+              <p>Upcoming deadline</p>
+            }
+          </div>
+        </a>
+
+        <div class="tasks-amount">
+          <a
+            routerLink="/board"
+            class="box box-amount"
+            aria-label="{{ taskService.tasks.length }} tasks in board. Open board."
+          >
+            @if (taskService.loading) {
+              <span class="loading-spinner"></span>
+            } @else {
+              <p class="number">{{ taskService.tasks.length }}</p>
+            }
+            <p>
+              Tasks in <br />
+              Board
+            </p>
+          </a>
+
+          <a
+            routerLink="/board"
+            class="box box-amount"
+            aria-label="{{
+              taskService.getTaskCountByStatus('in-progress')
+            }} tasks in progress. Open board."
+          >
+            @if (taskService.loading) {
+              <span class="loading-spinner"></span>
+            } @else {
+              <p class="number">{{ taskService.getTaskCountByStatus('in-progress') }}</p>
+            }
+            <p>
+              Tasks in <br />
+              Progress
+            </p>
+          </a>
+
+          <a
+            routerLink="/board"
+            class="box box-amount"
+            aria-label="{{
+              taskService.getTaskCountByStatus('await-feedback')
+            }} tasks awaiting feedback. Open board."
+          >
+            @if (taskService.loading) {
+              <span class="loading-spinner"></span>
+            } @else {
+              <p class="number">{{ taskService.getTaskCountByStatus('await-feedback') }}</p>
+            }
+            <p>
+              Awaiting <br />
+              Feedback
+            </p>
+          </a>
+        </div>
+      </div>
+
+      <div class="good-day-message">
+        @if (user$ | async; as user) {
+          @if (user.isAnonymous) {
+            <p class="desktop-only">{{ greeting }}!</p>
+          } @else {
+            <p class="desktop-only">{{ greeting }},</p>
+            <!-- <p class="user-name desktop-only">{{ getGreetingName(user.email, user.displayName) }}</p> -->
+            <p class="user-name desktop-only">{{ getGreetingName(user.email) }}</p>
+          }
+        }
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,132 @@
+<section class="add-task">
+  <header class="add-task__header">
+    <h1>{{ formTitle }}</h1>
+  </header>
+
+  <form class="add-task__form" autocomplete="on" (ngSubmit)="createTask()" (focusin)="markAsEdited()">
+    <div class="add-task__content">
+      <div class="add-task__column">
+        <app-task-form-field
+          label="Title"
+          [isRequired]="true"
+          placeholder="Enter a title"
+          (fieldBlur)="isTitleTouched = true"
+          [hasError]="showTitleError"
+          [(value)]="taskTitle"
+        ></app-task-form-field>
+        <span class="add-task__field-error" [class.is-visible]="showTitleError">
+          {{ titleErrorMessage }}
+        </span>
+
+        <app-task-form-field
+          label="Description"
+          [isTextarea]="true"
+          [isRequired]="false"
+          placeholder="Enter a Description"
+          [(value)]="taskDescription"
+        ></app-task-form-field>
+
+        <app-task-form-field
+          class="add-task__padding-top"
+          label="Due date"
+          [isRequired]="true"
+          placeholder="yyyy/mm/dd"
+          type="text"
+          [useFlatpickr]="true"
+          [min]="minDueDate"
+          (fieldBlur)="isDueDateTouched = true"
+          [hasError]="showDueDateError"
+          [(value)]="taskDueDate"
+          iconSrc="assets/img/icons/board/date.svg"
+        ></app-task-form-field>
+        <span class="add-task__field-error" [class.is-visible]="showDueDateError">
+          This field is required
+        </span>
+      </div>
+
+      <div class="add-task__column add-task__column--divider">
+        <app-priority-selector [(selectedPriority)]="activePriority"></app-priority-selector>
+        <app-dropdown-assignee
+          class="add-task__padding-top"
+          [(selectedContacts)]="activeAssignees"
+        ></app-dropdown-assignee>
+        <app-dropdown-category
+          class="add-task__padding-top"
+          [(selectedCategory)]="activeCategory"
+          (fieldBlur)="isCategoryTouched = true"
+          [hasError]="showCategoryError"
+        ></app-dropdown-category>
+        <span class="add-task__field-error" [class.is-visible]="showCategoryError">
+          This field is required
+        </span>
+        <app-subtask-composer [(subtasks)]="activeSubtasks"></app-subtask-composer>
+        @if (showSubtaskHint) {
+          <span class="add-task__subtask-hint"> Either add no subtasks or at least two.</span>
+        }
+      </div>
+    </div>
+
+    <div class="add-task__footer">
+      <span class="add-task__required-note"
+        ><span class="required">*</span> This field is required</span
+      >
+      <div class="add-task__actions">
+        @if (!isEditMode) {
+          <button type="button" class="button button--secondary button--icon" (click)="resetForm()">
+            Clear
+            <img
+              class="button__icon"
+              src="assets/img/icons/add-task/close.svg"
+              alt="close.svg icon"
+            />
+          </button>
+        }
+        <button
+          type="submit"
+          class="button button--primary button--icon"
+          [class.add-task__submit-button--disabled]="!isFormValid"
+          [attr.aria-disabled]="!isFormValid ? 'true' : null"
+        >
+          {{ submitButtonLabel }}
+          <img class="button__icon" src="assets/img/icons/buttons/save.svg" alt="save.svg icon" />
+        </button>
+      </div>
+    </div>
+  </form>
+</section>
+
+<div class="toast-wrapper">
+  <p
+    class="toast"
+    [class.toast--visible]="toastVisible"
+    role="status"
+    aria-live="polite"
+  >
+    @if(this.isEditMode){
+      Task updated
+    } @else {
+      Task created
+    }
+  </p>
+</div>
+
+@if(showCloseConfirm){
+  <div class="confirm-backdrop">
+    <div class="confirm-box" role="dialog" aria-modal="true">
+      <p>
+        <span class="delete-highlight">Close </span>
+        @if (taskToEdit?.title) {
+          "{{ taskToEdit?.title }}?"
+        } @else {
+          this task?
+        }
+        Your changes will be lost.
+      </p>
+
+      <div class="confirm-actions">
+        <button class="button button--primary delete-btn" type="button" (click)="confirmClose()">Close</button>
+        <button class="button button--secondary" type="button" (click)="cancelClose()">Cancel</button>
+      </div>
+    </div>
+  </div>
+}

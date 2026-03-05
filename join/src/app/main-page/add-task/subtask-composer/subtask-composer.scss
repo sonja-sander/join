@@ -1,0 +1,147 @@
+@use '../../../../styles/index.scss' as styles;
+
+.form-field {
+  @include styles.setFlex($d: column, $ai: flex-start, $jc: flex-start, $gap: 0.5rem);
+  width: 100%;
+}
+
+.form-field__label {
+  @include styles.setFont($size: 1.05em, $weight: 500, $color: styles.$gray-dark);
+}
+
+.form-field__control {
+  @include styles.setFlex($jc: space-between, $gap: 0.625rem);
+  width: 100%;
+  min-height: 3rem;
+  padding: clamp(0.5rem, 1vw, 0.75rem) clamp(0.75rem, 1.6vw, 0.875rem);
+  border: 0.0625rem solid styles.$gray-light;
+  border-radius: 1rem;
+  background-color: styles.$white;
+  box-shadow: 0 0.0625rem 0.125rem 0 #0000001a;
+
+  &:focus-within {
+    border-color: styles.$blue-sky;
+  }
+}
+
+.form-field__control--error {
+  border-color: styles.$red-error;
+}
+
+.form-field__input {
+  @include styles.setFont($size: 1em, $color: styles.$gray-dark);
+  border: none;
+  outline: none;
+  flex: 1;
+  min-width: 0;
+  background: transparent;
+  padding: clamp(0.5rem, 1.2vw, 0.625rem) clamp(0rem, 0vw, 0rem);
+
+  &::placeholder {
+    color: styles.$gray-light;
+  }
+}
+
+.form-field__input--dark-placeholder {
+  &::placeholder {
+    color: styles.$black;
+    opacity: 1;
+  }
+}
+
+.icon-button {
+  @include styles.setFlex();
+  border: none;
+  background-color: transparent;
+  padding: clamp(0.25rem, 0.6vw, 0.375rem);
+  cursor: pointer;
+
+  img {
+    width: 2.5rem;
+  }
+}
+
+.icon-button--small {
+  padding: 0.2rem;
+
+  img {
+    width: 1.6rem;
+  }
+}
+
+.subtask-actions {
+  @include styles.setFlex($gap: 0.5rem);
+  flex: 0 0 auto;
+}
+
+.subtask-actions__divider {
+  width: 0.0625rem;
+  height: 1.5rem;
+  background-color: styles.$gray-light;
+}
+
+.subtask-pattern-error {
+  @include styles.setFont($size: 1em, $weight: 400, $color: styles.$red-error);
+}
+
+.subtask-list {
+  // border: 1px solid red;
+  @include styles.setFlex($d: column, $ai: stretch, $jc: flex-start, $gap: 0.5rem);
+  width: 100%;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  max-height: clamp(6rem, 22vh, 12rem);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding-right: 0.25rem;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(styles.$gray-dark, 0.45) transparent;
+
+  &::-webkit-scrollbar {
+    width: 0.4rem;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: rgba(styles.$gray-dark, 0.45);
+    border-radius: 999px;
+  }
+}
+
+.subtask-list__item {
+  @include styles.setFlex($d: row, $ai: center, $jc: space-between, $gap: 0.5rem);
+  width: 100%;
+  // background-color: styles.$white-light;
+  border-radius: 1rem;
+  padding: clamp(0.45rem, 1vw, 0.65rem) clamp(0.75rem, 1.6vw, 1rem);
+
+  &:hover {
+    background-color: styles.$white-light;
+  }
+}
+
+.subtask-list__bullet {
+  @include styles.setFont($size: 1.1em, $weight: 700, $color: styles.$black);
+  flex: 0 0 auto;
+}
+
+.subtask-list__title {
+  // border: 1px solid red;
+  @include styles.setFont($size: 1em, $weight: 300, $color: styles.$black);
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.subtask-list__actions {
+  @include styles.setFlex($d: row, $ai: center, $jc: center, $gap: 0.4rem);
+  flex: 0 0 auto;
+}
+
+.subtask-list__divider {
+  width: 0.0625rem;
+  height: 1.5rem;
+  background-color: styles.$gray-light;
+}

@@ -1,0 +1,49 @@
+<div
+  class="contacts"
+  [class.contacts--detail-open]="isMobile && isDetailOpen"
+>
+  <app-contact-list
+    class="contacts__list"
+    [contacts]="firebaseService.contacts"
+    [loading]="firebaseService.loading"
+    [activeContactID]="activeContactID"
+    (selected)="setActiveContact($event)"
+    (addContact)="openAddDialog()"
+  />
+  <app-contact-info
+    class="contacts__info"
+    [activeContact]="activeContact"
+    [canDelete]="canDeleteContact(activeContact)"
+    (back)="closeContactInfo()"
+    (editContact)="openEditDialog(activeContact!)"
+    (requestDelete)="requestDelete(activeContact!)"
+  />
+</div>
+<app-contact-dialog
+  [canDelete]="canDeleteContact(activeContact)"
+  (saveContact)="onSave($event)"
+  (requestDelete)="requestDelete(activeContact!)"
+/>
+
+<div class="toast-wrapper">
+  <p
+    class="toast"
+    [class.toast--visible]="toastVisible"
+    role="status"
+    aria-live="polite"
+  >
+    Contact successfully created 
+  </p>
+</div>
+
+<dialog #confirmDialog class="confirm-dialog">
+  <div class="dialog-content">
+      <div class="confirm-box" role="dialog" aria-modal="true">
+        <p><span class="delete-highlight">Delete </span>"{{ contactToDelete?.name }}"?</p>
+        <div class="confirm-actions">
+          <button class="button button--primary delete-btn" type="button" (click)="confirmDelete()">Delete</button>
+          <button class="button button--secondary" type="button" (click)="cancelDelete()">Cancel</button>
+        </div>
+      </div>
+  </div>
+</dialog>

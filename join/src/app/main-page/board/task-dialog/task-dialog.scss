@@ -1,0 +1,326 @@
+@use '../../../../styles/index.scss' as styles;
+
+dialog {
+  margin: auto;
+  position: revert;
+  border: none;
+  border-radius: 24px;
+  box-shadow: 0px 0px 4px 0px #0000001a;
+  z-index: 6;
+
+  &.opened {
+    border: none;
+    border-radius: 24px;
+    background: transparent;
+
+    &::backdrop {
+      background: #b3b3b3;
+      opacity: 0.7;
+    }
+  }
+
+  .dialog-content {
+    @include styles.setFlex($d: column, $ai: stretch, $jc: flex-start, $gap: 8px);
+    width: 93dvw;
+    max-width: 390px;
+    max-height: 90dvh;
+    background-color: white;
+    border-radius: 24px;
+    padding: 25px 20px;
+    word-break: break-word;
+    overflow-y: auto;
+
+    &::-webkit-scrollbar {
+      width: 0px;
+    }
+
+    @include styles.down-xs{
+      width: 88dvw;
+    }
+
+    @include styles.up-xxl{
+      width: 505px;
+      max-width: 550px;
+      padding: 46px 36px 36px;
+      gap: 21px;
+      font-size: 20px;
+    }
+  }
+}
+
+.header{
+  @include styles.setFlex($jc: space-between);
+
+  .category{
+    @include styles.setFlex();
+    width: fit-content;
+    padding: 3px 16px;
+    border-radius: 8px;
+    color: white;
+
+    @include styles.up-xxl{
+      padding: 4px 30px;
+      font-size: 20px;
+    }
+  }
+  
+  .technical-task{
+    background-color: styles.$mint-accent;
+  }
+  
+  .user-story{
+    background-color: styles.$blue-primary;
+  }
+
+  .close-btn{
+    @include styles.setFlex();
+    background-color: transparent;
+    width: 32px;
+    height: 32px;
+
+    .icon{
+      width: 24px;
+      height: 24px;
+    }
+
+    .icon--hover{
+      display: none;
+    }
+
+    &:hover{
+      .icon--default{
+        display: none;
+      }
+
+      .icon--hover{
+        display: block;
+      }
+    }
+  }
+}
+
+.title{
+  margin-top: 4px;
+  margin-bottom: 8px;
+  font-size: 26px;
+
+  @include styles.up-xxl{
+    margin-bottom: 24px;
+    font-size: 40px;
+    line-height: 1.15;
+  }
+}
+
+.description{
+  margin-bottom: 4px;
+
+  @include styles.up-xxl{
+    margin-bottom: 0px;
+  }
+}
+
+.subtitle{
+  color: #42526E;
+}
+
+.due-date{
+  @include styles.setFlex($jc: flex-start, $gap: 16px);
+
+  @include styles.up-xxl{
+    gap: 24px;
+  }
+}
+
+.priority{
+  @include styles.setFlex($jc: flex-start, $gap: 30px);
+
+  @include styles.up-xxl{
+    gap: 42px;
+  }
+
+  div{
+    @include styles.setFlex($gap: 2px);
+  }
+}
+
+.assignees{
+  @include styles.setFlex($d: column, $ai: flex-start, $gap: 9px);
+
+  @include styles.up-xxl{
+    gap: 16px;
+  }
+
+  .assignee-list{
+    @include styles.setFlex($d: column, $ai: flex-start, $jc: flex-start, $gap: 6px);
+    width: 100%;
+    max-height: 135px;
+    overflow-y: auto;
+
+    @include styles.up-xxl{
+      max-height: 150px;
+    }
+
+    &::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: white;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: styles.$gray-light;
+    }
+
+    .assignee-item{
+      @include styles.setFlex($ai: center, $gap: 10px);
+      margin-left: 16px;
+      padding-right: 8px;
+
+      @include styles.up-xxl{
+        gap: 16px;
+      }
+
+      .initials{
+        @include styles.setFlex();
+        width: 36px;
+        height: 36px;
+        padding: 8px;
+        border: 1px solid white;
+        border-radius: 50%;
+        color: white;
+        word-break: normal;
+  
+        @include styles.up-xxl{
+          width: 40px;
+          height: 40px;
+        }
+      }
+    }
+  }
+}
+
+.subtasks{
+  @include styles.setFlex($d: column, $ai: flex-start, $gap: 8px);
+  width: 100%;
+
+  @include styles.up-xxl{
+    gap: 10px;
+  }
+
+  .subtask-list{
+    width: 100%;
+    max-height: 110px;
+    overflow-y: auto;
+
+    &::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: white;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: styles.$gray-light;
+    }
+
+    .checkbox-wrapper{
+      @include styles.setFlex($jc: flex-start, $gap: 10px);
+      width: fit-content;
+      padding-left: 16px;
+      padding-right: 16px;
+      margin-bottom: 6px;
+      cursor: pointer;
+  
+      @include styles.up-xxl{
+        font-size: 16px;
+        gap: 14px;
+        margin-bottom: 6px;
+      }
+      
+      &:hover{
+        padding-right: 16px;
+        border-radius: 8px;
+        background-color: styles.$white-light;
+      }
+  
+      .checkbox{
+        display: none;
+  
+        &:checked + .checkbox-ui {
+          background: url(../../../../../public/assets/img/icons/checkboxes/checkbox-checked.svg)
+          center / contain no-repeat;
+        }
+      }
+      
+      .checkbox-ui {
+        width: 24px;
+        height: 24px;
+        flex-shrink: 0;
+        background: url(../../../../../public/assets/img/icons/checkboxes/checkbox.svg)
+          center / contain no-repeat;
+      }
+      
+      &:hover .checkbox-ui {
+        background: url(../../../../../public/assets/img/icons/checkboxes/checkbox-hover.svg)
+        center / contain no-repeat;
+      }
+  
+      &:hover .checkbox:checked + .checkbox-ui {
+        background: url(../../../../../public/assets/img/icons/checkboxes/checkbox-checked-hover.svg)
+        center / contain no-repeat;
+      }
+
+      .subtask-title{
+        word-break: break-word;
+      }
+    }
+  }
+}
+
+footer{
+  @include styles.setFlex($jc: flex-end);
+
+  @include styles.up-xxl{
+    margin-top: -8px;
+  }
+
+  button{
+    @include styles.setFlex($gap: 4px);
+    background-color: transparent;
+    color: #2A3647;
+
+    @include styles.up-xxl{
+      font-size: 16px;
+    }
+
+    .icon{
+      width: 22px;
+      height: 22px;
+    }
+
+    .icon--hover{
+      display: none;
+    }
+
+    &:hover{
+      color: styles.$blue-sky;
+
+      .icon--default{
+        display: none;
+      }
+
+      .icon--hover{
+        display: block;
+      }
+    }
+  }
+
+  .separator{
+    width: 1px;
+    height: 18px;
+    background-color: #D1D1D1;
+  }
+}
+

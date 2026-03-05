@@ -1,0 +1,267 @@
+@use '../../../../styles/index.scss' as styles;
+
+section {
+  position: fixed;
+  bottom: 0;
+  @include styles.setFlex();
+  width: 100%;
+  background-color: styles.$gray-dark;
+  z-index: 2;
+
+  @include styles.up-xxl {
+    @include styles.setFlex($ai: flex-start);
+    position: relative;
+    height: 100dvh;
+  }
+
+  .content-wrapper {
+    @include styles.setFlex($jc: space-between);
+    height: 70px;
+    width: 90%;
+
+    @media (hover: none) and (orientation: landscape) and (max-height: 400px){
+      height: 50px;
+    }
+
+    @media(min-width: 650px) and (max-width: 1024px){
+      width: 80%;
+    }
+
+    @include styles.up-xxl {
+      @include styles.setGrid($rows: 25% 30% 25% 20%, $columns: 1fr);
+      height: 100%;
+      max-height: 1024px;
+      width: 100%;
+
+      @media(max-height: 800px){
+        @include styles.setGrid($rows: 1fr 1fr 1fr, $columns: 1fr);
+      }
+    }
+  }
+}
+
+.logo {
+  @include styles.up-xxl{
+    grid-area: 1/1/2/2;
+    @include styles.setFlex();
+    width: auto;
+    height: 100%;
+    max-height: 45%;
+    place-self: center;
+
+    @media(max-height: 800px){
+      grid-area: 1/1/2/2;
+      height: 85%;
+    }
+
+    @media(max-height: 380px){
+      display: none;
+    }
+  }
+}
+
+nav {
+  li {
+    list-style: none;
+
+    a {
+      font-weight: 300;
+
+      .icon {
+        width: 25px;
+        height: 25px;
+        object-fit: contain;
+
+        @media (hover: none) and (orientation: landscape) and (max-height: 400px){
+          display: none;
+        }
+      }
+    }
+  }
+}
+
+.main-nav {
+  width: 100%;
+  
+  @include styles.up-xxl{
+    grid-area: 2/1/3/2;
+
+    @media(max-height: 800px){
+      grid-area: 2/1/3/2;
+    }
+
+  }
+
+  ul {
+    @include styles.setFlex($jc: space-between);
+
+    @include styles.up-xxl {
+      @include styles.setFlex($d: column, $gap: 20px);
+      width: 100%;
+    }
+
+    @media (max-width: 350px) {
+      justify-content: space-around;
+    }
+
+    li {
+      @include styles.up-xxl {
+        width: 100%;
+      }
+
+      a {
+        @include styles.setFlex($d: column, $gap: 4px);
+        color: #cdcdcd;
+
+        @include styles.down-xxl {
+          width: 80px;
+          height: 65px;
+          border-radius: 8px;
+        }
+
+        @media (max-width: 350px) {
+          width: 70px;
+          height: 65px;
+        }
+
+        @media (hover: none) and (orientation: landscape) and (max-height: 400px){
+          height: 50px;
+        }
+
+        @include styles.up-xxl {
+          @include styles.setFlex($d: row, $jc: flex-start, $gap: 8px);
+          width: 100%;
+          padding: 8px 0 8px 55px;
+        }
+
+        &:hover {
+          background-color: styles.$navy-dark;
+        }
+
+        .icon--active {
+          display: none;
+        }
+
+        &.is-active {
+          background-color: styles.$navy-dark;
+          color: white;
+
+          .icon--default {
+            display: none;
+          }
+
+          .icon--active {
+            display: block;
+
+            @media (hover: none) and (orientation: landscape) and (max-height: 400px){
+              display: none;
+            }
+          }
+        }
+
+        span {
+          @media (max-width: 350px) {
+            display: none;
+          }
+          @include styles.up-xxl{
+            text-align: left;
+          }
+        }
+      }
+
+      .log-in-link:focus {
+        @include styles.down-xxl {
+          background-color: transparent;
+        }
+      }
+    }
+  }
+}
+
+.legal-nav {
+  @include styles.up-xxl {
+    grid-area: 4/1/5/2;
+    width: 100%;
+
+    @media(max-height: 800px){
+      grid-area: 3/1/4/2;
+    }
+
+    @media(max-height: 450px){
+      display: none;
+    }
+  }
+
+  ul {
+    @include styles.setFlex();
+
+    @include styles.up-xxl {
+      @include styles.setFlex($d: column);
+      width: 100%;
+    }
+
+    li {
+      @include styles.up-xxl {
+        width: 100%;
+      }
+
+      a {
+        color: #cdcdcd;
+        white-space: nowrap;
+
+        @include styles.down-xxl {
+          @include styles.setFlex();
+          width: 115px;
+          height: 65px;
+          border-radius: 8px;
+          font-weight: normal;
+        }
+
+        @include styles.up-xxl {
+          @include styles.setFlex($d: column, $ai: flex-start, $gap: 16px);
+          padding: 8px 0 8px 55px;
+          color: #a8a8a8;
+        }
+
+        &:hover {
+          color: styles.$blue-sky;
+          font-weight: 700;
+        }
+
+        &.is-active {
+          background-color: styles.$navy-dark;
+
+          @include styles.down-xxl {
+            color: white;
+            font-weight: normal;
+          }
+        }
+      }
+    }
+  }
+}
+
+.cockpit-loading{
+  @include styles.setFlex();
+  width: 100%;
+}
+
+.loading-spinner {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  margin-top: 12px;
+  border-top: 3px solid white;
+  border-right: 3px solid transparent;
+  border-radius: 50%;
+  animation-name: rotation;
+  animation-duration: 1s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+
+  @include styles.up-xxl{
+    width: 36px;
+    height: 36px;
+    margin-top: 16px;
+  }
+}

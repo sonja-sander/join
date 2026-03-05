@@ -1,0 +1,107 @@
+@if(task){
+  <dialog #taskDialog (cancel)="onEsc($event)" (mousedown)="onBackdropClick($event)" role="dialog" aria-labelledby="task-dialog-title">
+  <div class="dialog-content">
+    <div class="header">
+      <p class="category" [ngClass]="task.category">
+        {{ task.category === 'technical-task' ? 'Technical Task' : 'User Story' }}
+      </p>
+      <button class="close-btn" (click)="closeDialog()" aria-label="Close dialog">
+        <img class="icon icon--default" src="assets/img/icons/buttons/close.svg" alt="" aria-hidden="true">
+        <img class="icon icon--hover" src="assets/img/icons/buttons/close-hover.svg" alt="" aria-hidden="true">
+      </button>
+    </div>
+
+    <div class="topic">
+      <h2 class="title" id="task-dialog-title">{{ task.title }}</h2>
+      <p class="description">
+        {{ task.description }}
+      </p>
+    </div>
+
+    <div class="due-date">
+      <p class="subtitle">Due date:</p>
+      <p>{{ task.dueDate.toDate() | date:'dd/MM/yyyy' }}</p>
+    </div>
+
+    <div class="priority">
+      <p class="subtitle">Priority:</p>
+
+      <div>
+        @if (task.priority === "low") {
+          <p>Low</p>
+          <img class="priority-icon" src="assets/img/icons/priority/priority-low.svg" alt="Low priority">
+        } @else if (task.priority === "medium") {
+          <p>Medium</p>
+          <img class="priority-icon" src="assets/img/icons/priority/priority-medium.svg" alt="Medium priority">
+        } @else if (task.priority === "high") {
+          <p>High</p>
+          <img class="priority-icon" src="assets/img/icons/priority/priority-high.svg" alt="High priority">
+        }
+      </div>
+    </div>
+    
+    @if (task.assignees.length > 0){
+      <div class="assignees">
+        <p class="subtitle">Assigned To:</p>
+  
+        <div class="assignee-list scroll-shadows" aria-label="Assignees" role="group">
+          @for (assignee of task.assignees; track $index) {
+            <div class="assignee-item">
+              <div class="initials" [style.backgroundColor]="getUserColor(assignee)" aria-label="Assigned to {{ getAssigneeName(assignee) }}">
+                  {{ getAssigneeInitials(assignee) }}
+              </div>
+              <p class="name">
+                {{ getAssigneeName(assignee) }}
+              </p>
+            </div>
+          }
+        </div>
+      </div>
+    }
+
+    @if (task.subtasks.length > 0) {
+      <div class="subtasks">
+        <p class="subtitle">Subtasks:</p>
+  
+        <div class="subtask-list scroll-shadows">
+          @for (subtask of task.subtasks; track $index) {
+            <label class="checkbox-wrapper">
+              <input class="checkbox" type="checkbox" [checked]="subtask.done" (change)="toggleSubtask($index)">
+              <span class="checkbox-ui"></span>
+              <span class="subtask-title" id="subtask-{{$index}}">{{ subtask.title }}</span>
+            </label>
+          }
+        </div>
+      </div>
+    }
+
+    <footer>
+      <button type="button" (click)="onDeleteClick()">
+        <img class="icon icon--default" src="assets/img/icons/buttons/delete.svg" alt="" aria-hidden="true">
+        <img class="icon icon--hover" src="assets/img/icons/buttons/delete-hover.svg" alt="" aria-hidden="true">
+        Delete
+      </button>
+      <div class="separator"></div>
+      <button type="button" (click)="onEditClick()">
+        <img class="icon icon--default" src="assets/img/icons/buttons/edit.svg" alt="" aria-hidden="true">
+        <img class="icon icon--hover" src="assets/img/icons/buttons/edit-hover.svg" alt="" aria-hidden="true">
+        Edit
+      </button>
+    </footer>
+
+    @if(showDeleteConfirm){
+      <div class="confirm-backdrop">
+        <div class="confirm-box" role="dialog" aria-modal="true">
+          <p><span class="delete-highlight">Delete </span>"{{ task.title }}"?</p>
+
+          <div class="confirm-actions">
+            <button class="button button--primary delete-btn" type="button" (click)="confirmDelete()">Delete</button>
+            <button class="button button--secondary" type="button" (click)="cancelDelete()">Cancel</button>
+          </div>
+        </div>
+      </div> 
+    }
+
+  </div>
+</dialog>
+}

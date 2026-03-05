@@ -1,0 +1,79 @@
+@use '../../../../styles/index.scss' as styles;
+
+.priority-field {
+  @include styles.setFlex($d: column, $ai: flex-start, $jc: flex-start, $gap: 0.5rem);
+  width: 100%;
+}
+
+.priority-field__label {
+  @include styles.setFont($size: 1.05em, $weight: 500, $color: styles.$gray-dark);
+}
+
+.priority {
+  @include styles.setFlex(
+    $d: row,
+    $ai: stretch,
+    $jc: flex-start,
+    $gap: clamp(0.625rem, 1vw, 0.75rem)
+  );
+  width: 100%;
+}
+
+.priority__button {
+  @include styles.setFlex($gap: 0.5rem);
+  @include styles.setFlex($gap: 0);
+  flex: 1;
+  padding: clamp(0.5rem, 0.5vw, 0.75rem) clamp(0.5rem, 0.5vw, 0.75rem);
+  border-radius: 1rem;
+  border: 0.0625rem solid styles.$gray-light;
+  background-color: styles.$white;
+  box-shadow: 0 0.0625rem 0.125rem 0 #0000001a;
+  @include styles.setFont($size: 1em, $weight: 500, $color: styles.$gray-dark);
+}
+
+.priority__button--urgent {
+  color: styles.$red-accent;
+}
+
+.priority__button--medium {
+  color: styles.$orange-warning;
+}
+
+.priority__button--low {
+  color: styles.$green-success;
+}
+
+.priority__button.is-active {
+  color: styles.$white;
+  box-shadow: 0 0.25rem 0.25rem 0 #0000001a;
+
+  .priority__icon {
+    filter: brightness(0) invert(1);
+  }
+}
+
+.priority__button--urgent.is-active {
+  background-color: styles.$red-accent;
+  border-color: styles.$red-accent;
+}
+
+.priority__button--medium.is-active {
+  background-color: styles.$orange-warning;
+  border-color: styles.$orange-warning;
+}
+
+.priority__button--low.is-active {
+  background-color: styles.$green-success;
+  border-color: styles.$green-success;
+}
+
+.priority__icon {
+  width: 3rem;
+  // height: 1.125rem;
+}
+
+// @include styles.down-md {
+//   .priority {
+//     @include styles.setFlex($d: column, $ai: stretch, $jc: flex-start, $gap: 0rem);
+//   }
+// }

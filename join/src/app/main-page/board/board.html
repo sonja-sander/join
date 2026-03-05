@@ -1,0 +1,135 @@
+<section>
+  <div class="content-wrapper">
+    <div class="title-section">
+      <h1>Board</h1>
+      <div class="search-bar" role="search">
+        <input
+          class="search-bar__input"
+          [(ngModel)]="searchTerm"
+          (input)="search()"
+          type="text"
+          placeholder="Find Task"
+          aria-label="Search tasks by title or description"
+        />
+        <div class="search-bar__divider" aria-hidden="true"></div>
+        <button type="button" class="search-bar__button" (click)="search()" aria-label="Search">
+          <img
+            class="search-bar__icon search-bar__icon--default"
+            src="assets/img/icons/board/search.svg"
+            alt=""
+            aria-hidden="true"
+          />
+          <img
+            class="search-bar__icon search-bar__icon--hover desktop-only"
+            src="assets/img/icons/board/search-hover.svg"
+            alt=""
+            aria-hidden="true"
+          />
+        </button>
+      </div>
+      <button
+        type="button"
+        class="add-task-btn button button--primary button--icon"
+        aria-label="Add new task"
+        (click)="openAddTaskOverlay()"
+      >
+        <span class="desktop-only">Add task</span>
+        <img
+          class="button__icon"
+          src="assets/img/icons/buttons/add-task.svg"
+          alt=""
+          aria-hidden="true"
+        />
+      </button>
+    </div>
+
+    <div class="board" aria-label="Task board columns">
+      <app-task-list
+        status="to-do"
+        listTitle="To do"
+        (openTask)="openTask($event)"
+        (addTaskRequested)="openAddTaskOverlay($event)"
+      ></app-task-list>
+      <app-task-list
+        status="in-progress"
+        listTitle="In progress"
+        (openTask)="openTask($event)"
+        (addTaskRequested)="openAddTaskOverlay($event)"
+      ></app-task-list>
+      <app-task-list
+        status="await-feedback"
+        listTitle="Await feedback"
+        (openTask)="openTask($event)"
+        (addTaskRequested)="openAddTaskOverlay($event)"
+      ></app-task-list>
+      <app-task-list
+        status="done"
+        listTitle="Done"
+        (openTask)="openTask($event)"
+        (addTaskRequested)="openAddTaskOverlay($event)"
+      ></app-task-list>
+    </div>
+
+    <app-task-dialog
+      #taskDialog
+      [task]="selectedTask"
+      (deleteTask)="deleteTask($event)"
+      (editTask)="openEditTaskOverlay($event)"
+    ></app-task-dialog>
+
+    @if (isAddTaskOverlayOpen) {
+      <div
+        class="add-task-overlay"
+        role="dialog"
+        aria-modal="true"
+        [attr.aria-label]="taskToEdit ? 'Edit task' : 'Add new task'"
+        (mousedown)="onAddTaskOverlayMouseDown($event)"
+      >
+        <div class="add-task-overlay__panel">
+          <button
+            type="button"
+            class="add-task-overlay__close"
+            aria-label="Close add task overlay"
+            (click)="onCloseAddTaskClick()"
+          >
+            <img
+              class="add-task-overlay__close-icon"
+              src="assets/img/icons/buttons/close.svg"
+              alt=""
+              aria-hidden="true"
+            />
+          </button>
+
+          <app-add-task
+            [isOverlay]="true"
+            [taskToEdit]="taskToEdit"
+            [initialStatus]="addTaskStatus"
+            (closeDialogRequested)="closeAddTaskOverlay()"
+            (dirtyChange)="onAddTaskDirtyChange($event)"
+          ></app-add-task>
+        </div>
+      </div>
+    }
+  </div>
+</section>
+
+@if(showCloseConfirm){
+  <div class="confirm-backdrop">
+    <div class="confirm-box" role="dialog" aria-modal="true">
+      <p>
+        <span class="delete-highlight">Close </span>
+        @if (taskToEdit?.title) {
+          "{{ taskToEdit?.title }}?"
+        } @else {
+          this task?
+        }
+        Your changes will be lost.
+      </p>
+
+      <div class="confirm-actions">
+        <button class="button button--primary delete-btn" type="button" (click)="confirmClose()">Close</button>
+        <button class="button button--secondary" type="button" (click)="cancelClose()">Cancel</button>
+      </div>
+    </div>
+  </div>
+}

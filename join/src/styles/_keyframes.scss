@@ -1,0 +1,54 @@
+@keyframes contact-info-fab-menu-in {
+  from {
+    opacity: 0;
+    transform: translateX(3rem) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+@keyframes contact-info-profile-in {
+  from {
+    opacity: 0;
+    transform: translateX(100rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes overlayFade {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+} 
+
+@keyframes fadeInOut{
+  0%   { 
+    opacity: 0; 
+  }
+  12%  { 
+    opacity: 1; 
+  }
+  88%  { 
+    opacity: 1; 
+  }
+  100% { 
+    opacity: 0; 
+  }
+}

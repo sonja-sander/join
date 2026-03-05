@@ -1,0 +1,109 @@
+<section>
+  <div class="content-wrapper">
+    <img class="logo desktop-only" src="assets/img/icons/logo-light.svg" alt="Join" />
+
+    @if (authLoading$ | async){
+      <div class="cockpit-loading">
+        <div class="loading-spinner"></div>
+      </div>
+    } @else {
+      <nav class="main-nav" aria-label="Primary navigation">
+        @if (user$ | async) {
+          <ul>
+            <li>
+              <a routerLink="/summary" routerLinkActive="is-active">
+                <img
+                  class="icon icon--default"
+                  src="assets/img/icons/cockpit/summary.svg"
+                  alt=""
+                  aria-hidden="true"
+                />
+                <img
+                  class="icon icon--active"
+                  src="assets/img/icons/cockpit/summary-active.svg"
+                  alt=""
+                  aria-hidden="true"
+                />
+                <span>Summary</span>
+              </a>
+            </li>
+            <li>
+              <a routerLink="/add-task" routerLinkActive="is-active">
+                <img
+                  class="icon icon--default"
+                  src="assets/img/icons/cockpit/add-task.svg"
+                  alt=""
+                  aria-hidden="true"
+                />
+                <img
+                  class="icon icon--active"
+                  src="assets/img/icons/cockpit/add-task-active.svg"
+                  alt=""
+                  aria-hidden="true"
+                />
+                <span>Add Task</span>
+              </a>
+            </li>
+            <li>
+              <a routerLink="/board" routerLinkActive="is-active">
+                <img
+                  class="icon icon--default"
+                  src="assets/img/icons/cockpit/board.svg"
+                  alt=""
+                  aria-hidden="true"
+                />
+                <img
+                  class="icon icon--active"
+                  src="assets/img/icons/cockpit/board-active.svg"
+                  alt=""
+                  aria-hidden="true"
+                />
+                <span>Board</span>
+              </a>
+            </li>
+            <li>
+              <a routerLink="/contacts" routerLinkActive="is-active">
+                <img
+                  class="icon icon--default"
+                  src="assets/img/icons/cockpit/contacts.svg"
+                  alt=""
+                  aria-hidden="true"
+                />
+                <img
+                  class="icon icon--active"
+                  src="assets/img/icons/cockpit/contacts-active.svg"
+                  alt=""
+                  aria-hidden="true"
+                />
+                <span>Contacts</span>
+              </a>
+            </li>
+          </ul>
+        } @else {
+          <ul>
+            <li>
+              <a routerLink="/" class="log-in-link">
+                <img src="assets/img/icons/cockpit/log-in.svg" alt="" aria-hidden="true" />
+                <span>Log In</span>
+              </a>
+            </li>
+          </ul>
+        }
+      </nav>
+  
+      @if (isDesktop || !(user$ | async)) {
+        <nav class="legal-nav" aria-label="Legal navigation">
+          <ul>
+            <li>
+              <a routerLink="/privacy" routerLinkActive="is-active"> Privacy Policy </a>
+            </li>
+            <li>
+              <a routerLink="/imprint" routerLinkActive="is-active"> Legal Notice </a>
+            </li>
+          </ul>
+        </nav>
+      }
+    }
+
+  </div>
+</section>

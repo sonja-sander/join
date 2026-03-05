@@ -1,0 +1,66 @@
+@use '../../../../../styles/index.scss' as styles;
+
+.single-contact {
+  @include styles.setFlex($jc: flex-start, $gap: 1.5rem);
+  padding: 1rem 0.5rem;
+  border-radius: 1rem;
+  background-color: styles.$white;
+  cursor: pointer;
+  width: 100%;
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease;
+
+  &__avatar {
+    @include styles.setFlex();
+    flex-shrink: 0;
+    width: 5rem;
+    height: 5rem;
+    border: 0.3rem solid styles.$white-soft;
+    border-radius: 50%;
+    background-color: styles.$purple-accent;
+  }
+
+  &__initials {
+    @include styles.setFont($size: 1em, $weight: 700, $color: #ffffff);
+  }
+
+  &__text {
+    @include styles.setFlex($d: column, $ai: flex-start, $gap: 0.4rem);
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  &__name {
+    @include styles.setFont($size: clamp(1em, 2vw, 1.3em), $weight: 400, $color: styles.$black);
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &__email {
+    @include styles.setFont($size: 1em, $weight: 400, $color: styles.$blue-link);
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &:not(&--active):hover {
+    background-color: styles.$white-bright;
+  }
+
+  &--active {
+    background-color: styles.$gray-dark;
+    transform: scale(1.02);
+
+    .single-contact__name {
+      @include styles.setFont(
+        $size: clamp(1em, 1.25em, 1.5em),
+        $weight: 400,
+        $color: styles.$white-soft
+      );
+    }
+  }
+}

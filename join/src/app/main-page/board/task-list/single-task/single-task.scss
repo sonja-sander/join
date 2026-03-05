@@ -1,0 +1,210 @@
+@use "../../../../../styles/index.scss" as styles;
+
+article{
+  @include styles.setFlex($d: column, $ai: stretch, $jc: flex-start, $gap: 23px);
+  min-width: 211px;
+  width: 235px;
+  padding: 16px 14px;
+  border-radius: 20px;
+  background-color: white;
+  box-shadow: 0px 0px 2px 1px #00000014;
+  word-break: break-word;
+
+  @include styles.up-xxl{
+    min-width: 0;
+    width: 100%;
+    max-width: 100%;
+    padding: 16px 8px;
+    margin-bottom: 16px;
+    box-shadow: 0px 0px 1px 0.5px #00000014;
+  }
+
+  @media(min-width: 1120px){
+    padding: 16px 14px;
+  }
+}
+
+.header{
+  @include styles.setFlex($jc: space-between);
+
+  .category{
+    color: white;
+    width: fit-content;
+    padding: 4px 18px;
+    border-radius: 8px;
+    @include styles.setFlex();
+
+    @include styles.up-xxl{
+      padding: 4px 6px;
+    }
+
+    @media (min-width: 1250px){
+      padding: 4px 18px;
+    }
+  }
+  
+  .technical-task{
+    background-color: styles.$mint-accent;
+  }
+  
+  .user-story{
+    background-color: styles.$blue-primary;
+  }
+
+  .mobile-move-btn{
+    @include styles.setFlex();
+    background-color: transparent;
+    width: 28px;
+    height: 28px;
+
+    @include styles.up-xxl{
+      display: none;
+    }
+
+    img{
+      width: 24px;
+      height: 24px;
+    }
+  }
+}
+
+@include styles.down-xxl{
+  .menu-overlay {
+    position: fixed;
+    inset: 0;
+    background: transparent;
+    z-index: 1;
+  }
+
+  .move-menu {
+    position: absolute;
+    top: 16px;
+    right: -58px;
+    @include styles.setFlex($d: column, $ai: flex-start, $gap: 8px);
+    width: 110px;
+    height: auto;
+    padding: 16px 8px;
+    border-radius: 0 20px 20px 20px;
+    background-color: styles.$gray-dark;
+    box-shadow: 0px 0px 5px 3px #0000000A;
+    z-index: 2;
+    opacity: 0;
+    transform: translateX(8px);
+    transition: transform 160ms ease, opacity 120ms ease;
+    pointer-events: none;
+
+    @media(max-width: 360px){
+      right: -40px;
+    }
+
+    &.is-open{
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateX(0);
+    }
+
+    p{
+      color: white;
+      font-weight: bold;
+      padding: 0 8px;
+      margin-bottom: 4px;
+    }
+
+    button{
+      @include styles.setFlex($gap: 4px);
+      background-color: transparent;
+      color: white;
+      padding: 0 4px;
+    }
+  }
+}
+
+.title{
+  margin-bottom: 8px;
+}
+
+.description{
+  color: #a8a8a8;
+}
+
+.title, .description{
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.subtasks{
+  @include styles.setFlex($jc: space-between, $gap: 8px);
+
+  @include styles.up-xxl{
+    @include styles.setFlex($d: column, $ai: flex-start, $gap: 8px);
+  }
+
+  @media (min-width: 1250px){
+    @include styles.setFlex($d: row, $jc: space-between, $gap: 8px);
+  }
+
+  progress{
+    width: 48%;
+    height: 7px;
+    border-radius: 8px;
+    overflow: hidden;
+
+    @include styles.up-xxl{
+      width: 100px;
+    }
+
+    @media (min-width: 1250px){
+      width: 40%;
+      flex: 1;
+    }
+
+    &::-webkit-progress-bar{
+      background-color: styles.$white-soft;
+    }
+    
+    &::-webkit-progress-value{
+      background-color: styles.$blue-light;
+    }
+  }
+
+  label{
+    white-space: nowrap;
+  }
+}
+
+.assigned-info{
+  @include styles.setFlex($jc: space-between);
+
+  .assignees{
+    @include styles.setFlex();
+
+    div{
+      @include styles.setFlex();
+      width: 32px;
+      height: 32px;
+      padding: 8px;
+      margin-left: -8px;
+      border: 1px solid white;
+      border-radius: 50%;
+      color: white;
+      word-break: normal;
+      
+      &:first-child{
+        margin-left: 0;
+      }
+    }
+
+    .more-contacts-sign{
+      border: 1px solid transparent;
+      background-color: transparent;
+      
+      span{
+        margin-left: 4px;
+        color: black;
+        white-space: nowrap;
+      }
+    }
+  }
+}

@@ -1,0 +1,76 @@
+<label class="form-field">
+  <span class="form-field__label">Assigned to</span>
+  <div
+    class="form-field__control"
+    [class.is-open]="isDropdownOpen"
+    (click)="toggleDropdownOpen($event)"
+  >
+    <input
+      class="form-field__input"
+      type="text"
+      [placeholder]="isDropdownOpen ? '' : 'Select contacts to assign'"
+      [value]="isDropdownOpen ? assigneeQuery : ''"
+      [readonly]="!isDropdownOpen"
+      #input
+      (input)="assigneeQuery = input.value"
+    />
+    <button
+      type="button"
+      class="form-field__icon-button"
+      aria-label="Toggle assignee dropdown"
+      (click)="toggleDropdownOpen($event)"
+    >
+      <img
+        class="form-field__icon"
+        [class.is-open]="isDropdownOpen"
+        src="assets/img/icons/add-task/dropdown-arrow-down.svg"
+        alt="dropdown-arrow icon"
+      />
+    </button>
+  </div>
+
+  @if (!isDropdownOpen && selectedContacts.length) {
+    <div class="assignees-preview">
+      @for (contact of selectedContacts; track getContactId(contact, $index)) {
+        <span
+          class="assignees-preview__avatar"
+          [style.backgroundColor]="contact.userColor ?? '#cccccc'"
+          aria-hidden="true"
+        >
+          {{ getTwoInitials(contact.name) }}
+        </span>
+      }
+    </div>
+  }
+
+  @if (isDropdownOpen) {
+    <div class="dropdown">
+      @if (firebaseService.loading && !filteredContacts.length) {
+        <div class="dropdown__empty">Loading contacts...</div>
+      } @else if (!firebaseService.loading && !filteredContacts.length) {
+        <div class="dropdown__empty">
+          {{ assigneeQuery ? 'No matches found' : 'No contacts yet' }}
+        </div>
+      } @else {
+        @for (contact of filteredContacts; track getContactId(contact, $index)) {
+          <button
+            type="button"
+            class="dropdown__item"
+            [class.is-selected]="isSelected(contact)"
+            (click)="toggleContact(contact, $event)"
+          >
+            <span
+              class="dropdown__avatar"
+              [style.backgroundColor]="contact.userColor ?? '#cccccc'"
+              aria-hidden="true"
+            >
+              {{ getTwoInitials(contact.name) }}
+            </span>
+            <span class="dropdown__name">{{ contact.name }}</span>
+            <span class="dropdown__checkbox" aria-hidden="true"></span>
+          </button>
+        }
+      }
+    </div>
+  }
+</label>

@@ -1,0 +1,171 @@
+@use '../../../styles/index.scss' as styles;
+
+:host {
+  display: block;
+  height: 100%;
+}
+
+.add-task {
+  @include styles.setFlex(
+    $d: column,
+    $ai: stretch,
+    $jc: flex-start,
+    $gap: clamp(1.5rem, 3vw, 2.5rem)
+  );
+  padding: clamp(1.5rem, 4vw, 4rem) clamp(1.5rem, 4vw, 6rem);
+  background-color: styles.$white;
+  height: 100%;
+  min-height: 100%;
+}
+
+.add-task__header {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  background-color: styles.$white;
+  width: 100%;
+
+  h1 {
+    @include styles.setFont($size: clamp(2em, 3.5vw, 50px), $weight: 700, $color: styles.$black);
+  }
+}
+
+.add-task__form {
+  @include styles.setFlex(
+    $d: column,
+    $ai: stretch,
+    $jc: flex-start,
+    $gap: clamp(1.5rem, 4vw, 2.5rem)
+  );
+  flex: 1;
+  min-height: 0;
+}
+
+.add-task__content {
+  @include styles.setFlex($d: row, $ai: flex-start, $jc: flex-start);
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.add-task__column {
+  @include styles.setFlex($d: column, $ai: stretch, $jc: flex-start, $gap: 0.8rem);
+  flex: 1;
+  min-width: 0;
+}
+
+.add-task__column:first-child {
+  padding-right: clamp(1rem, 1.8vw, 2rem);
+}
+
+.add-task__column--divider {
+  border-left: 0.125rem solid rgba(styles.$gray-light, 0.7);
+  padding-left: clamp(1rem, 1.8vw, 2rem);
+}
+
+.add-task__footer {
+  @include styles.setFlex($jc: space-between, $gap: 1rem);
+  margin-top: auto;
+}
+
+.add-task__required-note {
+  @include styles.setFont($size: 1em, $weight: 400, $color: styles.$gray-dark);
+}
+
+.add-task__actions {
+  align-self: flex-end;
+  @include styles.setFlex($d: row, $ai: center, $jc: flex-end, $gap: 1rem);
+
+  .button--secondary:hover .button__icon {
+    filter: invert(62%) sepia(76%) saturate(1316%) hue-rotate(161deg) brightness(96%) contrast(88%);
+  }
+}
+
+.add-task__submit-button--disabled {
+  border: 1px solid styles.$gray-dark;
+  filter: opacity(0.5);
+}
+
+.add-task__field-error {
+  @include styles.setFont($size: 1em, $weight: 400, $color: styles.$red-error);
+  visibility: hidden;
+  min-height: 1em;
+}
+
+.add-task__field-error.is-visible {
+  visibility: visible;
+}
+
+.add-task__subtask-hint {
+  @include styles.setFont($size: 1em, $weight: 400, $color: styles.$red-error);
+}
+
+.add-task__padding-top {
+  padding-top: 2rem;
+}
+
+.required {
+  color: styles.$red-error;
+}
+
+@include styles.down-xxl {
+  .add-task {
+    height: calc(100dvh - 2 * styles.$header-height);
+  }
+}
+
+@include styles.down-lg {
+  .add-task {
+    padding: clamp(1.5rem, 4vw, 4rem) clamp(1rem, 4vw, 1.5rem);
+  }
+}
+
+@include styles.down-md {
+  .add-task {
+    padding: clamp(1.25rem, 3.5vw, 2.5rem);
+    overflow: hidden;
+  }
+
+  .add-task__header {
+    padding: clamp(0.75rem, 3vw, 1.5rem) clamp(0rem, 0vw, 0rem);
+  }
+
+  .add-task__form {
+    min-height: 0;
+  }
+
+  .add-task__content {
+    @include styles.setFlex($d: column, $ai: stretch, $jc: flex-start, $gap: 1rem);
+  }
+
+  .add-task__column {
+    flex: 0;
+    gap: 1rem;
+  }
+
+  .add-task__column:first-child {
+    padding-right: clamp(0rem, 0vw, 0rem);
+  }
+
+  .add-task__column--divider {
+    border-left: none;
+    padding-left: clamp(0rem, 0vw, 0rem);
+  }
+
+  .add-task__footer {
+    @include styles.setFlex($d: column, $ai: flex-start, $jc: flex-start, $gap: 1rem);
+    position: relative;
+  }
+
+  .add-task__actions {
+    width: 100%;
+    @include styles.setFlex($d: row, $ai: center, $jc: flex-end, $gap: 0.75rem);
+    align-self: flex-end;
+  }
+}

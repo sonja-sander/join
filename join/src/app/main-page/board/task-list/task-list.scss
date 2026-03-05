@@ -1,0 +1,120 @@
+@use "../../../../styles/index.scss" as styles;
+
+section{
+  @include styles.up-xxl{
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 0;
+    flex: 1;
+  }
+
+  .list-head{
+    @include styles.setFlex($jc: space-between);
+    margin-bottom: 14px;
+    height: 30px;
+
+    @include styles.up-xxl{
+      position: sticky;
+      top: 0;
+      width: 100%;
+      padding: 0 0 4px;
+      z-index: 10;
+      background-color: #f6f7f8;
+    }
+
+    h2{
+      color: #42526e;
+
+      @include styles.up-xxl{
+        font-size: clamp(16px, 1.5dvw, 20px);
+        padding: 0 4px;
+      }
+    }
+
+    .add-to-list-btn{
+      @include styles.setFlex();
+      background-color: transparent;
+      width: 30px;
+      height: 30px;
+
+      .add-icon--hover{
+        display: none;
+      }
+
+      &:hover{
+        .add-icon--default{
+          display: none;
+        }
+
+        .add-icon--hover{
+          display: block;
+        }
+      }
+    }
+  }
+
+  .list{
+    margin-bottom: 24px;
+    padding: 4px;
+    
+    @include styles.down-xxl{
+      @include styles.setFlex($jc: flex-start, $ai: flex-start, $gap: 16px);
+      overflow-x: auto;
+
+      &::-webkit-scrollbar {
+        display: none;
+      }
+    }
+
+    @include styles.up-xxl{
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 0;
+      padding: 4px;
+      overflow-y: auto;
+
+      &::-webkit-scrollbar {
+        display: none;
+      }
+    }
+  }
+}
+
+.loading-tasks-box{
+  @include styles.setFlex();
+  min-width: 211px;
+  width: 235px;
+  height: 200px;
+  border: 1px dashed #A8A8A8;
+  border-radius: 20px;
+  background-color: #e7e7e7;
+  box-shadow: 0px 0px 4px 2px #00000014;
+  padding: 16px 14px;
+
+  @include styles.up-xxl{
+    min-width: 0;
+    width: 100%;
+    box-shadow: 0px 0px 10px 3px #00000014;
+  }
+
+  p{
+    color: #A8A8A8;
+  }
+}
+
+.no-tasks-box{
+  @include styles.setFlex();
+  width: 100%;
+  border: 1px dashed #A8A8A8;
+  border-radius: 10px;
+  background-color: #e7e7e7;
+  box-shadow: 0px 0px 4px 0px #00000029;
+  padding: 16px 14px; 
+
+  p{
+    color: #A8A8A8;
+    word-break: break-all;
+  }
+}

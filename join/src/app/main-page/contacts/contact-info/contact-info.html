@@ -1,0 +1,125 @@
+<section class="contact-info">
+  <header class="contact-info__header">
+    <h1 class="contact-info__title">Contacts</h1>
+    <span class="contact-info__header-divider" aria-hidden="true"></span>
+    <p class="contact-info__subtitle">Better with a team</p>
+  </header>
+
+  <a class="contact-info__back-arrow" href="#" (click)="handleBack($event)">
+    <img src="assets/img/icons/buttons/back.svg" alt="Back icon" />
+  </a>
+
+  @if (activeContact) {
+    <div
+      class="contact-info__profile"
+      [class.contact-info__profile--animating]="profileAnimating"
+      >
+      <div class="contact-info__main">
+        <div
+          class="contact-info__avatar"
+          [style.backgroundColor]="activeContact.userColor"
+          aria-hidden="true"
+        >
+          <span class="contact-info__initials">{{ getTwoInitials(activeContact.name) }}</span>
+        </div>
+        <div class="contact-info__identity">
+          <h2 class="contact-info__name">{{ activeContact.name }}</h2>
+          <div class="contact-info__actions">
+            <button class="contact-info__action" type="button" (click)="editContact.emit()">
+              <img
+                class="contact-info__action-icon"
+                src="assets/img/icons/buttons/edit.svg"
+                alt="Edit icon"
+                aria-hidden="true"
+              />
+              <span>Edit</span>
+            </button>
+            @if (canDelete) {
+              <button class="contact-info__action" type="button" (click)="requestDelete.emit()">
+                <img
+                  class="contact-info__action-icon"
+                  src="assets/img/icons/buttons/delete.svg"
+                  alt="Delete icon"
+                  aria-hidden="true"
+                />
+                <span>Delete</span>
+              </button>
+            }
+          </div>
+        </div>
+      </div>
+      <div class="contact-info__details">
+        <h3 class="contact-info__section-title">Contact Information</h3>
+        <div class="contact-info__detail">
+          <span class="contact-info__label">Email</span>
+          <a class="contact-info__value" [attr.href]="'mailto:' + activeContact.email">
+            {{ activeContact.email }}
+          </a>
+        </div>
+        <div class="contact-info__detail">
+          <span class="contact-info__label">Phone</span>
+          @if (hasPhoneNumber(activeContact.phone)) {
+            <a class="contact-info__value contact-info__value--phone" [attr.href]="'tel:' + activeContact.phone">
+              {{ activeContact.phone }}
+            </a>
+          } @else {
+            <span class="contact-info__value contact-info__value--phone contact-info__value--empty-phone">no phone number yet</span>
+          }
+        </div>
+      </div>
+    </div>
+    @if (isDownLg) {
+      <button
+        class="contact-info__fab"
+        type="button"
+        aria-label="Contact options"
+        aria-controls="contact-info-fab-menu"
+        [attr.aria-expanded]="fabMenuOpen"
+        (click)="toggleFabMenu()"
+      >
+        <img src="assets/img/icons/buttons/contact-options.svg" alt="" aria-hidden="true" />
+      </button>
+      @if (fabMenuOpen) {
+        <div class="contact-info__fab-overlay" (click)="closeFabMenu()"></div>
+        <div
+          id="contact-info-fab-menu"
+          class="contact-info__fab-menu"
+          role="menu"
+          (keydown.escape)="closeFabMenu()"
+        >
+          <button
+            class="contact-info__fab-action"
+            type="button"
+            role="menuitem"
+            (click)="handleFabEdit()"
+          >
+            <img
+              class="contact-info__fab-action-icon"
+              src="assets/img/icons/buttons/edit.svg"
+              alt=""
+              aria-hidden="true"
+            />
+            <span>Edit</span>
+          </button>
+          @if (canDelete) {
+            <button
+              class="contact-info__fab-action"
+              type="button"
+              role="menuitem"
+              (click)="requestDelete.emit()"
+            >
+              <img
+                class="contact-info__fab-action-icon"
+                src="assets/img/icons/buttons/delete.svg"
+                alt=""
+                aria-hidden="true"
+              />
+              <span>Delete</span>
+            </button>
+          }
+        </div>
+      }
+    }
+  }
+</section>
+

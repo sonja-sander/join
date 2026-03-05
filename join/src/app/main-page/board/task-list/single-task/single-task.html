@@ -1,0 +1,118 @@
+<div class="task-drag-wrapper" cdkDrag [cdkDragData]="task" [cdkDragDisabled]="isMobile" role="listitem" aria-roledescription="Draggable task">
+  <article class="task-card" (click)="openTask.emit(task)">
+    <div class="header">
+      <p class="category" [ngClass]="task.category">
+        {{ task.category === 'technical-task' ? 'Technical Task' : 'User Story' }}
+      </p>
+      <button class="mobile-move-btn" (click)="openMenu($event)" aria-label="Move task to other list" aria-controls="move-menu">
+        <img src="assets/img/icons/board/move.svg" alt="" aria-hidden="true">
+      </button>
+    </div>
+
+    @if (moveMenuOpen) {
+      <div class="menu-overlay mobile-only" (click)="closeMenu($event)" aria-hidden="true"></div>
+    }
+    <div id="move-menu" class="move-menu mobile-only" [class.is-open]="moveMenuOpen" aria-label="Move task menu" role="menu">
+      <p>Move to</p>
+
+      @if(task.status === "to-do"){
+        <button (click)="moveTo('in-progress', $event)" role="menuitem" aria-label="Move to in progress">
+          <img src="assets/img/icons/board/arrow-downward.svg" alt="" aria-hidden="true">
+          Doing
+        </button>
+        <button (click)="moveTo('await-feedback', $event)" role="menuitem" aria-label="Move to await feedback">
+          <img src="assets/img/icons/board/arrow-downward.svg" alt="" aria-hidden="true">
+          Review
+        </button>
+        <button (click)="moveTo('done', $event)" role="menuitem" aria-label="Move to done">
+          <img src="assets/img/icons/board/arrow-downward.svg" alt="" aria-hidden="true">
+          Done
+        </button>
+      }
+      
+      @if(task.status === "in-progress"){
+        <button (click)="moveTo('to-do', $event)" role="menuitem" aria-label="Move to to do">
+          <img src="assets/img/icons/board/arrow-upward.svg" alt="" aria-hidden="true">
+          To-do
+        </button>
+        <button (click)="moveTo('await-feedback', $event)" role="menuitem" aria-label="Move to await feedback">
+          <img src="assets/img/icons/board/arrow-downward.svg" alt="" aria-hidden="true">
+          Review
+        </button>
+        <button (click)="moveTo('done', $event)" role="menuitem" aria-label="Move to done">
+          <img src="assets/img/icons/board/arrow-downward.svg" alt="" aria-hidden="true">
+          Done
+        </button>
+      }
+
+      @if(task.status === "await-feedback"){
+        <button (click)="moveTo('to-do', $event)" role="menuitem" aria-label="Move to to do">
+          <img src="assets/img/icons/board/arrow-upward.svg" alt="" aria-hidden="true">
+          To-do
+        </button>
+        <button (click)="moveTo('in-progress', $event)" role="menuitem" aria-label="Move to in progress">
+          <img src="assets/img/icons/board/arrow-upward.svg" alt="" aria-hidden="true">
+          Doing
+        </button>
+        <button (click)="moveTo('done', $event)" role="menuitem" aria-label="Move to done">
+          <img src="assets/img/icons/board/arrow-downward.svg" alt="" aria-hidden="true">
+          Done
+        </button>
+      }
+
+      @if(task.status === "done"){
+        <button (click)="moveTo('to-do', $event)" role="menuitem" aria-label="Move to to do">
+          <img src="assets/img/icons/board/arrow-upward.svg" alt="" aria-hidden="true">
+          To-do
+        </button>
+        <button (click)="moveTo('in-progress', $event)" role="menuitem" aria-label="Move to in progress">
+          <img src="assets/img/icons/board/arrow-upward.svg" alt="" aria-hidden="true">
+          Doing
+        </button>
+        <button (click)="moveTo('await-feedback', $event)" role="menuitem" aria-label="Move to await feedback">
+          <img src="assets/img/icons/board/arrow-upward.svg" alt="" aria-hidden="true">
+          Review
+        </button>
+      }
+    </div>
+
+    <div class="topic">
+      <h4 class="title">{{ task.title }}</h4>
+      <p class="description">
+        {{ task.description }}
+      </p>
+    </div>
+
+    @if(totalCount > 0){
+      <div class="subtasks" title="{{ doneCount }} of {{ totalCount }} subtasks completed">
+        <progress id="subtasks-done" [value]="doneCount" [max]="totalCount" aria-valuetext="{{ doneCount }} of {{ totalCount }} subtasks completed"></progress>
+        <label for="subtasks-done">
+          {{ doneCount }}/{{ totalCount }} Subtasks
+        </label>
+      </div>
+    }
+
+    <div class="assigned-info">
+      <div class="assignees" aria-label="Assignees" role="group">
+        @for (assignee of task.assignees.slice(0, 3); track $index) {
+          <div [style.backgroundColor]="getUserColor(assignee)" aria-label="Assigned to {{ getAssigneeInitials(assignee) }}">
+            <span>{{ getAssigneeInitials(assignee) }}</span>
+          </div>
+        }
+        @if(task.assignees.length > 3){
+          <div class="more-contacts-sign" aria-label="And assigned to further contacts">
+            <span>+{{task.assignees.length - 3}}</span>
+          </div>
+        }
+      </div>
+
+      @if (task.priority === "low") {
+        <img class="priority-icon" src="assets/img/icons/priority/priority-low.svg" alt="Low priority">
+      } @else if (task.priority === "medium") {
+        <img class="priority-icon" src="assets/img/icons/priority/priority-medium.svg" alt="Medium priority">
+      } @else if (task.priority === "high") {
+        <img class="priority-icon" src="assets/img/icons/priority/priority-high.svg" alt="High priority">
+      }
+    </div>
+  </article>
+</div>

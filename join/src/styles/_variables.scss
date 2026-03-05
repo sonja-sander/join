@@ -1,0 +1,76 @@
+$g-pad-x: clamp(1.2rem, 6vw, 7.5rem);
+$g-max-width: 1440px;
+$g-frame-gap: clamp(0.8rem, 1.5vw, 1.5rem);
+
+$header-height: clamp(70px, 6dvw, 96px);
+
+$menu-overlay-title-size: clamp(2em, 6vmin, 6em);
+
+//////////////////////////////////////////////////////////////////////////////
+
+// All Colors
+
+// Reds
+$red-error: #e60026;
+$red-accent: #ff3d00;
+$red-soft: #ff4646;
+
+// Oranges
+$orange-accent: #ff7a00;
+$orange-warning: #ffa800;
+$orange-soft: #ff745e;
+$orange-peach: #ffa35e;
+
+// Yellows
+$yellow-accent: #ffc701;
+$yellow-amber: #ffbb2b;
+$yellow-lemon: #ffe62b;
+
+// Greens
+$green-success: #7ae229;
+$green-lime: #c3ff2b;
+
+// Cyans / Mint
+$mint-accent: #1fd7c1;
+$cyan-accent: #00bee8;
+
+// Blues
+$blue-primary: #0038ff;
+$blue-light: #4589ff;
+$blue-link: #007cee;
+$blue-sky: #29abe2;
+
+// Purples / Magenta
+$purple-accent: #6e52ff;
+$purple-violet: #9327ff;
+$magenta-accent: #fc71ff;
+$pink-accent: #ff5eb3;
+
+// Neutrals
+$white: #ffffff;
+$white-soft: #f4f4f4;
+$white-light: #f0f0f0;
+$white-bright: #f9f9f9;
+$gray-light: #d1d1d1;
+$gray-dark: #2a3647;
+$navy-dark: #091931;
+$black: #000000;
+
+// User colors list
+$user-color-list: (
+  $red-soft,
+  $orange-soft,
+  $orange-peach,
+  $orange-accent,
+  $yellow-amber,
+  $yellow-accent,
+  $yellow-lemon,
+  $green-lime,
+  $mint-accent,
+  $cyan-accent,
+  $blue-primary,
+  $magenta-accent,
+  $pink-accent,
+  $purple-accent,
+  $purple-violet
+);

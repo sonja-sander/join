@@ -1,0 +1,67 @@
+@use '../../../../styles/index.scss' as styles;
+
+.form-field {
+  @include styles.setFlex($d: column, $ai: flex-start, $jc: flex-start, $gap: 0.5rem);
+  width: 100%;
+}
+
+.form-field__label {
+  @include styles.setFont($size: 1.05em, $weight: 500, $color: styles.$gray-dark);
+}
+
+.required {
+  color: styles.$red-error;
+}
+
+.form-field__control {
+  @include styles.setFlex($d: row, $ai: center, $jc: space-between, $gap: 0.625rem);
+  width: 100%;
+  min-height: 3rem;
+  padding: clamp(0.5rem, 1vw, 0.75rem) clamp(0.75rem, 1.6vw, 0.875rem);
+  border: 0.0625rem solid styles.$gray-light;
+  border-radius: 1rem;
+  background-color: styles.$white;
+  box-shadow: 0 0.0625rem 0.125rem 0 #0000001a;
+
+  &:focus-within {
+    border-color: styles.$blue-sky;
+  }
+}
+
+.form-field__control--error {
+  border-color: styles.$red-error;
+
+  &:focus-within {
+    border-color: styles.$red-error;
+  }
+}
+
+.form-field__input {
+  @include styles.setFont($size: 1em, $color: styles.$gray-dark);
+  border: none;
+  outline: none;
+  flex: 1;
+  min-width: 0;
+  background: transparent;
+  padding: clamp(0.5rem, 1.2vw, 0.625rem) clamp(0rem, 0vw, 0rem);
+
+  &::placeholder {
+    color: styles.$gray-light;
+  }
+}
+
+.form-field__input--textarea {
+  min-height: 6.875rem;
+  resize: vertical;
+  padding: clamp(0.75rem, 1.4vw, 0.875rem) clamp(0rem, 0vw, 0rem);
+}
+
+.form-field--textarea {
+  .form-field__control {
+    align-items: flex-start;
+  }
+}
+
+.form-field__icon {
+  width: 2.5rem;
+}

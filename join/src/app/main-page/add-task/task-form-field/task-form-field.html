@@ -1,0 +1,56 @@
+<label class="form-field" [class.form-field--textarea]="isTextarea">
+  <span class="form-field__label">
+    {{ label }}
+    @if (isRequired) {
+      <span class="required">*</span>
+    }
+  </span>
+  <div class="form-field__control" [class.form-field__control--error]="hasError">
+    @if (!isTextarea) {
+      @if (useFlatpickr) {
+        <input
+          class="form-field__input"
+          appFlatpickr
+          [fpOptions]="{ minDate: min ?? undefined }"
+          readonly
+          [type]="type"
+          [placeholder]="placeholder"
+          [required]="isRequired"
+          [ngModelOptions]="{ standalone: true }"
+          [ngModel]="value"
+          (ngModelChange)="valueChange.emit($event)"
+          (blur)="fieldBlur.emit()"
+        />
+      } @else {
+        <input
+          class="form-field__input"
+          [type]="type"
+          [placeholder]="placeholder"
+          [attr.min]="min"
+          [required]="isRequired"
+          [ngModelOptions]="{ standalone: true }"
+          [ngModel]="value"
+          (ngModelChange)="valueChange.emit($event)"
+          (blur)="fieldBlur.emit()"
+        />
+      }
+    } @else {
+      <textarea
+        class="form-field__input form-field__input--textarea"
+        [placeholder]="placeholder"
+        [required]="isRequired"
+        [ngModelOptions]="{ standalone: true }"
+        [ngModel]="value"
+        (ngModelChange)="valueChange.emit($event)"
+        (blur)="fieldBlur.emit()"
+      ></textarea>
+    }
+    @if (iconSrc) {
+      <img
+        class="form-field__icon"
+        [src]="iconSrc"
+        [attr.alt]="label ? label + ' icon' : 'form field icon'"
+      />
+    }
+  </div>
+</label>

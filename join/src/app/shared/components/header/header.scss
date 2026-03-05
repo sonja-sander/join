@@ -1,0 +1,163 @@
+@use '../../../../styles/index.scss' as styles;
+
+header {
+  position: sticky;
+  top: 0;
+  @include styles.setFlex();
+  height: styles.$header-height;
+  background-color: white;
+  box-shadow: 0px 4px 4px 0px #0000001a;
+  z-index: 5;
+
+  @media (hover: none) and (orientation: landscape) and (max-height: 400px) {
+    height: 60px;
+  }
+
+  @include styles.up-xxl {
+    @include styles.setFlex($jc: flex-start);
+  }
+
+  .content-wrapper {
+    @include styles.setFlex($jc: space-between);
+    width: 93%;
+
+    @include styles.up-xxl {
+      width: 100%;
+      max-width: 1208px;
+      padding-left: 120px;
+      padding-right: 32px;
+    }
+  }
+}
+
+.content-left {
+  .mobile-logo {
+    width: 35px;
+    height: 35px;
+    object-fit: contain;
+  }
+
+  .desktop-title {
+    font-size: 20px;
+  }
+}
+
+.content-right {
+  @include styles.setFlex($gap: 16px);
+
+  .desktop-help-link {
+    @include styles.setFlex();
+
+    @include styles.down-xxl {
+      display: none;
+    }
+
+    > img {
+      transition: transform 0.15s ease;
+
+      &:hover {
+        transform: scale(1.2);
+      }
+    }
+  }
+
+  .user-menu-button {
+    @include styles.setFlex();
+    width: 40px;
+    height: 40px;
+    border: 2px solid styles.$gray-dark;
+    border-radius: 50%;
+    background-color: white;
+    z-index: 6;
+
+    &:hover {
+      background-color: #e2e6ec;
+    }
+
+    &.is-open {
+      background-color: #e2e6ec;
+    }
+
+    &:focus-visible {
+      outline: 2px solid #101010;
+      outline-offset: 3px;
+    }
+
+    @include styles.up-xxl {
+      width: 50px;
+      height: 50px;
+    }
+
+    > span {
+      @include styles.setFont($color: styles.$blue-sky, $weight: 900);
+
+      @include styles.up-xxl {
+        font-size: 18px;
+      }
+    }
+  }
+
+  .menu-overlay {
+    position: fixed;
+    inset: 0;
+    background: transparent;
+    z-index: 4;
+  }
+
+  .user-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    @include styles.setFlex($d: column, $ai: flex-start);
+    width: 150px;
+    padding: 8px 8px;
+    border-radius: 16px 0 16px 16px;
+    background-color: styles.$gray-dark;
+    z-index: 5;
+
+    @include styles.down-xxl {
+      opacity: 0;
+      transform: translateX(8px);
+      transition:
+        transform 160ms ease,
+        opacity 120ms ease;
+      pointer-events: none;
+    }
+
+    @include styles.up-xxl {
+      top: 130%;
+      right: -8px;
+      display: none;
+    }
+
+    &.is-open {
+      opacity: 1;
+      pointer-events: auto;
+
+      @include styles.down-xxl {
+        transform: translateX(0);
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      @include styles.up-xxl {
+        @include styles.setFlex($d: column, $ai: flex-start);
+      }
+    }
+
+    a, button {
+      width: 100%;
+      padding: 12px 8px 12px 16px;
+      color: #cdcdcd;
+
+      &:hover {
+        background-color: #2a3d59;
+      }
+    }
+
+    button{
+      background-color: transparent;
+      @include styles.setFlex($jc: flex-start);
+    }
+  }
+}
