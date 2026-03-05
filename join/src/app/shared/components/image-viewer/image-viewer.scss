@@ -150,6 +150,7 @@ header{
 @include styles.up-xxl{
   .desktop-previous, .desktop-next{
     display: block;
+    @include styles.setFlex();
   }
 
   .desktop-previous{

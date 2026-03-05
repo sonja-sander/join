@@ -1,8 +1,8 @@
-<section>
-  <p class="title">Attachments</p>
+<section aria-labelledby="attachments-title">
+  <p id="attachments-title" class="title">Attachments</p>
 
   <div class="description">
-    <p>Allowed file types are JPEG and PNG</p>
+    <p id="attachment-description">Allowed file types are JPEG and PNG</p>
     @if (attachments.length > 0) {
       <button type="button" (click)="deleteAllAttachments()">
         <img class="icon icon--default" src="assets/img/icons/buttons/delete.svg" alt="" aria-hidden="true">
@@ -12,19 +12,22 @@
     }
   </div>
 
-  <div class="drag-area" 
+  <button 
+    type="button"
+    class="drag-area" 
     [class.drag-area--active]="isDragging"
-    onclick="filePicker.click()" 
     (dragover)="onDragOver($event)"
     (dragleave)="onDragLeave($event)"
     (drop)="onDrop($event)"
+    (click)="openFilePicker()"
+    aria-describedby="attachment-description"
   >
     <p>Drag file or browse</p>
-    <img src="assets/img/icons/add-task/add-attachment.svg" alt="">
-  </div>
+    <img src="assets/img/icons/add-task/add-attachment.svg" alt="" aria-hidden="true">
+</button>
 
   <input
-    id="filePicker"
+    #filePicker
     class="filePicker"
     type="file"
     accept="image/png, image/jpeg"
@@ -35,7 +38,7 @@
     
   <div class="gallery" #gallery>
     @for (attachment of attachments; track attachment.fileName) {
-      <figure class="attachment" (click)="openImageViewer($index)">
+      <figure class="attachment" role="button" tabindex="0" (click)="openImageViewer($index)" (keydown.enter)="openImageViewer($index)" (keydown.space)="openImageViewer($index)" aria-label="Open attachment {{ attachment.fileName }}">
         <div class="image-wrapper">
           <img class="attachment-img" [src]="attachment.base64" [alt]="attachment.fileName">
           <button

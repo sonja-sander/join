@@ -7,10 +7,11 @@ import { FirebaseService } from '../../../shared/services/firebase-service';
 import { FileService } from '../../../shared/services/file-service';
 import { ImageViewer } from '../../../shared/components/image-viewer/image-viewer';
 import { ConfirmDialog } from '../../../shared/components/confirm-dialog/confirm-dialog';
+import { A11yModule } from '@angular/cdk/a11y';
 
 @Component({
   selector: 'app-task-dialog',
-  imports: [NgClass, DatePipe, ImageViewer, ConfirmDialog],
+  imports: [NgClass, DatePipe, ImageViewer, ConfirmDialog, A11yModule],
   templateUrl: './task-dialog.html',
   styleUrl: './task-dialog.scss',
 })

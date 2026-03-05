@@ -10,6 +10,7 @@ import { ImageViewer } from '../../../shared/components/image-viewer/image-viewe
   styleUrl: './attachments.scss',
 })
 export class Attachments {
+  @ViewChild('filePicker') filePicker!: ElementRef<HTMLInputElement>;
   @ViewChild('gallery') gallery!: ElementRef<HTMLDivElement>;
   fileService = inject(FileService);
   @Input() attachments!: Attachment[];
@@ -30,6 +31,10 @@ export class Attachments {
   onDragLeave(event: DragEvent): void {
     event.preventDefault();
     this.isDragging = false;
+  }
+
+  openFilePicker(): void {
+    this.filePicker.nativeElement.click();
   }
 
   onDrop(event: DragEvent): void {

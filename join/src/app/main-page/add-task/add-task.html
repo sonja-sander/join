@@ -1,9 +1,9 @@
 <section class="add-task">
   <header class="add-task__header">
-    <h1>{{ formTitle }}</h1>
+    <h1 id="add-task-title">{{ formTitle }}</h1>
   </header>
 
-  <form class="add-task__form" autocomplete="on" (ngSubmit)="createTask()" (focusin)="markAsEdited()">
+  <form class="add-task__form" autocomplete="on" (ngSubmit)="createTask()" (focusin)="markAsEdited()" aria-labelledby="add-task-title">
     <div class="add-task__content">
       <div class="add-task__column">
         <app-task-form-field

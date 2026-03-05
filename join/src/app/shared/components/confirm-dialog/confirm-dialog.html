@@ -1,6 +1,6 @@
 @if (open) {
-  <div class="confirm-backdrop" tabindex="-1">
-    <div class="confirm-box" role="dialog" aria-modal="true" (click)="$event.stopPropagation()">
+  <div class="confirm-backdrop">
+    <div class="confirm-box" role="dialog" aria-modal="true" (click)="$event.stopPropagation()" cdkTrapFocus cdkTrapFocusAutoCapture>
       <p class="confirm-text">
         @if (highlight) {
           <span class="confirm-highlight">

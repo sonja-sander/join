@@ -6,10 +6,11 @@ import { TaskDialog } from './task-dialog/task-dialog';
 import { Task } from '../../shared/interfaces/task';
 import { AddTask } from '../add-task/add-task';
 import { ConfirmDialog } from '../../shared/components/confirm-dialog/confirm-dialog';
+import { A11yModule } from '@angular/cdk/a11y';
 
 @Component({
   selector: 'app-board',
-  imports: [TaskList, FormsModule, TaskDialog, AddTask, ConfirmDialog ],
+  imports: [TaskList, FormsModule, TaskDialog, AddTask, ConfirmDialog, A11yModule],
   templateUrl: './board.html',
   styleUrl: './board.scss',
 })

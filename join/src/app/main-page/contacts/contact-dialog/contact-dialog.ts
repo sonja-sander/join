@@ -5,10 +5,11 @@ import { ContactFormData } from '../../../shared/interfaces/contact-form-data';
 import { getTwoInitials } from '../../../shared/utilities/utils';
 import { FileService } from '../../../shared/services/file-service';
 import { Toast } from '../../../shared/components/toast/toast';
+import { A11yModule } from '@angular/cdk/a11y';
 
 @Component({
   selector: 'app-contact-dialog',
-  imports: [FormsModule, Toast],
+  imports: [FormsModule, Toast, A11yModule],
   templateUrl: './contact-dialog.html',
   styleUrl: './contact-dialog.scss',
 })
@@ -23,6 +24,7 @@ export class ContactDialog {
   fileService = inject(FileService);
   isOpen: boolean = false;
   @ViewChild('contactForm') contactForm!: NgForm;
+  @ViewChild('filePicker') filePicker!: ElementRef<HTMLInputElement>;
   @Input() canDelete = true;
   @Input() confirmOpen: boolean = false;
   dialogMode: 'add' | 'edit' = 'add';
@@ -99,6 +101,10 @@ export class ContactDialog {
     this.isOpen = true;
   }
   // #endregion
+
+  openFilePicker(): void {
+    this.filePicker.nativeElement.click();
+  }
 
   /**
    * Handles form submission.

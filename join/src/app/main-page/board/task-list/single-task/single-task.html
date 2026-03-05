@@ -1,5 +1,5 @@
 <div class="task-drag-wrapper" cdkDrag [cdkDragData]="task" [cdkDragDisabled]="isMobile" role="listitem" aria-roledescription="Draggable task">
-  <article class="task-card" (click)="openTask.emit(task)">
+  <article class="task-card" (click)="openTask.emit(task)" (keydown.enter)="openTask.emit(task); $event.preventDefault()" (keydown.space)="openTask.emit(task)" tabindex="0" role="button">
     <div class="header">
       <p class="category" [ngClass]="task.category">
         {{ task.category === 'technical-task' ? 'Technical Task' : 'User Story' }}

@@ -1,10 +1,11 @@
 import { Component, ElementRef, EventEmitter, HostListener, inject, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { Attachment } from '../../interfaces/task';
 import { FileService } from '../../services/file-service';
+import { A11yModule } from '@angular/cdk/a11y';
 
 @Component({
   selector: 'app-image-viewer',
-  imports: [],
+  imports: [A11yModule],
   templateUrl: './image-viewer.html',
   styleUrl: './image-viewer.scss',
 })

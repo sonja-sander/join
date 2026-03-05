@@ -2,6 +2,10 @@
   class="single-contact"
   [class.single-contact--active]="isActive"
   (click)="setContactAsSelected()"
+  (keydown.enter)="setContactAsSelected()"
+  (keydown.space)="setContactAsSelected()" 
+  tabindex="0" 
+  role="button"
 >
   <div class="single-contact__avatar" [style.backgroundColor]="contact?.userColor || null">
     @if (contact?.avatar?.base64) {

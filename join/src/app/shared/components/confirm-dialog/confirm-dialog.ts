@@ -1,8 +1,9 @@
+import { A11yModule } from '@angular/cdk/a11y';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'app-confirm-dialog',
-  imports: [],
+  imports: [A11yModule],
   templateUrl: './confirm-dialog.html',
   styleUrl: './confirm-dialog.scss',
 })
