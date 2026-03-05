@@ -51,7 +51,10 @@ export class SingleTask implements OnInit {
    * @returns void
    */
   checkDevice(): void {
-    this.isMobile = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+    this.isMobile =
+      window.innerWidth <= 1024 ||
+      'ontouchstart' in window ||
+      navigator.maxTouchPoints > 0;
   }
 
   /**
