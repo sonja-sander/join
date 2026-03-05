@@ -9,6 +9,12 @@ import { A11yModule } from '@angular/cdk/a11y';
   templateUrl: './image-viewer.html',
   styleUrl: './image-viewer.scss',
 })
+/**
+ * ImageViewer component
+ *
+ * Displays task attachments in a fullscreen viewer.
+ * Supports image navigation, zoom controls, and keyboard interaction.
+ */
 export class ImageViewer implements OnInit {
   fileService = inject(FileService);
   @Input() attachments: Array<Attachment> = [];
@@ -21,16 +27,41 @@ export class ImageViewer implements OnInit {
   maxScale: number = 3;
   zoomStep: number = 0.25;
 
+  /**
+   * Initializes the image viewer.
+   *
+   * Sets the starting image index and
+   * emits the viewer open state.
+   *
+   * @returns void
+   */
   ngOnInit(): void {
     this.currentIndex = this.startIndex;
     this.viewerStateChange.emit(true);
   }
 
-  closeImageViewer() {
+  /**
+   * Closes the image viewer.
+   *
+   * Emits viewer state updates and
+   * notifies the parent component.
+   *
+   * @returns void
+   */
+  closeImageViewer(): void {
     this.viewerStateChange.emit(false);
     this.close.emit();
   }
 
+  /**
+   * Handles clicks on the viewer backdrop.
+   *
+   * Closes the viewer when the overlay
+   * background is clicked.
+   *
+   * @param event The mouse click event
+   * @returns void
+   */
   onBackdropClick(event: MouseEvent): void {
     const target = event.target as HTMLElement;
 
@@ -39,6 +70,15 @@ export class ImageViewer implements OnInit {
     }
   }
 
+  /**
+   * Handles the Escape key interaction.
+   *
+   * Prevents default browser behavior and
+   * closes the image viewer.
+   *
+   * @param event The keyboard event triggered by Escape
+   * @returns void
+   */
   @HostListener('document:keydown.escape', ['$event'])
   onEsc(event: Event): void {
     event.stopPropagation();
@@ -46,18 +86,42 @@ export class ImageViewer implements OnInit {
     this.closeImageViewer();
   }
 
+  /**
+   * Returns the currently displayed attachment.
+   *
+   * @returns The current attachment
+   */
   get currentAttachment(): Attachment {
     return this.attachments[this.currentIndex];
   }
 
+  /**
+   * Increases the zoom level of the image.
+   *
+   * @returns void
+   */
   zoomIn(): void {
     this.scale = Math.min(this.scale + this.zoomStep, this.maxScale);
   }
 
+  /**
+   * Decreases the zoom level of the image.
+   *
+   * @returns void
+   */
   zoomOut(): void {
     this.scale = Math.max(this.scale - this.zoomStep, this.minScale);
   }
 
+  /**
+   * Handles mouse wheel zoom interaction.
+   *
+   * Zooms in or out depending on the
+   * scroll direction.
+   *
+   * @param event The mouse wheel event
+   * @returns void
+   */
   onWheel(event: WheelEvent): void {
     event.preventDefault();
 
@@ -68,6 +132,14 @@ export class ImageViewer implements OnInit {
     }
   }
 
+  /**
+   * Navigates to the previous image.
+   *
+   * Wraps to the last image when the
+   * beginning of the list is reached.
+   *
+   * @returns void
+   */
   previousImage(): void {
     this.currentIndex--;
 
@@ -78,6 +150,14 @@ export class ImageViewer implements OnInit {
     this.resetZoom();
   }
 
+  /**
+   * Navigates to the next image.
+   *
+   * Wraps to the first image when the
+   * end of the list is reached.
+   *
+   * @returns void
+   */
   nextImage(): void {
     this.currentIndex++;
 
@@ -88,6 +168,11 @@ export class ImageViewer implements OnInit {
     this.resetZoom();
   }
 
+  /**
+   * Resets the zoom level to the default value.
+   *
+   * @returns void
+   */
   resetZoom(): void {
     this.scale = 1;
   }

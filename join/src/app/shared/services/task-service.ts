@@ -40,23 +40,46 @@ export class TaskService {
     return this.tasks.filter(task => task.status === status).length;
   }
 
+    /**
+   * Returns the number of tasks marked with high priority.
+   *
+   * @returns The count of urgent tasks
+   */
   getUrgentTaskCount(): number {
     return this.tasks.filter(task => task.priority === 'high').length;
   }
 
+  /**
+   * Determines the nearest upcoming task deadline.
+   *
+   * Iterates through all tasks and returns the earliest
+   * due date if available.
+   *
+   * @returns The next deadline date or null if no tasks exist
+   */
   getNextDeadline(): Date | null {
     let nextDate: Date | null = null;
 
-    for (const task of this.tasks){
+    for (const task of this.tasks) {
       const date = task.dueDate.toDate();
 
-      if(!nextDate || date < nextDate){
+      if (!nextDate || date < nextDate) {
         nextDate = date;
       }
     }
     return nextDate;
   }
 
+  /**
+   * Updates the current task search term.
+   *
+   * Stores the search term and dispatches a custom
+   * event to notify components that tasks should
+   * be refreshed.
+   *
+   * @param term The search term used to filter tasks
+   * @returns void
+   */
   setSearchTerm(term: string): void {
     this.searchTerm = term;
     window.dispatchEvent(new Event('tasks-updated'));

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-toast',
@@ -6,6 +6,12 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
   templateUrl: './toast.html',
   styleUrl: './toast.scss',
 })
+/**
+ * Toast component
+ *
+ * Displays a temporary notification message to the user.
+ * Supports informational and error message types.
+ */
 export class Toast {
   @Input() message: string = '';
   @Input() type: 'info' | 'error' = 'info';

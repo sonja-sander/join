@@ -154,38 +154,76 @@ export class MainPage implements OnInit {
     this.showConfirmPassword = !this.showConfirmPassword;
   }
 
-  /**
-   * Handles user login.
+    /**
+   * Handles the login process.
    *
-   * Validates the form, triggers authentication,
-   * and navigates after successful login.
+   * Validates the login form, initiates authentication,
+   * and triggers the corresponding success or error flow.
    *
    * @param form The login form instance
    * @returns void
    */
   onLogin(form: NgForm): void {
     if (this.isLoggingIn) return;
-
-    if (form.invalid) {
-      form.control.markAllAsTouched();
-      return;
-    }
+    if (this.isLoginFormInvalid(form)) return;
 
     this.isLoggingIn = true;
     this.loginError = false;
 
-    this.authService.logIn(this.logInData.email, this.logInData.password)
-      .subscribe({
-        next: () => {
-          this.isLoggingIn = false;
-          this.handleLoginNavigation();
-        },
-        error: (err) => {
-          console.error('Login failed', err);
-          this.isLoggingIn = false;
-          this.loginError = true;
-        },
-      });
+    this.authService.logIn(this.logInData.email, this.logInData.password
+    ).subscribe({
+      next: () => {
+        this.onLoginSuccess();
+      },
+      error: (err) => {
+        this.onLoginError(err);
+      },
+    });
+  }
+
+  /**
+   * Validates the login form state.
+   *
+   * Marks all form controls as touched when
+   * the form validation fails.
+   *
+   * @param form The login form instance
+   * @returns True if the form is invalid
+   */
+  isLoginFormInvalid(form: NgForm): boolean {
+    if (form.invalid) {
+      form.control.markAllAsTouched();
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * Handles a successful login.
+   *
+   * Resets the loading state and performs
+   * post-login navigation.
+   *
+   * @returns void
+   */
+  onLoginSuccess(): void {
+    this.isLoggingIn = false;
+    this.handleLoginNavigation();
+  }
+
+  /**
+   * Handles a login error.
+   *
+   * Logs the error and updates the UI
+   * to reflect the failed login attempt.
+   *
+   * @param err The error returned during login
+   * @returns void
+   */
+  onLoginError(err: unknown): void {
+    console.error('Login failed', err);
+    this.isLoggingIn = false;
+    this.loginError = true;
   }
 
   /**

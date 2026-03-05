@@ -187,61 +187,129 @@ export class AddTask implements OnChanges, OnDestroy {
   // #endregion
 
   // #region Public Actions
+
   /**
-   * Validates and persists the current form as a new task or task update.
-   * Shows a toast afterwards and either closes overlay mode or navigates to board.
+   * Creates or updates a task based on the current mode.
+   *
+   * Prepares the form data, determines whether the task
+   * should be created or updated, and handles the
+   * post-submit actions.
+   *
+   * @returns Promise<void>
    */
   async createTask(): Promise<void> {
+    const formData = this.prepareFormData();
+    if (!formData) return;
+
+    if (this.isEditMode) {
+      await this.updateTask(formData);
+    } else {
+      await this.createNewTask(formData);
+    }
+
+    this.showToast();
+    this.resetDirtyState();
+  }
+
+  /**
+   * Prepares and validates the form data for task creation or update.
+   *
+   * Trims input values, validates the form fields,
+   * parses the due date, and extracts assignee identifiers.
+   *
+   * @returns The prepared task form data or null if validation fails
+   */
+  private prepareFormData(): {title: string; description: string; dueDate: Timestamp; assigneeIds: string[]; category: Task['category'];} | null {
     const title = this.taskTitle.trim();
     const description = this.taskDescription.trim();
     const dueDateValue = this.taskDueDate.trim();
     const validatedCategory = this.validateForm(
       title,
       dueDateValue,
-      this.activeCategory?.value ?? null,
+      this.activeCategory?.value ?? null
     );
-
-    if (!validatedCategory) return;
+    if (!validatedCategory) return null;
 
     const dueDateDate = this.parseDueDate(dueDateValue);
-    if (!dueDateDate) return;
-    const dueDate = Timestamp.fromDate(dueDateDate);
+    if (!dueDateDate) return null;
+    const assigneeIds = this.getAssigneeIds();
 
-    const assigneeIds = this.activeAssignees
+    return {title, description, dueDate: Timestamp.fromDate(dueDateDate), assigneeIds, category: validatedCategory,};
+  }
+
+  /**
+   * Extracts the identifiers of all selected assignees.
+   *
+   * Filters out undefined values and returns
+   * a list of valid contact IDs.
+   *
+   * @returns An array of assignee identifiers
+   */
+  private getAssigneeIds(): string[] {
+    return this.activeAssignees
       .map((contact) => contact.id)
       .filter((id): id is string => Boolean(id));
+  }
+
+  /**
+   * Updates an existing task with the provided data.
+   *
+   * Builds the task payload and persists
+   * the updated task through the task service.
+   *
+   * @param data The prepared task data
+   * @returns Promise<void>
+   */
+  private async updateTask(data: {title: string; description: string; dueDate: Timestamp; assigneeIds: string[]; category: Task['category'];}): Promise<void> {
+    if (!this.taskToEdit?.id) return;
+
     const taskPayload = this.buildTaskPayload(
-      title,
-      description,
-      dueDate,
-      assigneeIds,
-      validatedCategory,
+      data.title,
+      data.description,
+      data.dueDate,
+      data.assigneeIds,
+      data.category
     );
 
-    if (this.isEditMode && this.taskToEdit?.id) {
-      const updatedTask: Task = {
-        ...this.taskToEdit,
-        ...taskPayload,
-      };
-      await this.taskService.updateDocument(updatedTask, 'tasks');
-    } else {
-      const tasksInTargetColumn = this.taskService.tasks.filter(
-        (task) => task.status === this.initialStatus,
-      );
-      const newOrder = tasksInTargetColumn.length;
+    const updatedTask: Task = {
+      ...this.taskToEdit,
+      ...taskPayload,
+    };
 
-      const task: Task = {
-        status: this.initialStatus,
-        order: newOrder,
-        ...taskPayload,
-      };
+    await this.taskService.updateDocument(updatedTask, 'tasks');
+  }
 
-      await this.taskService.addDocument(task);
-      this.resetForm();
-    }
+  /**
+   * Creates a new task using the provided data.
+   *
+   * Determines the correct order in the target column,
+   * builds the task payload, and stores the task
+   * in the database.
+   *
+   * @param data The prepared task data
+   * @returns Promise<void>
+   */
+  private async createNewTask(data: {title: string; description: string; dueDate: Timestamp; assigneeIds: string[]; category: Task['category']; }): Promise<void> {
+    const tasksInTargetColumn = this.taskService.tasks.filter(
+      (task) => task.status === this.initialStatus
+    );
 
-    this.showToast();
-    this.resetDirtyState();
+    const taskPayload = this.buildTaskPayload(
+      data.title,
+      data.description,
+      data.dueDate,
+      data.assigneeIds,
+      data.category
+    );
+
+    const task: Task = {
+      status: this.initialStatus,
+      order: tasksInTargetColumn.length,
+      ...taskPayload,
+    };
+
+    await this.taskService.addDocument(task);
+    this.resetForm();
   }
 
   /** Resets all form fields and touch states to their defaults. */
@@ -424,17 +492,41 @@ export class AddTask implements OnChanges, OnDestroy {
   }
   // #endregion
 
+    /**
+   * Marks the form as edited.
+   *
+   * Updates the dirty state and emits a change event
+   * when the user modifies the form for the first time.
+   *
+   * @returns void
+   */
   markAsEdited(): void {
     if (this.hasUserEdited) return;
     this.hasUserEdited = true;
     this.dirtyChange.emit(true);
   }
 
+  /**
+   * Resets the dirty state of the form.
+   *
+   * Clears the edited flag and notifies listeners
+   * that the form no longer contains unsaved changes.
+   *
+   * @returns void
+   */
   resetDirtyState(): void {
     this.hasUserEdited = false;
     this.dirtyChange.emit(false);
   }
 
+  /**
+   * Confirms deletion of all attachments.
+   *
+   * Clears the attachments array, marks the form as edited,
+   * and closes the confirmation dialog.
+   *
+   * @returns void
+   */
   confirmDeleteAllAttachments(): void {
     this.attachments = [];
     this.markAsEdited();

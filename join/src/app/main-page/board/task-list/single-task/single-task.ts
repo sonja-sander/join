@@ -21,13 +21,13 @@ import { CdkDrag, DragDropModule } from '@angular/cdk/drag-drop';
  * and subtask progress.
  */
 export class SingleTask implements OnInit {
-  @Input() task!: Task;
   taskService = inject(TaskService);
   contactService = inject(FirebaseService);
+  @Input() task!: Task;
+  @Output() openTask = new EventEmitter<Task>();
   userColor: string | null = null;
   moveMenuOpen: boolean = false;
-  isMobile = false;
-  @Output() openTask = new EventEmitter<Task>();
+  isMobile: boolean = false;
 
   /**
    * Initializes the component.
@@ -154,6 +154,15 @@ export class SingleTask implements OnInit {
     return contact?.userColor || '#9327ff';
   }
 
+    /**
+   * Retrieves the avatar image of an assignee.
+   *
+   * Searches the contact list for the specified ID
+   * and returns the base64 encoded avatar if available.
+   *
+   * @param id The identifier of the assignee
+   * @returns The base64 avatar string or null if no avatar exists
+   */
   getAssigneeAvatar(id: string): string | null {
     const contact = this.contactService.contacts.find((c) => {
       return c.id === id;

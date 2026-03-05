@@ -26,9 +26,10 @@ import { ConfirmDialog } from '../../shared/components/confirm-dialog/confirm-di
 export class Contacts implements DoCheck {
   firebaseService = inject(FirebaseService);
   authService = inject(AuthService);
-  private readonly mobileMaxWidth = 768;
-  private lastContactsVersion = 0;
-
+  @ViewChild(ContactDialog) dialog!: ContactDialog;
+  @ViewChild('confirmDialog') confirmDialog!: ElementRef<HTMLDialogElement>;
+  private readonly mobileMaxWidth: number = 768;
+  private lastContactsVersion: number = 0;
   isMobile: boolean = false;
   isDetailOpen: boolean = false;
   activeContactID: string | null = null;
@@ -36,9 +37,6 @@ export class Contacts implements DoCheck {
   addContactSuccess: boolean = false;
   showDeleteConfirm: boolean = false;
   contactToDelete: Contact | null = null;
-
-  @ViewChild(ContactDialog) dialog!: ContactDialog;
-  @ViewChild('confirmDialog') confirmDialog!: ElementRef<HTMLDialogElement>;
 
   constructor() {
     this.updateIsMobile();
@@ -153,28 +151,18 @@ export class Contacts implements DoCheck {
     }
   }
 
-  /**
-   * Creates a new contact from form data.
+    /**
+   * Creates a new contact from submitted form data.
    *
-   * Sets the created contact as active and
-   * opens the detail view on mobile devices.
+   * Builds the contact object, saves it to the database,
+   * and sets the created contact as the active contact.
    *
-   * @param data The form data used to create the contact
+   * @param data The submitted contact form data
    * @returns Promise<void>
    */
   async createContactFromForm(data: ContactFormData): Promise<void> {
-    const contact: Contact = {
-      name: capitalizeFullname(data.name),
-      email: data.email,
-      phone: data.phone,
-      isAvailable: true,
-      userColor: setUserColor(),
-      avatar: data.avatar
-    };
-
-    const newContactId = await this.firebaseService.addDocument(contact);
-    this.showToast();
-
+    const contact = this.buildContactFromForm(data);
+    const newContactId = await this.saveContact(contact);
     if (!newContactId) return;
 
     const createdContact: Contact = {
@@ -182,12 +170,45 @@ export class Contacts implements DoCheck {
       id: newContactId,
     };
 
-    this.activeContactID = newContactId;
-    this.activeContact = createdContact;
+    this.setActiveContact({
+      id: newContactId,
+      contact: createdContact,
+    });
+  }
 
-    if (this.isMobile) {
-      this.isDetailOpen = true;
-    }
+  /**
+   * Builds a contact object from form data.
+   *
+   * Normalizes the contact name and assigns
+   * default values such as availability and color.
+   *
+   * @param data The submitted contact form data
+   * @returns The constructed contact object
+   */
+  private buildContactFromForm(data: ContactFormData): Contact {
+    return {
+      name: capitalizeFullname(data.name),
+      email: data.email,
+      phone: data.phone,
+      isAvailable: true,
+      userColor: setUserColor(),
+      avatar: data.avatar
+    };
+  }
+
+  /**
+   * Persists a contact to the database.
+   *
+   * Displays a confirmation toast after saving
+   * and returns the created contact identifier.
+   *
+   * @param contact The contact to save
+   * @returns The identifier of the created contact or null
+   */
+  private async saveContact(contact: Contact): Promise<string | null> {
+    const newContactId = await this.firebaseService.addDocument(contact);
+    this.showToast();
+    return newContactId ?? null;
   }
 
   /**

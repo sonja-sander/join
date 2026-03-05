@@ -24,11 +24,11 @@ import { A11yModule } from '@angular/cdk/a11y';
  */
 export class Board {
   taskService = inject(TaskService);
+  @ViewChild('taskDialog') taskDialog!: TaskDialog;
   searchTerm: string = '';
   isAddTaskOverlayOpen: boolean = false;
   taskToEdit: Task | null = null;
   addTaskStatus: Task['status'] = 'to-do';
-  @ViewChild('taskDialog') taskDialog!: TaskDialog;
   selectedTask: Task | null = null;
   showCloseConfirm: boolean = false;
   isAddTaskDirty: boolean = false;

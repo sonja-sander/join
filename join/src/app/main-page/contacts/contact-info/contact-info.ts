@@ -32,6 +32,12 @@ export class ContactInfo implements OnChanges {
   profileAnimating: boolean = false;
   readonly getTwoInitials = getTwoInitials;
 
+    /**
+   * Checks whether a contact has a valid phone number.
+   *
+   * @param phone The phone number to evaluate
+   * @returns True if the phone number contains a non-empty value
+   */
   hasPhoneNumber(phone: Contact['phone'] | null | undefined): boolean {
     return String(phone ?? '').trim().length > 0;
   }
@@ -70,10 +76,18 @@ export class ContactInfo implements OnChanges {
    * Opens a small confirmation toast before deleting.
    */
   handleFabDelete(): void {
-    // this.requestDeleteConfirmation();
     this.requestDelete.emit();
   }
 
+  /**
+   * Handles viewport resize events.
+   *
+   * Updates the responsive state and closes
+   * the floating action menu when switching
+   * to larger screen sizes.
+   *
+   * @returns void
+   */
   @HostListener('window:resize')
   onResize(): void {
     this.isDownLg = this.isDownLgViewport();
@@ -85,13 +99,18 @@ export class ContactInfo implements OnChanges {
    */
   ngOnChanges(changes: SimpleChanges): void {
     if (!changes['activeContact'] || !this.activeContact) return;
-    // this.showDeleteConfirm = false;
     this.profileAnimating = false;
     setTimeout(() => {
       this.profileAnimating = true;
     }, 0);
   }
 
+    /**
+   * Determines whether the viewport width is
+   * below the defined large-screen breakpoint.
+   *
+   * @returns True if the viewport is smaller than or equal to the breakpoint
+   */
   private isDownLgViewport(): boolean {
     return window.innerWidth <= this.downLgBreakpoint;
   }

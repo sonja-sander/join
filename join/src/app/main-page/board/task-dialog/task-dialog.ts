@@ -33,7 +33,7 @@ export class TaskDialog {
   @Output() editTask = new EventEmitter<Task>();
   @Output() close = new EventEmitter<void>();
   showDeleteConfirm: boolean = false;
-  showViewer = false;
+  showViewer: boolean = false;
   viewerAttachments: Array<Attachment> = [];
   viewerStartIndex: number = 0;
 
@@ -111,6 +111,16 @@ export class TaskDialog {
     }
   }
 
+    /**
+   * Handles the Escape key interaction.
+   *
+   * Prevents the default browser behavior and
+   * closes the dialog when no blocking overlays
+   * (viewer or delete confirmation) are active.
+   *
+   * @param event The keyboard event triggered by pressing Escape
+   * @returns void
+   */
   @HostListener('document:keydown.escape', ['$event'])
   onEsc(event: Event): void {
     if (this.showViewer) return;
@@ -149,6 +159,15 @@ export class TaskDialog {
     return contact?.name || 'Unknown';
   }
 
+    /**
+   * Retrieves the avatar image of an assignee by contact ID.
+   *
+   * Looks up the contact and returns the base64-encoded avatar
+   * if available.
+   *
+   * @param id The contact identifier
+   * @returns The base64 avatar string or null if none exists
+   */
   getAssigneeAvatar(id: string): string | null {
     const contact = this.contactService.contacts.find((c) => {
       return c.id === id;
@@ -185,13 +204,32 @@ export class TaskDialog {
     this.taskService.updateSubtasks(this.task);
   }
 
+    /**
+   * Opens the image viewer for task attachments.
+   *
+   * Initializes the viewer with the task's attachments
+   * and sets the starting index for the displayed image.
+   *
+   * @param index The index of the image to display first
+   * @returns void
+   */
   openImageViewer(index: number): void {
     this.viewerAttachments = this.task.attachments;
     this.viewerStartIndex = index;
     this.showViewer = true;
   }
 
-  downloadAttachment(event: MouseEvent, attachment: Attachment) {
+  /**
+   * Downloads the selected attachment.
+   *
+   * Stops event propagation to prevent triggering
+   * parent click handlers.
+   *
+   * @param event The mouse event triggering the download
+   * @param attachment The attachment to download
+   * @returns void
+   */
+  downloadAttachment(event: MouseEvent, attachment: Attachment): void {
     event.stopPropagation();
     this.fileService.downloadAttachment(attachment);
   }

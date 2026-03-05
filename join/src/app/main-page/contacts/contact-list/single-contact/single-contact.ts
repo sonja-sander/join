@@ -13,7 +13,7 @@ import { getTwoInitials } from '../../../../shared/utilities/utils';
  */
 export class SingleContact {
   @Input() contact?: Contact;
-  @Input() isActive = false;
+  @Input() isActive: boolean = false;
   @Output() selected = new EventEmitter<Contact>();
 
   readonly getTwoInitials = getTwoInitials;

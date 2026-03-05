@@ -22,19 +22,18 @@ import { A11yModule } from '@angular/cdk/a11y';
  */
 export class ContactDialog {
   fileService = inject(FileService);
-  isOpen: boolean = false;
   @ViewChild('contactForm') contactForm!: NgForm;
   @ViewChild('filePicker') filePicker!: ElementRef<HTMLInputElement>;
   @Input() canDelete = true;
   @Input() confirmOpen: boolean = false;
+  @Output() saveContact = new EventEmitter<ContactFormData>();
+  @Output() requestDelete = new EventEmitter<void>();
+  isOpen: boolean = false;
   dialogMode: 'add' | 'edit' = 'add';
   readonly getTwoInitials = getTwoInitials;
   userColor: string | null = null;
   imageTypeError: boolean = false;
   imageSizeError: boolean = false;
-
-  @Output() saveContact = new EventEmitter<ContactFormData>();
-  @Output() requestDelete = new EventEmitter<void>();
 
   contactData: ContactFormData = {
     name: '',
@@ -102,6 +101,14 @@ export class ContactDialog {
   }
   // #endregion
 
+    /**
+   * Opens the file picker dialog.
+   *
+   * Triggers the hidden file input element
+   * to allow the user to select a file.
+   *
+   * @returns void
+   */
   openFilePicker(): void {
     this.filePicker.nativeElement.click();
   }
@@ -188,6 +195,16 @@ export class ContactDialog {
     this.closeDialog();
   }
 
+    /**
+   * Handles the Escape key interaction.
+   *
+   * Prevents the default browser behavior and
+   * closes the dialog when it is open and no
+   * confirmation dialog is active.
+   *
+   * @param event The keyboard event triggered by pressing Escape
+   * @returns void
+   */
   @HostListener('document:keydown.escape', ['$event'])
   onEsc(event: Event): void {
     if (!this.isOpen) return;
@@ -197,12 +214,30 @@ export class ContactDialog {
     this.closeDialog();
   }
 
+  /**
+   * Confirms the delete action.
+   *
+   * Emits a delete request event to the parent
+   * component.
+   *
+   * @returns void
+   */
   confirmDelete(): void {
     this.requestDelete.emit();
   }
 
   // #endregion
   
+    /**
+   * Handles avatar selection from the file input.
+   *
+   * Extracts the selected file, validates the file type
+   * and size, compresses the image, and stores the
+   * processed avatar data.
+   *
+   * @param event The file input event
+   * @returns Promise<void>
+   */
   async onAvatarSelected(event: Event): Promise<void> {
     const file = this.extractFile(event);
     if (!file) return;
@@ -215,23 +250,52 @@ export class ContactDialog {
     this.contactData.avatar = this.createAvatarObject(file, sizeInBytes, compressedBase64);
   }
 
+  /**
+   * Extracts the selected file from the input event.
+   *
+   * @param event The file input event
+   * @returns The selected file or null if none exists
+   */
   extractFile(event: Event): File | null {
     const inputElement = event.target as HTMLInputElement;
     return inputElement.files?.[0] ?? null;
   }
 
+  /**
+   * Checks whether the selected file type is valid.
+   *
+   * Displays an error notification when the file
+   * type is not allowed.
+   *
+   * @param file The file to validate
+   * @returns True if the file type is invalid
+   */
   hasInvalidFileType(file: File): boolean {
     const isInvalid = !this.fileService.isValidFileType(file);
     this.showTypeErrorToast();
     return isInvalid;
   }
 
+  /**
+   * Checks whether the avatar file exceeds the allowed size.
+   *
+   * Displays an error notification when the size
+   * limit is exceeded.
+   *
+   * @param size The file size in bytes
+   * @returns True if the size limit is exceeded
+   */
   exceedsSizeLimit(size: number): boolean {
     const exceeds = !this.fileService.isWithinSizeLimit(size);
     this.showSizeErrorToast();
     return exceeds;
   }
 
+  /**
+   * Displays a temporary error notification for invalid file types.
+   *
+   * @returns void
+   */
   showTypeErrorToast(): void {
     this.imageTypeError = true;
 
@@ -240,6 +304,12 @@ export class ContactDialog {
     }, 2500);
   }
 
+  /**
+   * Displays a temporary error notification for files
+   * exceeding the size limit.
+   *
+   * @returns void
+   */
   showSizeErrorToast(): void {
     this.imageSizeError = true;
 
@@ -248,6 +318,14 @@ export class ContactDialog {
     }, 2500);
   }
 
+  /**
+   * Creates an avatar object from the processed file data.
+   *
+   * @param file The original file
+   * @param size The file size in bytes
+   * @param base64 The base64 encoded image
+   * @returns The avatar object
+   */
   createAvatarObject(file: File, size: number, base64: string) {
     return {
       fileName: file.name,
@@ -257,7 +335,14 @@ export class ContactDialog {
     };
   }
 
-  onAvatarDelete() {
+  /**
+   * Removes the currently selected avatar.
+   *
+   * Resets the avatar data to an empty state.
+   *
+   * @returns void
+   */
+  onAvatarDelete(): void {
     this.contactData.avatar = {
       fileName: '',
       fileType: '',
