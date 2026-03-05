@@ -1,0 +1,68 @@
+  <div class="viewer-overlay" (click)="onBackdropClick($event)">
+    <div class="viewer-content" cdkTrapFocus cdkTrapFocusAutoCapture>
+      <header>
+        <div class="header-content">
+          <div class="metadata">
+            <p class="file-name">
+              {{ currentAttachment.fileName }} 
+            </p>
+            <p class="file-type-and-size">
+              {{ currentAttachment.fileType.split('/')[1].toUpperCase() }} / 
+              {{ (currentAttachment.base64Size / 1024).toFixed(0) }} KB
+            </p>
+          </div>
+  
+          <div class="zoom desktop-only">
+            <button class="zoom-out" type="button" (click)="zoomOut()">
+              <img src="assets/img/icons/add-task/zoom-out.svg" alt="">
+            </button>
+            <button class="zoom-in" type="button" (click)="zoomIn()">
+              <img src="assets/img/icons/add-task/zoom-in.svg" alt="">
+            </button>
+          </div>
+    
+          <div class="header-actions">
+            <button class="download-btn" type="button" (click)="this.fileService.downloadAttachment(currentAttachment)">
+              <img src="assets/img/icons/add-task/download-white.svg" alt="">
+            </button>
+      
+            <button class="close-btn" type="button" (click)="closeImageViewer()">
+              <img src="assets/img/icons/add-task/close-white.svg" alt="">
+            </button>
+          </div>
+        </div>
+      </header>
+  
+      <section class="image-section">
+        <img class="attachment-img" [src]="currentAttachment.base64" [style.transform]="`scale(${scale})`" (wheel)="onWheel($event)" alt="">
+      </section>
+
+      <button class="desktop-previous desktop-only" type="button" (click)="previousImage()">
+        <img class="desktop-only" src="assets/img/icons/add-task/arrow-left.svg" alt="">
+      </button>
+      <button class="desktop-next desktop-only" type="button" (click)="nextImage()">
+        <img class="desktop-only" src="assets/img/icons/add-task/arrow-right.svg" alt="">
+      </button>
+      
+      <footer>
+        <div class="footer-content mobile-only">
+          <button class="previous" type="button" (click)="previousImage()">
+            <img src="assets/img/icons/add-task/arrow-left.svg" alt="">
+          </button>
+    
+          <div class="zoom">
+            <button class="zoom-out" type="button" (click)="zoomOut()">
+              <img src="assets/img/icons/add-task/zoom-out.svg" alt="">
+            </button>
+            <button class="zoom-in" type="button" (click)="zoomIn()">
+              <img src="assets/img/icons/add-task/zoom-in.svg" alt="">
+            </button>
+          </div>
+    
+          <button class="next" type="button" (click)="nextImage()">
+            <img src="assets/img/icons/add-task/arrow-right.svg" alt="">
+          </button>
+        </div>
+      </footer>
+    </div>
+  </div>

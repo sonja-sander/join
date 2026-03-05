@@ -1,0 +1,31 @@
+<section>
+  <div class="list-head">
+    <h2>{{listTitle}}</h2>
+    @if (status !== "done") {
+      <button class="add-to-list-btn" type="button" aria-label="Add task to {{ listTitle }}" (click)="onAddTaskClick()">
+        <img class="add-icon add-icon--default" src="assets/img/icons/board/add-task.svg" alt="" aria-hidden="true">
+        <img class="add-icon add-icon--hover" src="assets/img/icons/board/add-task-hover.svg" alt="" aria-hidden="true">
+      </button>
+    }
+  </div>
+
+  <div class="list" cdkDropList (cdkDropListDropped)="onDrop($event)" [id]="status" [cdkDropListConnectedTo]="connectedLists" [cdkDropListData]="tasksByStatus" role="list" aria-roledescription="Task drop zone">
+    @if(taskService.loading || contactService.loading){
+      <div class="loading-tasks-box" role="status" aria-live="polite">
+        <p>Loading...</p>
+      </div>
+    } @else if(tasksByStatus.length === 0 && taskService.searchTerm){
+      <div class="no-tasks-box" role="status" aria-live="polite"> 
+        <p>No search results for "{{ taskService.searchTerm }}"</p>
+      </div>
+    } @else if (tasksByStatus.length > 0) { 
+        @for (singleTask of tasksByStatus; track singleTask.id) {
+          <app-single-task [task]="singleTask" (openTask)="openTask.emit($event)"></app-single-task>
+        }
+      } @else{
+        <div class="no-tasks-box">
+          <p>No tasks To Do</p>
+        </div>
+      }
+  </div>
+</section>

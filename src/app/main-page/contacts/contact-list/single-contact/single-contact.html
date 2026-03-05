@@ -1,0 +1,21 @@
+<li
+  class="single-contact"
+  [class.single-contact--active]="isActive"
+  (click)="setContactAsSelected()"
+  (keydown.enter)="setContactAsSelected()"
+  (keydown.space)="setContactAsSelected()" 
+  tabindex="0" 
+  role="button"
+>
+  <div class="single-contact__avatar" [style.backgroundColor]="contact?.userColor || null">
+    @if (contact?.avatar?.base64) {
+      <img class="single-contact__avatar-img" [src]="contact?.avatar?.base64" alt="Contact profile picture">
+    } @else {
+      <span class="single-contact__initials">{{ getTwoInitials(contact?.name) }}</span>
+    }
+  </div>
+  <div class="single-contact__text">
+    <div class="single-contact__name">{{ contact?.name }}</div>
+    <div class="single-contact__email">{{ contact?.email }}</div>
+  </div>
+</li>

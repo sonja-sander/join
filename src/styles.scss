@@ -1,0 +1,331 @@
+@use './styles/index' as styles;
+
+*,
+*::before,
+*::after {
+  position: relative;
+  padding: 0;
+  margin: 0;
+  scroll-behavior: smooth;
+  box-sizing: border-box;
+}
+
+a {
+  text-decoration: none;
+  cursor: pointer;
+}
+
+html {
+  @include styles.setFont($size: 10px);
+
+  > body {
+    @include styles.setFont($size: 16px, $weight: 400);
+  }
+}
+
+body:has(dialog[open]),
+body:has(.add-task-overlay) {
+  overflow: hidden;
+}
+
+// #region Button styles
+button {
+  padding: 8px;
+  border: none;
+  border-radius: 8px;
+  @include styles.setFont();
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.button--primary {
+  background-color: styles.$gray-dark;
+  color: white;
+
+  @include styles.up-xxl {
+    padding: 14px;
+
+    &:hover {
+      background-color: styles.$blue-sky;
+      box-shadow: 0px 4px 4px 0px #00000040;
+    }
+  
+    &:active {
+      background-color: styles.$navy-dark;
+      box-shadow: 0px 4px 4px 0px #00000040;
+    }
+
+    &:focus-visible{
+      background-color: styles.$blue-primary;
+    }
+  }
+}
+
+.button--secondary {
+  background-color: white;
+  color: styles.$gray-dark;
+  border: 1px solid styles.$gray-dark;
+
+  @include styles.up-xxl {
+    padding: 14px;
+
+    &:hover {
+      color: styles.$blue-sky;
+      border-color: styles.$blue-sky;
+      box-shadow: 0px 4px 4px 0px #00000040;
+    }
+  
+    &:active {
+      color: styles.$gray-dark;
+      border-color: styles.$gray-dark;
+      box-shadow: 0px 4px 4px 0px #00000040;
+    }
+  }
+}
+
+.button--disabled {
+  border: 1px solid styles.$gray-dark;
+  filter: opacity(0.5);
+  cursor: not-allowed;
+}
+
+.button--icon {
+  @include styles.setFlex($gap: 4px);
+
+  .button__icon {
+    width: 20px;
+    height: 20px;
+  }
+}
+// #endregion
+
+// #region Legal pages
+.legal-content-wrapper {
+  @include styles.setFlex($ai: flex-start);
+  height: 100%;
+  overflow-y: auto;
+  scrollbar-width: none;
+
+  .legal-page-article {
+    width: 90%;
+    padding: 2rem 0 12rem;
+
+    @include styles.up-xxl{
+      padding: 4rem 0 12rem;
+    }
+
+    .heading {
+      @include styles.setFlex($jc: space-between);
+      padding-bottom: 16px;
+
+      h1 {
+        font-size: 32px;
+  
+        @include styles.up-xxl {
+          font-size: 50px;
+        }
+      }
+
+      button {
+        @include styles.setFlex();
+        width: 32px;
+        padding: 0;
+        background-color: transparent;
+      }
+    }
+
+    h2 {
+      margin: 24px 0 16px;
+      font-size: 24px;
+
+      @include styles.up-xxl {
+        font-size: 30px;
+      }
+    }
+
+    h3 {
+      margin-top: 16px;
+      font-size: 20px;
+
+      @include styles.up-xxl {
+        font-size: 24px;
+      }
+    }
+
+    h4 {
+      margin-top: 16px;
+      font-size: 18px;
+
+      @include styles.up-xxl {
+        font-size: 20px;
+      }
+    }
+
+    h5,
+    h6 {
+      margin-top: 16px;
+      font-size: 16px;
+
+      @include styles.up-xxl {
+        font-size: 18px;
+      }
+    }
+
+    ul {
+      padding-left: 24px;
+    }
+
+    li {
+      margin: 16px 0;
+    }
+
+    ol {
+      list-style: none;
+      counter-reset: number-counter;
+    }
+
+    ol > li {
+      counter-increment: number-counter;
+      list-style-position: outside;
+      @include styles.setGrid($columns: 20px 1fr);
+
+      &::before {
+        content: counter(number-counter) '. ';
+        font-weight: bold;
+        font-size: 20px;
+      }
+    }
+
+    .li-content {
+      margin-left: 15px;
+
+      > span {
+        font-weight: bold;
+        font-size: 18px;
+      }
+    }
+
+    a {
+      color: styles.$blue-sky;
+    }
+
+    p {
+      margin-top: 8px;
+    }
+  }
+}
+// #endregion
+
+// #region Visibility classes
+.mobile-only {
+  @include styles.up-xxl {
+    display: none;
+  }
+}
+
+.desktop-only {
+  @include styles.down-xxl {
+    display: none;
+  }
+}
+// #endregion
+
+// #region Dragging tasks on board
+.cdk-drag-preview {
+  overflow: visible;
+}
+
+.cdk-drop-list-dragging .no-tasks-box {
+  opacity: 0;
+  pointer-events: none;
+  position: absolute;
+}
+
+.cdk-drag-preview .task-card {
+  backface-visibility: hidden;
+  box-shadow: none;
+  transform: rotate(4deg);
+  box-shadow: 0px 0px 10px 3px #00000014;
+}
+
+.cdk-drag-placeholder {
+  margin-bottom: 16px;
+  margin-top: 0;
+  border: 2px dashed #e7e7e7;
+  border-radius: 20px;
+  background-color: #f6f7f8;
+}
+
+.cdk-drag-placeholder > .task-card {
+  visibility: hidden;
+}
+
+.cdk-drag-animating {
+  transition: transform 280ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+// #endregion
+
+.scroll-shadows {
+  --white: #fff;
+  --black: #c1bbbb;
+  --scroll-shadow-size: 3px;
+
+  background:
+    linear-gradient(180deg, var(--white) var(--scroll-shadow-size), transparent) center top,
+    linear-gradient(0deg, var(--white) var(--scroll-shadow-size), transparent) center bottom,
+    linear-gradient(180deg, color-mix(in srgb, var(--black), transparent 50%), transparent) center
+      top,
+    linear-gradient(0deg, color-mix(in srgb, var(--black), transparent 50%), transparent) center
+      bottom,
+    var(--white);
+  background-size:
+    100% calc(2 * var(--scroll-shadow-size)),
+    100% calc(2 * var(--scroll-shadow-size)),
+    100% var(--scroll-shadow-size),
+    100% var(--scroll-shadow-size);
+  background-attachment: local, local, scroll, scroll;
+  background-repeat: no-repeat;
+}
+
+// #region Goodday message after login
+.good-day-message{
+  @include styles.setFlex($d: column);
+  font-size: 30px;
+  font-weight: 500;
+  color: styles.$gray-dark;
+  max-width: 100%;
+
+  @include styles.up-xxl{
+    align-items: flex-start;
+    font-size: 26px;
+  }
+
+  @media (min-width: 1200px) {
+    font-size: 40px;
+  }
+
+  .user-name{
+    color: styles.$blue-sky;
+    font-size: 36px;
+    font-weight: bold;
+    text-align: center;
+    align-self: center;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    white-space: normal;
+
+    @include styles.up-xxl{
+      font-size: 30px;
+    }
+
+    @media (min-width: 1200px) {
+      font-size: 48px;
+    }
+  }
+}
+// #endregion
+
+:focus-visible {
+  outline: 1px solid styles.$blue-primary;
+}

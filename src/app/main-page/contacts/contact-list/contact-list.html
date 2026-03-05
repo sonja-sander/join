@@ -1,0 +1,35 @@
+<section class="contact-list">
+  <button class="contact-list__button" type="button" (click)="addContact.emit()">
+    <span class="contact-list__btn-text">Add new contact</span>
+    <img
+      class="contact-list__btn-icon"
+      src="assets/img/icons/buttons/add-contact.svg"
+      alt="Add contact Icon"
+      aria-hidden="true"
+    />
+  </button>
+
+  <ul class="contact-list__scroll">
+    @if (loading && !contacts.length){
+      <li class="contact-list__empty">Loading contacts...</li>
+    } @else if (!loading && !contacts.length) {
+      <li class="contact-list__empty">No contacts yet</li>
+    }
+
+    @for (contact of contacts; track getContactId(contact, $index); let idx = $index) {
+      <div class="contact-list__alphab-section">
+        @if (isNewLetter(idx)) {
+          <div class="contact-list__letter">{{ getFirstLetter(contact) }}</div>
+          <div class="contact-list__divider"></div>
+        }
+
+        <app-single-contact
+          class="contact-list__single-contact"
+          [contact]="contact"
+          [isActive]="activeContactID === getContactId(contact, idx)"
+          (selected)="setActiveContact(contact, idx)"
+        />
+      </div>
+    }
+  </ul>
+</section>

@@ -1,0 +1,28 @@
+@if (open) {
+  <div class="confirm-backdrop">
+    <div class="confirm-box" role="dialog" aria-modal="true" (click)="$event.stopPropagation()" cdkTrapFocus cdkTrapFocusAutoCapture>
+      <p class="confirm-text">
+        @if (highlight) {
+          <span class="confirm-highlight">
+            {{ highlight }}
+          </span>
+        }
+        "{{ highlightObject }}"? 
+
+        @if (message) {
+          {{ message }} 
+        }
+      </p>
+
+      <div class="confirm-actions">
+        <button class="button button--primary confirm-btn" type="button" (click)="onConfirm()">
+          {{ confirmText }}
+        </button>
+
+        <button class="button button--secondary cancel-btn" type="button" (click)="onCancel()">
+          {{ cancelText }}
+        </button>
+      </div>
+    </div>
+  </div>
+}

@@ -1,0 +1,283 @@
+@if (isOpen) {
+  <div
+    class="overlay-backdrop"
+    (mousedown)="onBackdropClick($event)"
+  >
+    <div 
+      #contactDialog 
+      class="dialog-content" 
+      (mousedown)="$event.stopPropagation()" 
+      role="dialog" 
+      aria-modal="true" 
+      aria-labelledby="contact-dialog-title" 
+      cdkTrapFocus 
+      cdkTrapFocusAutoCapture 
+      >
+      <header>
+        <button
+          class="close-btn-mobile mobile-only"
+          type="button"
+          aria-label="Close contact dialog"
+          (click)="closeDialog()"
+        >
+          <img src="assets/img/icons/buttons/close-white.svg" alt="" aria-hidden="true"/>
+        </button>
+
+        <div class="title">
+          <img class="logo desktop-only" src="assets/img/icons/logo-light.svg" alt="" aria-hidden="true"/>
+          <h1 id="contact-dialog-title">
+            @if (dialogMode === 'add') {
+              Add contact
+            } @else {
+              Edit contact
+            }
+          </h1>
+          @if (dialogMode === 'add') {
+            <p>Tasks are better with a team!</p>
+          }
+          <div class="line"></div>
+        </div>
+      </header>
+
+      <button
+        class="close-btn-desktop desktop-only"
+        type="button"
+        aria-label="Close contact dialog"
+        (click)="closeDialog()"
+      >
+        <img
+          class="icon icon--default"
+          src="assets/img/icons/buttons/close.svg"
+          alt=""
+          aria-hidden="true"
+        />
+        <img
+          class="icon icon--hover"
+          src="assets/img/icons/buttons/close-hover.svg"
+          alt=""
+          aria-hidden="true"
+        />
+      </button>
+
+      <section class="form-section">
+        <div class="avatar-wrapper">
+          <div class="avatar" [style.backgroundColor]="userColor">
+            @if(contactData.avatar?.base64){
+              <img class="avatar-img" [src]="contactData.avatar?.base64" alt="Contact profile picture" />
+            }
+            @else if (dialogMode === 'add') {
+              <img class="avatar-placeholder-img" src="assets/img/icons/forms/contact-white.svg" alt="" aria-hidden="true" />
+            } @else {
+              <span class="initials">
+                {{ getTwoInitials(contactData.name) }}
+              </span> 
+            }
+            <div class="avatar-upload-wrapper">
+              <button
+                class="upload-btn" 
+                type="button" 
+                (click)="openFilePicker()"
+                aria-label="Upload contact profile picture"
+              >
+                <img class="upload-icon icon--default" src="assets/img/icons/forms/add-avatar.svg" alt="" aria-hidden="true">
+                <img class="upload-icon icon--hover desktop-only" src="assets/img/icons/forms/add-avatar-hover.svg" alt="" aria-hidden="true">
+              </button>
+            </div>
+
+            @if (contactData.avatar?.base64) {
+              <div class="avatar-delete-wrapper">
+                <button class="delete-btn" type="button" (click)="onAvatarDelete()" aria-label="Delete contact profile picture">
+                  <img class="delete-icon icon--default" src="assets/img/icons/add-task/delete-white.svg" alt="" aria-hidden="true">
+                  <img class="delete-icon icon--hover desktop-only" src="assets/img/icons/add-task/delete-white-hover.svg" alt="" aria-hidden="true">
+                </button>
+              </div>
+            }
+          </div>
+            
+          <input
+            #filePicker
+            class="avatarFilePicker"
+            type="file"
+            accept="image/png, image/jpeg"
+            (change)="onAvatarSelected($event)"
+            hidden
+          />
+        </div>
+
+        <app-toast
+          [message]="'File format not allowed! You can only upload JPEG or PNG.'"
+          [type]="'error'"
+          [visible]="imageTypeError">
+        </app-toast>
+
+        <app-toast
+          [message]="'File is too large. Max allowed is 1 MB.'"
+          [type]="'error'"
+          [visible]="imageSizeError">
+        </app-toast>
+
+        <form
+          class="form"
+          #contactForm="ngForm"
+          (ngSubmit)="onSubmit(contactForm)"
+          novalidate
+          autocomplete="off"
+        >
+          <div class="form__input-box">
+            <input
+              class="form__input"
+              type="text"
+              placeholder="Name"
+              name="name"
+              aria-label="Name"
+              required
+              minlength="2"
+              pattern="^[a-zA-Z\xC0-\uFFFF]+([ \-']{0,1}[a-zA-Z\xC0-\uFFFF]+){0,2}[.]{0,1}$"
+              [(ngModel)]="contactData.name"
+              #name="ngModel"
+            />
+            <img class="form__icon" src="assets/img/icons/forms/name.svg" alt="" aria-hidden="true"/>
+            <div class="input-error-wrapper">
+              @if (name.invalid && name.touched) {
+                <span class="form__error" aria-live="assertive">
+                  @if (name.errors?.['required']) {
+                    Name is required.
+                  } @else if (name.errors?.['pattern']) {
+                    Please enter a valid name.
+                  } @else if (name.errors?.['minlength']) {
+                    At least 2 characters.
+                  }
+                </span>
+              }
+            </div>
+          </div>
+
+          <div class="form__input-box">
+            <input
+              class="form__input"
+              type="email"
+              placeholder="Email"
+              name="email"
+              aria-label="Email"
+              required
+              minlength="5"
+              pattern="[a-zA-Z0-9](?:[a-zA-Z0-9._%+\-]*[a-zA-Z0-9])?@[a-zA-Z0-9\-]+(?:\.[a-zA-Z0-9\-]+)*\.[a-zA-Z]{2,}"
+              [(ngModel)]="contactData.email"
+              #email="ngModel"
+              [readonly]="dialogMode === 'edit'"
+              [attr.aria-readonly]="dialogMode === 'edit' ? 'true' : null"
+            />
+            <img class="form__icon" src="assets/img/icons/forms/email.svg" alt="" aria-hidden="true"/>
+            <div class="input-error-wrapper">
+              @if (email.invalid && email.touched) {
+                <span class="form__error" aria-live="assertive">
+                  @if (email.errors?.['required']) {
+                    Email is required.
+                  } @else if (email.errors?.['minlength']) {
+                    At least 5 characters.
+                  } @else if (email.errors?.['pattern']) {
+                    Please enter a valid email address.
+                  }
+                </span>
+              }
+            </div>
+          </div>
+
+          <div class="form__input-box">
+            <input
+              class="form__input"
+              type="tel"
+              placeholder="Phone"
+              name="phone"
+              aria-label="Phone"
+              required
+              minlength="5"
+              pattern="^\+?[0-9 ]+$"
+              [(ngModel)]="contactData.phone"
+              #phone="ngModel"
+            />
+            <img class="form__icon" src="assets/img/icons/forms/phone.svg" alt="" aria-hidden="true"/>
+            <div class="input-error-wrapper">
+              @if (phone.invalid && phone.touched) {
+                <span class="form__error" aria-live="assertive">
+                  @if (phone.errors?.['required']) {
+                    Phone number is required.
+                  } @else if (phone.errors?.['pattern']) {
+                    Only numbers, spaces and + are allowed.
+                  } @else if (phone.errors?.['minlength']) {
+                    At least 5 characters.
+                  }
+                </span>
+              }
+            </div>
+          </div>
+
+          <div class="form__actions">
+            @if (dialogMode === 'add') {
+              <button
+                type="button"
+                class="button button--secondary button--icon desktop-only"
+                (click)="closeDialog()"
+                aria-label="Cancel and close dialog"
+              >
+                Cancel
+                <img
+                  class="button__icon button__icon--default"
+                  src="assets/img/icons/buttons/cancel.svg"
+                  alt=""
+                  aria-hidden="true"
+                />
+                <img
+                  class="button__icon button__icon--hover"
+                  src="assets/img/icons/buttons/cancel-hover.svg"
+                  alt=""
+                  aria-hidden="true"
+                />
+              </button>
+            } @else if (canDelete) {
+              <button
+                type="button"
+                class="button button--secondary"
+                (click)="requestDelete.emit()"
+                aria-label="Delete contact"
+              >
+                Delete
+              </button>
+            }
+            <button
+              type="submit"
+              class="button button--primary button--icon"
+              [class.button--disabled]="contactForm.invalid"
+              aria-label="Save changes"
+            >
+              @if (dialogMode === 'add') {
+                Create contact
+              } @else {
+                Save
+              }
+              <img
+                class="button__icon"
+                src="assets/img/icons/buttons/save.svg"
+                alt=""
+                aria-hidden="true"
+              />
+            </button>
+          </div>
+        </form>
+      </section>
+
+      
+    </div>
+  </div>
+}
+
+<!-- <app-confirm-dialog
+  [open]="showDeleteConfirm"
+  [highlight]="'Delete'"
+  [highlightObject]="contactData.name ? contactData.name : 'this contact'"
+  [confirmText]="'Delete'"
+  [cancelText]="'Cancel'"
+  (confirm)="confirmDelete()"
+  (cancel)="cancelDelete()"
+>
+</app-confirm-dialog> -->

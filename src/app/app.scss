@@ -1,0 +1,71 @@
+@use '../../src/styles/index.scss' as styles;
+
+.app-layout {
+  background-color: #f6f7f8;
+
+  @include styles.up-xxl {
+    @include styles.setGrid($rows: styles.$header-height minmax(0, 1fr) auto, $columns: 232px minmax(0, 1208px) auto);
+    width: 100%;
+    height: 100dvh;
+    max-height: 1024px;
+
+    > * {
+      min-width: 0;
+      min-height: 0;
+    }
+  }
+
+  @include styles.up-xxl {
+    app-cockpit {
+      grid-area: 1/1/4/2;
+    }
+    
+    app-header {
+      grid-area: 1/2/2/4;
+    }
+    
+    .content-area {
+      grid-area: 2/2/3/3;
+    }
+  
+    .empty-content-column{
+      grid-area: 2/3/3/4;
+      background-color: white;
+    }
+  
+    .empty-content-row{
+      grid-area: 3/2/4/3;
+    }
+  }
+}
+
+.app-layout-login{
+  background-color: #f6f7f8;
+
+  @include styles.up-xxl {
+    @include styles.setGrid($rows: minmax(0, 1fr), $columns: minmax(0, 1440px));
+    width: 100%;
+    height: 100dvh;
+    max-height: 1024px;
+
+    > * {
+      min-width: 0;
+      min-height: 0;
+    }
+  }
+
+  @include styles.up-xxl{
+    .content-area {
+      grid-area: 1/1/2/2;
+    }
+
+    .empty-content-column{
+      grid-area: 1/2/2/3;
+      background-color: white;
+    }
+  
+    .empty-content-row{
+      grid-area: 2/1/3/3;
+    }
+  }
+}

@@ -1,0 +1,14 @@
+<div class="toast-wrapper">
+  <div
+    class="toast"
+    [class.toast--visible]="visible"
+    [class.toast--info]="type === 'info'"
+    [class.toast--error]="type === 'error'"
+    role="status"
+    aria-live="assertive"
+  >
+    <p>
+      {{ message }}
+    </p>
+  </div>
+</div>

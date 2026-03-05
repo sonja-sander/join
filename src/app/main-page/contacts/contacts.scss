@@ -1,0 +1,48 @@
+@use '../../../styles/index.scss' as styles;
+
+.contacts {
+  @include styles.setFlex($ai: stretch);
+  height: 100%;
+  width: 100%;
+
+  &__list {
+    background-color: #ffffff;
+  }
+
+  &__info {
+    flex: 1;
+    min-width: 0;
+  }
+}
+
+@include styles.down-lg {
+  .contacts__list {
+    width: 100%;
+  }
+
+  .contacts__info {
+    display: none;
+  }
+
+  .contacts--detail-open {
+    .contacts__info {
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 1;
+      width: 100%;
+      background-color: #ffffff;
+    }
+
+    .contacts__list {
+      display: none;
+    }
+  }
+}
+
+.toast {
+  @include styles.up-xxl {
+    transform: translate(7dvw, 25dvh);
+  }
+}

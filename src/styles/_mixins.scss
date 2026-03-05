@@ -1,0 +1,54 @@
+@mixin setFlex($display: flex, $d: row, $jc: center, $ai: center, $wrap: nowrap, $gap: 0) {
+  display: flex;
+  flex-direction: $d;
+  justify-content: $jc;
+  align-items: $ai;
+  flex-wrap: $wrap;
+  gap: $gap;
+}
+
+@mixin setGrid(
+  $rows: null,
+  $columns: null,
+  $gap: null,
+  $row-gap: null,
+  $column-gap: null,
+  $ji: null,
+  $ai: null,
+  $jc: null,
+  $ac: null
+) {
+  display: grid;
+  grid-template-rows: $rows;
+  grid-template-columns: $columns;
+  gap: $gap;
+  row-gap: $row-gap;
+  column-gap: $column-gap;
+  justify-content: $jc;
+  justify-items: $ji;
+  align-content: $ac;
+  align-items: $ai;
+}
+
+@mixin setFont(
+  $family: (
+    'Inter',
+    sans-serif,
+  ),
+  $size: 1em,
+  $weight: null,
+  $line-height: null,
+  $letter-spacing: null,
+  $style: normal,
+  $color: #000000,
+  $hyphens: auto
+) {
+  font-family: $family;
+  font-size: $size;
+  font-weight: $weight;
+  line-height: $line-height;
+  letter-spacing: $letter-spacing;
+  font-style: $style;
+  color: $color;
+  hyphens: $hyphens;
+}

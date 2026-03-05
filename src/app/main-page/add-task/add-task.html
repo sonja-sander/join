@@ -1,0 +1,136 @@
+<section class="add-task">
+  <header class="add-task__header">
+    <h1 id="add-task-title">{{ formTitle }}</h1>
+  </header>
+
+  <form class="add-task__form" autocomplete="on" (ngSubmit)="createTask()" (focusin)="markAsEdited()" aria-labelledby="add-task-title">
+    <div class="add-task__content">
+      <div class="add-task__column">
+        <app-task-form-field
+          label="Title"
+          [isRequired]="true"
+          placeholder="Enter a title"
+          (fieldBlur)="isTitleTouched = true"
+          [hasError]="showTitleError"
+          [(value)]="taskTitle"
+        ></app-task-form-field>
+        <span class="add-task__field-error" [class.is-visible]="showTitleError">
+          {{ titleErrorMessage }}
+        </span>
+
+        <app-task-form-field
+          label="Description"
+          [isTextarea]="true"
+          [isRequired]="false"
+          placeholder="Enter a Description"
+          [(value)]="taskDescription"
+        ></app-task-form-field>
+
+        <app-task-form-field
+          class="add-task__padding-top"
+          label="Due date"
+          [isRequired]="true"
+          placeholder="yyyy/mm/dd"
+          type="text"
+          [useFlatpickr]="true"
+          [min]="minDueDate"
+          (fieldBlur)="isDueDateTouched = true"
+          [hasError]="showDueDateError"
+          [(value)]="taskDueDate"
+          iconSrc="assets/img/icons/board/date.svg"
+        ></app-task-form-field>
+        <span class="add-task__field-error" [class.is-visible]="showDueDateError">
+          This field is required
+        </span>
+      </div>
+
+      <div class="add-task__column add-task__column--divider">
+        <app-priority-selector [(selectedPriority)]="activePriority"></app-priority-selector>
+        <app-dropdown-assignee
+          class="add-task__padding-top"
+          [(selectedContacts)]="activeAssignees"
+        ></app-dropdown-assignee>
+        <app-dropdown-category
+          class="add-task__padding-top"
+          [(selectedCategory)]="activeCategory"
+          (fieldBlur)="isCategoryTouched = true"
+          [hasError]="showCategoryError"
+        ></app-dropdown-category>
+        <span class="add-task__field-error" [class.is-visible]="showCategoryError">
+          This field is required
+        </span>
+        <app-attachments
+          [attachments]="attachments"
+          (attachmentsChange)="attachments = $event; markAsEdited()"
+          (viewerStateChange)="viewerStateChange.emit($event)"
+          (imageTypeError)="showTypeErrorToast()"
+          (taskSizeError)="showSizeErrorToast()"
+          (deleteAll)="this.showDeleteAllConfirm = true;"
+        ></app-attachments>
+        <app-subtask-composer [(subtasks)]="activeSubtasks"></app-subtask-composer>
+        @if (showSubtaskHint) {
+          <span class="add-task__subtask-hint"> Either add no subtasks or at least two.</span>
+        }
+      </div>
+    </div>
+
+    <div class="add-task__footer">
+      <span class="add-task__required-note"
+        ><span class="required">*</span> This field is required</span
+      >
+      <div class="add-task__actions">
+        @if (!isEditMode) {
+          <button type="button" class="button button--secondary button--icon" (click)="resetForm()" aria-label="Clear all inputs">
+            Clear
+            <img
+              class="button__icon"
+              src="assets/img/icons/add-task/close.svg"
+              alt=""
+              aria-hidden="true"
+            />
+          </button>
+        }
+        <button
+          type="submit"
+          class="button button--primary button--icon"
+          [class.add-task__submit-button--disabled]="!isFormValid"
+          [attr.aria-disabled]="!isFormValid ? 'true' : null"
+        >
+          {{ submitButtonLabel }}
+          <img class="button__icon" src="assets/img/icons/buttons/save.svg" alt="" aria-hidden="true" />
+        </button>
+      </div>
+    </div>
+  </form>
+</section>
+
+<app-toast
+  [message]="'File format not allowed! You can only upload JPEG or PNG.'"
+  [type]="'error'"
+  [visible]="imageTypeError"
+  (close)="this.imageTypeError = false">
+</app-toast>
+
+<app-toast
+  [message]="'Attached files are too large in total. Max allowed is 1 MB.'"
+  [type]="'error'"
+  [visible]="taskSizeError"
+  (close)="this.taskSizeError = false"> 
+</app-toast>
+
+<app-toast
+  [message]="toastMessage"
+  [type]="'info'" 
+  [visible]="addTaskSuccess"
+  >
+</app-toast>
+
+<app-confirm-dialog
+  [open]="showDeleteAllConfirm"
+  [highlight]="'Delete all attachments of'"
+  [highlightObject]="taskTitle"
+  [confirmText]="'Delete'"
+  [cancelText]="'Cancel'"
+  (confirm)="confirmDeleteAllAttachments()"
+  (cancel)="showDeleteAllConfirm = false">
+</app-confirm-dialog>

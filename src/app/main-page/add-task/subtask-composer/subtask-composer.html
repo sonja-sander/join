@@ -1,0 +1,75 @@
+<label class="form-field">
+  <span class="form-field__label">Subtasks</span>
+  <div
+    class="form-field__control"
+    [class.form-field__control--error]="showSubtaskPatternError || showSubtaskDuplicateError"
+  >
+    <input
+      class="form-field__input"
+      type="text"
+      placeholder="Add new subtask"
+      [value]="subtaskTitle"
+      #input
+      (input)="onSubtaskTitleInput(input.value)"
+      (keydown.enter)="handleEnter($event)"
+    />
+    @if (hasSubtaskInput) {
+      <div class="subtask-actions">
+        <button
+          type="button"
+          class="icon-button"
+          aria-label="Clear subtask title"
+          (click)="clearSubtaskTitle()"
+        >
+          <img src="assets/img/icons/add-task/close.svg" alt="" />
+        </button>
+        <span class="subtask-actions__divider" aria-hidden="true"></span>
+        <button type="button" class="icon-button" aria-label="Add subtask" (click)="addSubtask()">
+          <img src="assets/img/icons/add-task/check.svg" alt="" />
+        </button>
+      </div>
+    } @else {
+      <button type="button" class="icon-button" aria-hidden="true">
+        <img src="assets/img/icons/add-task/add.svg" alt="" />
+      </button>
+    }
+  </div>
+  @if (showSubtaskPatternError) {
+    <span class="subtask-pattern-error">
+      Use up to {{ subtaskTitleMaxLength }} chars with at least {{ subtaskTitleMinLetters }} letters
+      (a-z)
+    </span>
+  }
+  @if (showSubtaskDuplicateError) {
+    <span class="subtask-pattern-error">This subtask already exists!</span>
+  }
+  @if (subtasks.length) {
+    <ul class="subtask-list scroll-shadows">
+      @for (subtask of subtasks; track $index) {
+        <li class="subtask-list__item">
+          <span class="subtask-list__bullet" aria-hidden="true">•</span>
+          <span class="subtask-list__title">{{ subtask.title }}</span>
+          <div class="subtask-list__actions">
+            <button
+              type="button"
+              class="icon-button icon-button--small"
+              aria-label="Edit subtask"
+              (click)="startEditSubtask($index)"
+            >
+              <img src="assets/img/icons/add-task/edit.svg" alt="" />
+            </button>
+            <span class="subtask-list__divider" aria-hidden="true"></span>
+            <button
+              type="button"
+              class="icon-button icon-button--small"
+              aria-label="Delete subtask"
+              (click)="removeSubtask($index)"
+            >
+              <img src="assets/img/icons/add-task/delete.svg" alt="" />
+            </button>
+          </div>
+        </li>
+      }
+    </ul>
+  }
+</label>
