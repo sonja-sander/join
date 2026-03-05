@@ -54,6 +54,10 @@ button {
       background-color: styles.$navy-dark;
       box-shadow: 0px 4px 4px 0px #00000040;
     }
+
+    &:focus-visible{
+      background-color: styles.$blue-primary;
+    }
   }
 }
 
@@ -322,3 +326,6 @@ button {
 }
 // #endregion
 
+:focus-visible {
+  outline: 1px solid styles.$blue-primary;
+}

@@ -206,6 +206,7 @@
     max-width: 100%;
     max-height: 120px;
     margin: 8px 0 8px 0;
+    padding-top: 2px;
     padding-bottom: 8px;
     overflow-x: auto;
 
@@ -224,6 +225,7 @@
   
   .attachment{
     width: 112px;
+    margin-left: 2px;
     border: 1px solid #D1D1D1;
     border-radius: 8px;
     cursor: pointer;
@@ -278,6 +280,15 @@
           height: 24px;
           object-fit: contain;
         }
+
+        &:focus-visible{
+          background-color: styles.$blue-primary;
+          
+          @include styles.up-xxl{
+            background-color: styles.$blue-sky;
+            opacity: 1;
+          }
+        }
       }
     }
 
@@ -288,6 +299,11 @@
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
+    }
+
+    &:focus-visible{
+      outline: none;
+      border-color: styles.$blue-primary;
     }
   }
 }
@@ -304,6 +320,7 @@
     width: 100%;
     max-height: 110px;
     overflow-y: auto;
+    padding-top: 2px;
 
     &::-webkit-scrollbar {
       width: 4px;
@@ -338,11 +355,17 @@
       }
   
       .checkbox{
-        display: none;
+        position: absolute;
+        opacity: 0;
+        pointer-events: none;
   
         &:checked + .checkbox-ui {
           background: url(../../../../../public/assets/img/icons/checkboxes/checkbox-checked.svg)
           center / contain no-repeat;
+        }
+
+        &:focus-visible + .checkbox-ui{
+          outline: 1px solid styles.$blue-primary;
         }
       }
       
@@ -412,6 +435,7 @@ footer{
   .separator{
     width: 1px;
     height: 18px;
+    margin: 0 2px;
     background-color: #D1D1D1;
   }
 }

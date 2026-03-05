@@ -11,6 +11,7 @@ section{
 
   .list-head{
     @include styles.setFlex($jc: space-between);
+    margin-top: 3px;
     margin-bottom: 14px;
     height: 30px;
 
@@ -37,6 +38,8 @@ section{
       background-color: transparent;
       width: 30px;
       height: 30px;
+      padding: 0;
+      margin-right: 2px;
 
       .add-icon--hover{
         display: none;

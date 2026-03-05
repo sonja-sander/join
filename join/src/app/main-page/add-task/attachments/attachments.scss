@@ -21,6 +21,7 @@ section{
     background-color: transparent;
     color: #2A3647;
     padding: 0 8px;
+    margin-right: 1px;
 
     @include styles.up-xxl{
       font-size: 16px;
@@ -67,6 +68,11 @@ section{
     border-color: styles.$blue-sky;
     background-color: rgba(69, 137, 255, 0.08);
     cursor: copy;
+  }
+
+  &:focus-visible{
+    outline: none;
+    border-color: styles.$blue-primary;
   }
 }
 
@@ -150,6 +156,15 @@ section{
         height: 24px;
         object-fit: contain;
       }
+
+      &:focus-visible{
+        background-color: styles.$blue-primary;
+        
+        @include styles.up-xxl{
+          background-color: styles.$blue-sky;
+          opacity: 1;
+        }
+      }
     }
   }
 
@@ -160,5 +175,10 @@ section{
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+  }
+
+  &:focus-visible{
+    outline: none;
+    border-color: styles.$blue-primary;
   }
 }

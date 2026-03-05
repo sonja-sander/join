@@ -48,6 +48,10 @@
       &:hover{
         background-color: styles.$gray-dark;
       }
+
+      &:focus-visible{
+        background-color: styles.$blue-primary;
+      }
     }
 
     .cancel-btn:hover{

@@ -108,6 +108,7 @@ header {
 
 .close-btn-desktop{
   @include styles.up-xxl{
+    @include styles.setFlex();
     grid-area: 1/2/2/3;
     justify-self: end;
     align-self: start;
@@ -250,19 +251,24 @@ header {
 
     .avatar-delete-wrapper{
       position: absolute;
-      bottom: -8px;
-      left: -6px;
       width: 34px;
       height: 34px;
+
+      @include styles.down-xxl{
+        bottom: -8px;
+        left: -6px;
+      }
       
       @include styles.up-xxl{
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        width: 40px;
-        height: 40px;
         opacity: 0;
         transition: opacity 0.2s ease;
+      }
+
+      &:focus-within{
+        opacity: 1;
       }
 
       .delete-btn{
@@ -277,11 +283,6 @@ header {
           background-color: styles.$gray-dark;
         }
 
-        @include styles.up-xxl{
-          width: 40px;
-          height: 40px;
-        }
-
         .delete-icon{
           width: 20px;
           height: 20px;
@@ -291,6 +292,10 @@ header {
             width: 30px;
             height: 30px;
           }
+        }
+
+        &:focus-visible{
+          background-color: styles.$blue-sky;
         }
       }
 
@@ -354,7 +359,7 @@ header {
 
       &:focus {
         outline: none;
-        border-color: styles.$gray-dark;
+        border-color: styles.$blue-primary;
       }
 
       &.ng-invalid.ng-touched {

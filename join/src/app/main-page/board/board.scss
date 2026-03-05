@@ -60,11 +60,6 @@ section {
         font-size: 20px;
         padding: 0 20% 0 12px;
       }
-
-      &:focus {
-        outline: none;
-        border-color: styles.$gray-dark;
-      }
     }
 
     .search-bar__divider {
@@ -77,6 +72,7 @@ section {
 
     .search-bar__button {
       grid-area: 1/3/2/4;
+      padding: 0;
       background-color: transparent;
       @include styles.setFlex();
 

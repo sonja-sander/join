@@ -167,6 +167,10 @@ nav {
             text-align: left;
           }
         }
+
+        &:focus-visible{
+          background-color: styles.$blue-primary;
+        }
       }
 
       .log-in-link:focus {
@@ -235,6 +239,10 @@ nav {
             color: white;
             font-weight: normal;
           }
+        }
+        
+        &:focus-visible{
+          background-color: styles.$blue-primary;
         }
       }
     }
