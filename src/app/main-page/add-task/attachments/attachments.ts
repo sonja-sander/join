@@ -129,6 +129,7 @@ export class Attachments {
     const isInvalid = !this.fileService.isValidFileType(file);
     if (isInvalid) {
       this.imageTypeError.emit();
+      this.filePicker.nativeElement.value = '';
     }
     return isInvalid;
   }
@@ -158,6 +159,7 @@ export class Attachments {
     const exceeds = !this.fileService.isWithinSizeLimit(totalSize);
     if (exceeds) {
       this.taskSizeError.emit();
+      this.filePicker.nativeElement.value = '';
     }
     return exceeds;
   }
@@ -199,6 +201,7 @@ export class Attachments {
    */
   deleteAllAttachments(): void {
     this.deleteAll.emit();
+    this.filePicker.nativeElement.value = '';
   }
 
   /**

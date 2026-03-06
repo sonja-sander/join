@@ -82,7 +82,7 @@ export class ContactDialog {
       name: contact.name,
       email: contact.email,
       phone: String(contact.phone),
-      avatar: contact.avatar
+      avatar: contact.avatar ?? null
     };
 
     this.userColor = contact.userColor ?? null;
@@ -272,7 +272,9 @@ export class ContactDialog {
    */
   hasInvalidFileType(file: File): boolean {
     const isInvalid = !this.fileService.isValidFileType(file);
-    this.showTypeErrorToast();
+    if (isInvalid) {
+      this.showTypeErrorToast();
+    }
     return isInvalid;
   }
 
@@ -287,7 +289,9 @@ export class ContactDialog {
    */
   exceedsSizeLimit(size: number): boolean {
     const exceeds = !this.fileService.isWithinSizeLimit(size);
-    this.showSizeErrorToast();
+    if (exceeds) {
+      this.showSizeErrorToast();
+    }
     return exceeds;
   }
 
@@ -343,11 +347,8 @@ export class ContactDialog {
    * @returns void
    */
   onAvatarDelete(): void {
-    this.contactData.avatar = {
-      fileName: '',
-      fileType: '',
-      base64Size: 0,
-      base64: '' 
-    };
+    this.contactData.avatar = null;
+    
+    this.filePicker.nativeElement.value = '';
   }
 }

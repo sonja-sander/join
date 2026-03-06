@@ -85,6 +85,8 @@
                       class="download-btn"
                       type="button"
                       (click)="downloadAttachment($event, attachment)"
+                      (keydown.enter)="$event.stopPropagation()"
+                      (keydown.space)="$event.stopPropagation()"
                       aria-label="Download {{ attachment.fileName }}"
                     >
                       <img class="download-icon" src="assets/img/icons/add-task/download-white.svg" alt="" aria-hidden="true">

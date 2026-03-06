@@ -27,6 +27,9 @@ body:has(dialog[open]),
 body:has(.add-task-overlay) {
   overflow: hidden;
 }
+body:has(.task-dialog-overlay) {
+  overflow: hidden;
+}
 
 // #region Button styles
 button {

@@ -10,8 +10,6 @@
   z-index: 100;
 }
 
-
-
 .dialog-content {
   @include styles.setGrid($rows: 38% 50px 1fr, $columns: 1fr);
   width: 85dvw;

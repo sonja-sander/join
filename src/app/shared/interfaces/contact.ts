@@ -7,5 +7,5 @@ export interface Contact {
   phone: number | string;
   isAvailable: boolean;
   userColor?: string | null;
-  avatar?: ContactAvatar | null;
+  avatar: ContactAvatar | null;
 }

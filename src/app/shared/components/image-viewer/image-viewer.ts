@@ -141,6 +141,8 @@ export class ImageViewer implements OnInit {
    * @returns void
    */
   previousImage(): void {
+    if (this.attachments.length <= 1) return;
+
     this.currentIndex--;
 
     if (this.currentIndex < 0) {
@@ -159,6 +161,8 @@ export class ImageViewer implements OnInit {
    * @returns void
    */
   nextImage(): void {
+    if (this.attachments.length <= 1) return;
+    
     this.currentIndex++;
 
     if (this.currentIndex >= this.attachments.length) {

@@ -45,6 +45,8 @@
             class="delete-btn"
             type="button"
             (click)="deleteSingleAttachment($event, attachment)"
+            (keydown.enter)="$event.stopPropagation()"
+            (keydown.space)="$event.stopPropagation()"
             aria-label="Delete {{ attachment.fileName }}"
           >
             <img class="delete-icon" src="assets/img/icons/add-task/delete-white.svg" alt="" aria-hidden="true">

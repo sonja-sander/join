@@ -81,6 +81,7 @@ export class AuthService {
         phone: '',
         isAvailable: true,
         userColor: setUserColor(),
+        avatar: null
       });
 
       return response;
