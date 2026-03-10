@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, Input, Output, inject } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnChanges, Output, SimpleChanges, inject } from '@angular/core';
 import { Subtask } from '../../../shared/interfaces/task';
 
 /**
@@ -10,7 +10,7 @@ import { Subtask } from '../../../shared/interfaces/task';
   templateUrl: './subtask-composer.html',
   styleUrl: './subtask-composer.scss',
 })
-export class SubtaskComposer {
+export class SubtaskComposer implements OnChanges {
   private hostElement = inject(ElementRef<HTMLElement>);
   readonly subtaskTitleMinLength = 3;
   readonly subtaskTitleMaxLength = 100;
@@ -24,6 +24,22 @@ export class SubtaskComposer {
   subtaskTitle = '';
   editingIndex: number | null = null;
   showSubtaskDuplicateError = false;
+
+  /**
+ * Reacts to changes of input properties.
+ * 
+ * If the `subtasks` input changes and the list becomes empty,
+ * the subtask editing state and validation flags are reset.
+ *
+ * @param changes - Object containing all changed input properties with their previous and current values.
+ */
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['subtasks'] && this.subtasks.length === 0) {
+      this.subtaskTitle = '';
+      this.editingIndex = null;
+      this.showSubtaskDuplicateError = false;
+    }
+  }
 
   /** Indicates whether the subtask input contains non-whitespace text. */
   get hasSubtaskInput(): boolean {

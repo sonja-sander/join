@@ -84,6 +84,7 @@ export class AddTask implements OnChanges, OnDestroy {
   isDueDateTouched: boolean = false;
   isCategoryTouched: boolean = false; 
   attachments: Array<Attachment> = [];
+  isSubmitting: boolean = false;
   // #endregion
 
   // #region UI State
@@ -129,6 +130,10 @@ export class AddTask implements OnChanges, OnDestroy {
 
   /** Returns the submit button label for the active form mode. */
   get submitButtonLabel(): string {
+    if (this.isSubmitting) {
+      return this.isEditMode ? 'Saving...' : 'Creating...';
+    }
+
     return this.isEditMode ? 'Save' : 'Create Task';
   }
 
@@ -198,8 +203,14 @@ export class AddTask implements OnChanges, OnDestroy {
    * @returns Promise<void>
    */
   async createTask(): Promise<void> {
+    if (this.isSubmitting) return;
+    this.isSubmitting = true;
+
     const formData = this.prepareFormData();
-    if (!formData) return;
+    if (!formData) {
+      this.isSubmitting = false;
+      return;
+    }
 
     if (this.isEditMode) {
       await this.updateTask(formData);

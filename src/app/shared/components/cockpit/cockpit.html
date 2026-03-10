@@ -1,6 +1,6 @@
 <section>
   <div class="content-wrapper">
-    <img class="logo desktop-only" src="assets/img/icons/logo-light.svg" alt="Join" />
+    <img class="logo" src="assets/img/icons/logo-light.svg" alt="Join" />
 
     @if (authLoading$ | async){
       <div class="cockpit-loading">
@@ -91,18 +91,16 @@
         }
       </nav>
   
-      @if (isDesktop || !(user$ | async)) {
-        <nav class="legal-nav" aria-label="Legal navigation">
-          <ul>
-            <li>
-              <a routerLink="/privacy" routerLinkActive="is-active"> Privacy Policy </a>
-            </li>
-            <li>
-              <a routerLink="/imprint" routerLinkActive="is-active"> Legal Notice </a>
-            </li>
-          </ul>
-        </nav>
-      }
+      <nav class="legal-nav" [class.desktop-only]="user$ | async" aria-label="Legal navigation">
+        <ul>
+          <li>
+            <a routerLink="/privacy" routerLinkActive="is-active"> Privacy Policy </a>
+          </li>
+          <li>
+            <a routerLink="/imprint" routerLinkActive="is-active"> Legal Notice </a>
+          </li>
+        </ul>
+      </nav>
     }
 
   </div>

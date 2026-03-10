@@ -236,16 +236,24 @@
       }
     
       <footer>
-        <a routerLink="/privacy">Privacy Policy</a>
-        <a routerLink="/imprint">Legal notice</a>
+        <nav>
+          <ul>
+            <a routerLink="/privacy">Privacy Policy</a>
+          </ul>
+          <ul>
+            <a routerLink="/imprint">Legal notice</a>
+          </ul>
+        </nav>
       </footer>
 
-      <app-toast
-        [message]="'You signed up successfully'"
-        [type]="'info'"
-        [visible]="signUpSuccess"
-        >
-      </app-toast>
+      @if (signUpSuccess) {
+        <app-toast
+          [message]="'You signed up successfully'"
+          [type]="'info'"
+          [visible]="signUpSuccess"
+          >
+        </app-toast>
+      }
     }
     
     @if (showMobileGreeting) {

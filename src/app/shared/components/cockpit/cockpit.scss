@@ -41,6 +41,8 @@ section {
 }
 
 .logo {
+  display: none;
+
   @include styles.up-xxl{
     grid-area: 1/1/2/2;
     @include styles.setFlex();
@@ -183,7 +185,10 @@ nav {
 }
 
 .legal-nav {
+  display: none;
+
   @include styles.up-xxl {
+    display: block;
     grid-area: 4/1/5/2;
     width: 100%;
 

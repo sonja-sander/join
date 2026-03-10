@@ -90,6 +90,7 @@
 .add-task__submit-button--disabled {
   border: 1px solid styles.$gray-dark;
   filter: opacity(0.5);
+  pointer-events: none;
 }
 
 .add-task__field-error {
