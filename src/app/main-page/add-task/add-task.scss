@@ -1,10 +1,5 @@
 @use '../../../styles/index.scss' as styles;
 
-:host {
-  display: block;
-  height: 100%;
-}
-
 .add-task {
   @include styles.setFlex(
     $d: column,
@@ -14,8 +9,11 @@
   );
   padding: clamp(1.5rem, 4vw, 4rem) clamp(1.5rem, 4vw, 6rem);
   background-color: styles.$white;
-  height: 100%;
+}
+
+.add-task--overlay-height{
   min-height: 100%;
+  height: 100%;
 }
 
 .add-task__header {
@@ -101,10 +99,6 @@
 
 .add-task__field-error.is-visible {
   visibility: visible;
-}
-
-.add-task__subtask-hint {
-  @include styles.setFont($size: 1em, $weight: 400, $color: styles.$red-error);
 }
 
 .add-task__padding-top {

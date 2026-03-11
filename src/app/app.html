@@ -2,7 +2,7 @@
   <div class="app-layout" [class.white-bg]="router.url === '/add-task'">
     <app-cockpit />
     <app-header />
-    <div class="content-area" [class.no-max-height]="router.url === '/imprint' || router.url === '/privacy' || router.url === '/help'">
+    <div class="content-area">
       <router-outlet />
     </div>
     <div class="empty-content-column"></div>

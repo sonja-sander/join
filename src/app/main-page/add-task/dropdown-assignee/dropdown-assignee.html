@@ -27,68 +27,71 @@
         alt="dropdown-arrow icon"
       />
     </button>
+
+    @if (isDropdownOpen) {
+      <div class="dropdown">
+        @if (firebaseService.loading && !filteredContacts.length) {
+          <div class="dropdown__empty">Loading contacts...</div>
+        } @else if (!firebaseService.loading && !filteredContacts.length) {
+          <div class="dropdown__empty">
+            {{ assigneeQuery ? 'No matches found' : 'No contacts yet' }}
+          </div>
+        } @else {
+          @for (contact of filteredContacts; track getContactId(contact, $index)) {
+            <button
+              type="button"
+              class="dropdown__item"
+              [class.is-selected]="isSelected(contact)"
+              (click)="toggleContact(contact, $event)"
+            >
+              <span
+                class="dropdown__avatar"
+                [style.backgroundColor]="contact.userColor ?? '#cccccc'"
+                aria-hidden="true"
+              >
+                @if (contact.avatar?.base64) {
+                  <img
+                    class="avatar-img"
+                    [src]="contact.avatar?.base64"
+                    alt=""
+                    aria-hidden="true"
+                  />
+                } @else {
+                  {{ getTwoInitials(contact.name) }}
+                }
+              </span>
+              <span class="dropdown__name">{{ contact.name }}</span>
+              <span class="dropdown__checkbox" aria-hidden="true"></span>
+            </button>
+          }
+        }
+      </div>
+    }
   </div>
 
-  @if (!isDropdownOpen && selectedContacts.length) {
-    <div class="assignees-preview">
-      @for (contact of selectedContacts; track getContactId(contact, $index)) {
-        <span
-          class="assignees-preview__avatar"
-          [style.backgroundColor]="contact.userColor ?? '#cccccc'"
-          aria-hidden="true"
-        >
-          @if (contact.avatar?.base64) {
-            <img
-              class="avatar-img"
-              [src]="contact.avatar?.base64"
-              alt=""
-              aria-hidden="true"
-            />
-          } @else {
-            {{ getTwoInitials(contact.name) }}
-          }
-        </span>
-      }
-    </div>
-  }
-
-  @if (isDropdownOpen) {
-    <div class="dropdown">
-      @if (firebaseService.loading && !filteredContacts.length) {
-        <div class="dropdown__empty">Loading contacts...</div>
-      } @else if (!firebaseService.loading && !filteredContacts.length) {
-        <div class="dropdown__empty">
-          {{ assigneeQuery ? 'No matches found' : 'No contacts yet' }}
-        </div>
-      } @else {
-        @for (contact of filteredContacts; track getContactId(contact, $index)) {
-          <button
-            type="button"
-            class="dropdown__item"
-            [class.is-selected]="isSelected(contact)"
-            (click)="toggleContact(contact, $event)"
-          >
-            <span
-              class="dropdown__avatar"
-              [style.backgroundColor]="contact.userColor ?? '#cccccc'"
-              aria-hidden="true"
-            >
-              @if (contact.avatar?.base64) {
-                <img
-                  class="avatar-img"
-                  [src]="contact.avatar?.base64"
-                  alt=""
-                  aria-hidden="true"
-                />
-              } @else {
-                {{ getTwoInitials(contact.name) }}
-              }
-            </span>
-            <span class="dropdown__name">{{ contact.name }}</span>
-            <span class="dropdown__checkbox" aria-hidden="true"></span>
-          </button>
+  <div class="assignees-preview">
+    @for (contact of selectedContacts.slice(0, 7); track getContactId(contact, $index)) {
+      <span
+        class="assignees-preview__avatar"
+        [style.backgroundColor]="contact.userColor ?? '#cccccc'"
+        aria-label="Assigned to {{ contact.name }}"
+      >
+        @if (contact.avatar?.base64) {
+          <img
+            class="avatar-img"
+            [src]="contact.avatar?.base64"
+            alt=""
+            aria-hidden="true"
+          />
+        } @else {
+          {{ getTwoInitials(contact.name) }}
         }
-      }
-    </div>
-  }
+      </span>
+    }
+    @if(selectedContacts.length > 7){
+      <div aria-label="And assigned to further contacts">
+        <span>+{{selectedContacts.length - 7}}</span>
+      </div>
+    }
+  </div>
 </label>

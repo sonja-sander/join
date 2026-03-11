@@ -23,11 +23,6 @@
     
     .content-area {
       grid-area: 2/2/3/3;
-      max-height: calc(1024px - styles.$header-height);
-    }
-  
-    .no-max-height{
-      max-height: none;
     }
   
     .empty-content-column{

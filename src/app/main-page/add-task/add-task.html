@@ -1,4 +1,4 @@
-<section class="add-task">
+<section class="add-task" [class.add-task--overlay-height]="isOverlay">
   <header class="add-task__header">
     <h1 id="add-task-title">{{ formTitle }}</h1>
   </header>
@@ -65,12 +65,9 @@
           (viewerStateChange)="viewerStateChange.emit($event)"
           (imageTypeError)="showTypeErrorToast()"
           (taskSizeError)="showSizeErrorToast()"
-          (deleteAll)="this.showDeleteAllConfirm = true;"
+          (deleteAll)="showDeleteAllConfirm = true;"
         ></app-attachments>
         <app-subtask-composer [(subtasks)]="activeSubtasks"></app-subtask-composer>
-        @if (showSubtaskHint) {
-          <span class="add-task__subtask-hint"> Either add no subtasks or at least two.</span>
-        }
       </div>
     </div>
 
@@ -108,14 +105,14 @@
   [message]="'File format not allowed! You can only upload JPEG or PNG.'"
   [type]="'error'"
   [visible]="imageTypeError"
-  (close)="this.imageTypeError = false">
+  (close)="imageTypeError = false">
 </app-toast>
 
 <app-toast
   [message]="'Attached files are too large in total. Max allowed is 1 MB.'"
   [type]="'error'"
   [visible]="taskSizeError"
-  (close)="this.taskSizeError = false"> 
+  (close)="taskSizeError = false"> 
 </app-toast>
 
 <app-toast
