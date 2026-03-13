@@ -235,6 +235,10 @@
         font-size: 20px;
       }
 
+      &:-webkit-autofill {
+        -webkit-box-shadow: 0 0 0 1000px white inset;
+      }
+
       &::placeholder{
         color: styles.$gray-light;
       }
@@ -264,7 +268,7 @@
       .visibility-btn{
         @include styles.setFlex($jc: flex-start);
         background-color: transparent;
-        padding: 0;
+        padding: auto;
         padding-left: 0;
       }
     }
@@ -275,7 +279,6 @@
       margin-bottom: 4px;
 
       .form-error{
-        display: block;
         color: styles.$red-error;
       }
     }
@@ -322,11 +325,17 @@
     }
   
     .checkbox{
-      display: none;
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
 
       &:checked + .checkbox-ui {
         background: url(../../../public/assets/img/icons/checkboxes/checkbox-checked.svg)
         center / contain no-repeat;
+      }
+
+      &:focus + .checkbox-ui {
+        outline: 1px solid styles.$blue-primary;
       }
     }
       
@@ -379,21 +388,24 @@ footer{
     height: 70px;
   }
   
-  nav{
+  ul{
     @include styles.setFlex($gap: 20px);
-  }
+    list-style: none;
 
-  a{
-    color: #A8A8A8;
-    
-    @include styles.up-xxl{
-      width: 110px;
-      text-align: center;
-    }
+    li{
+      @include styles.up-xxl{
+        width: 110px;
+        text-align: center; 
+      }
 
-    &:hover{
-      color: styles.$blue-sky;
-      font-weight: 600;
+      a{
+        color: styles.$gray-dark;
+        
+        &:hover{
+          color: styles.$blue-sky;
+          font-weight: 600;
+        }
+      }
     }
   }
 }

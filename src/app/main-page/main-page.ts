@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
 import { FirebaseService } from '../shared/services/firebase-service';
 import { Router, RouterLink } from '@angular/router';
 import { FormsModule, NgForm } from '@angular/forms';
@@ -27,12 +27,16 @@ export class MainPage implements OnInit {
   authService = inject(AuthService);
   router = inject(Router);
   user$ = this.authService.user$;
+  @ViewChild('loginTitle') loginTitle!: ElementRef;
 
   isMobile: boolean = false;
   showSignUp: boolean = false;
+  isGuestLoggingIn: boolean = false;
   isLoggingIn: boolean = false;
+  submitLoginError: boolean = false;
   loginError: boolean = false;
   isSigningUp: boolean = false;
+  submitSignupError: boolean = false;
   signUpError: boolean = false;
   signUpSuccess: boolean = false;
   showMobileGreeting: boolean = false;
@@ -125,6 +129,10 @@ export class MainPage implements OnInit {
    */
   closeSignUp(): void {
     this.showSignUp = false;
+
+    setTimeout(() => {
+      this.loginTitle.nativeElement.focus();
+    });
   }
 
   /**
@@ -192,9 +200,11 @@ export class MainPage implements OnInit {
    */
   isLoginFormInvalid(form: NgForm): boolean {
     if (form.invalid) {
+      this.submitLoginError = true;
       form.control.markAllAsTouched();
       return true;
     }
+    this.submitLoginError = false;
     return false;
   }
 
@@ -232,12 +242,17 @@ export class MainPage implements OnInit {
    * @returns void
    */
   guestLogin(): void {
+    if (this.isGuestLoggingIn) return;
+    this.isGuestLoggingIn = true;
+
     this.authService.guestLogIn().subscribe({
       next: () => {
         this.handleLoginNavigation();
+        this.isGuestLoggingIn = false;
       },
       error: (err) => {
         console.error('Guest login failed', err);
+        this.isGuestLoggingIn = false;
       },
     });
   }
@@ -300,9 +315,11 @@ export class MainPage implements OnInit {
    */
   isSignUpFormInvalid(form: NgForm): boolean {
     if (form.invalid || this.signUpData.password !== this.confirmPassword) {
+      this.submitSignupError = true;
       form.control.markAllAsTouched();
       return true;
     }
+    this.submitSignupError = false;
     return false;
   }
 
@@ -322,7 +339,7 @@ export class MainPage implements OnInit {
       email: '',
       password: '',
     };
-    this.showSignUp = false;
+    this.closeSignUp();
     this.showToast();
   }
 

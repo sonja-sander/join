@@ -12,14 +12,16 @@
           title="Help"
           aria-label="Open help page"
         >
-          <img src="assets/img/icons/buttons/help.svg" alt="" aria-hidden="true" />
+          <img src="assets/img/icons/buttons/help.svg" alt="" />
         </a>
+
         <button
           class="user-menu-button"
           [class.is-open]="menuOpen"
           (click)="toggleMenu()"
           aria-label="Open user menu"
           aria-controls="user-menu"
+          [attr.aria-expanded]="menuOpen"
         >
           @if (user$ | async; as user) {
             @if (user.isAnonymous) {
@@ -31,16 +33,28 @@
             }
           }
         </button>
+
         @if (menuOpen) {
-          <div class="menu-overlay" (click)="closeMenu()"></div>
+          <div class="menu-overlay" (click)="closeMenu()" aria-hidden="true"></div>
+          <nav id="user-menu" class="user-menu" [class.is-open]="menuOpen" aria-label="User menu">
+            <ul>
+              <li class="mobile-only">
+                <a routerLink="/help" (click)="closeMenu()">Help</a>
+              </li>
+              <li>
+                <a routerLink="/imprint" (click)="closeMenu()">Legal Notice</a>
+              </li>
+              <li>
+                <a routerLink="/privacy" (click)="closeMenu()">Privacy Policy</a>
+              </li>
+              <li>
+                <button type="button" (click)="logout()">Log out</button>
+              </li>
+            </ul>
+          </nav>
         }
-        <div id="user-menu" class="user-menu" [class.is-open]="menuOpen" role="menu">
-          <a routerLink="/help" class="mobile-only" (click)="closeMenu()" role="menuitem">Help</a>
-          <a routerLink="/imprint" (click)="closeMenu()" role="menuitem">Legal Notice</a>
-          <a routerLink="/privacy" (click)="closeMenu()" role="menuitem">Privacy Policy</a>
-          <button (click)="logout()" role="menuitem">Log out</button>
-        </div>
       }
+
     </div>
   </div>
 </header>

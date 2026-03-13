@@ -2,9 +2,9 @@
   <div class="app-layout" [class.white-bg]="router.url === '/add-task'">
     <app-cockpit />
     <app-header />
-    <div class="content-area">
+    <main class="content-area" id="main-content" tabindex="-1">
       <router-outlet />
-    </div>
+    </main>
     <div class="empty-content-column"></div>
     <div class="empty-content-row"></div>
   </div>

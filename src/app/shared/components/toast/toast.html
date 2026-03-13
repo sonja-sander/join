@@ -4,11 +4,10 @@
     [class.toast--visible]="visible"
     [class.toast--info]="type === 'info'"
     [class.toast--error]="type === 'error'"
-    role="status"
-    aria-live="assertive"
+    [attr.role]="type === 'error' ? 'alert' : 'status'"
   >
     <p>
-      {{ message }}
+      {{ visible ? message : '' }}
     </p>
   </div>
 </div>

@@ -10,5 +10,13 @@ import { Cockpit } from './shared/components/cockpit/cockpit';
   styleUrl: './app.scss',
 })
 export class App {
-  constructor(public router: Router) {}
+  constructor(public router: Router) {
+    
+    this.router.events.subscribe(() => {
+      setTimeout(() => {
+        document.getElementById('main-content')?.focus();
+      });
+    });
+  }
+
 }

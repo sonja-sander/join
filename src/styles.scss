@@ -87,9 +87,22 @@ button {
 }
 
 .button--disabled {
-  border: 1px solid styles.$gray-dark;
   filter: opacity(0.5);
   cursor: not-allowed;
+
+  &:hover {
+    box-shadow: none;
+  }
+}
+
+.button--primary.button--disabled:hover {
+  background-color: styles.$gray-dark;
+  color: white;
+}
+
+.button--secondary.button--disabled:hover {
+  background-color: white;
+  color: styles.$gray-dark;
 }
 
 .button--icon {
@@ -331,4 +344,16 @@ button {
 
 :focus-visible {
   outline: 1px solid styles.$blue-primary;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }

@@ -1,9 +1,9 @@
-<section>
+<aside>
   <div class="content-wrapper">
     <img class="logo" src="assets/img/icons/logo-light.svg" alt="Join" />
 
     @if (authLoading$ | async){
-      <div class="cockpit-loading">
+      <div class="cockpit-loading" role="status" aria-live="polite">
         <div class="loading-spinner"></div>
       </div>
     } @else {
@@ -16,13 +16,11 @@
                   class="icon icon--default"
                   src="assets/img/icons/cockpit/summary.svg"
                   alt=""
-                  aria-hidden="true"
                 />
                 <img
                   class="icon icon--active"
                   src="assets/img/icons/cockpit/summary-active.svg"
                   alt=""
-                  aria-hidden="true"
                 />
                 <span>Summary</span>
               </a>
@@ -33,13 +31,11 @@
                   class="icon icon--default"
                   src="assets/img/icons/cockpit/add-task.svg"
                   alt=""
-                  aria-hidden="true"
                 />
                 <img
                   class="icon icon--active"
                   src="assets/img/icons/cockpit/add-task-active.svg"
                   alt=""
-                  aria-hidden="true"
                 />
                 <span>Add Task</span>
               </a>
@@ -50,13 +46,11 @@
                   class="icon icon--default"
                   src="assets/img/icons/cockpit/board.svg"
                   alt=""
-                  aria-hidden="true"
                 />
                 <img
                   class="icon icon--active"
                   src="assets/img/icons/cockpit/board-active.svg"
                   alt=""
-                  aria-hidden="true"
                 />
                 <span>Board</span>
               </a>
@@ -67,13 +61,11 @@
                   class="icon icon--default"
                   src="assets/img/icons/cockpit/contacts.svg"
                   alt=""
-                  aria-hidden="true"
                 />
                 <img
                   class="icon icon--active"
                   src="assets/img/icons/cockpit/contacts-active.svg"
                   alt=""
-                  aria-hidden="true"
                 />
                 <span>Contacts</span>
               </a>
@@ -104,4 +96,4 @@
     }
 
   </div>
-</section>
+</aside>

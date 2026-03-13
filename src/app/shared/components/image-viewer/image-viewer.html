@@ -1,32 +1,33 @@
-  <div class="viewer-overlay" (click)="onBackdropClick($event)">
+  <div class="viewer-overlay" (click)="onBackdropClick($event)" role="dialog" aria-modal="true" aria-labelledby="viewer-title">
     <div class="viewer-content" cdkTrapFocus cdkTrapFocusAutoCapture>
+
       <header>
         <div class="header-content">
           <div class="metadata">
-            <p class="file-name">
+            <h2 id="viewer-title" class="file-name">
               {{ currentAttachment.fileName }} 
-            </p>
+            </h2>
             <p class="file-type-and-size">
               {{ currentAttachment.fileType.split('/')[1].toUpperCase() }} / 
               {{ (currentAttachment.base64Size / 1024).toFixed(0) }} KB
             </p>
           </div>
   
-          <div class="zoom desktop-only">
-            <button class="zoom-out" type="button" (click)="zoomOut()">
+          <div class="zoom desktop-only" role="group" aria-label="Zoom controls">
+            <button class="zoom-out" type="button" (click)="zoomOut()" aria-label="Zoom out">
               <img src="assets/img/icons/add-task/zoom-out.svg" alt="">
             </button>
-            <button class="zoom-in" type="button" (click)="zoomIn()">
+            <button class="zoom-in" type="button" (click)="zoomIn()" aria-label="Zoom in">
               <img src="assets/img/icons/add-task/zoom-in.svg" alt="">
             </button>
           </div>
     
-          <div class="header-actions">
-            <button class="download-btn" type="button" (click)="this.fileService.downloadAttachment(currentAttachment)">
+          <div class="header-actions" role="group" aria-label="Image actions">
+            <button class="download-btn" type="button" (click)="this.fileService.downloadAttachment(currentAttachment)" aria-label="Download image">
               <img src="assets/img/icons/add-task/download-white.svg" alt="">
             </button>
       
-            <button class="close-btn" type="button" (click)="closeImageViewer()">
+            <button class="close-btn" type="button" (click)="closeImageViewer()" aria-label="Close image viewer">
               <img src="assets/img/icons/add-task/close-white.svg" alt="">
             </button>
           </div>
@@ -34,35 +35,36 @@
       </header>
   
       <section class="image-section">
-        <img class="attachment-img" [src]="currentAttachment.base64" [style.transform]="`scale(${scale})`" (wheel)="onWheel($event)" alt="">
+        <img class="attachment-img" [src]="currentAttachment.base64" [style.transform]="`scale(${scale})`" (wheel)="onWheel($event)" alt="{{ currentAttachment.fileName }}">
       </section>
 
-      <button class="desktop-previous desktop-only" type="button" (click)="previousImage()">
+      <button class="desktop-previous desktop-only" type="button" (click)="previousImage()" aria-label="Previous image">
         <img class="desktop-only" src="assets/img/icons/add-task/arrow-left.svg" alt="">
       </button>
-      <button class="desktop-next desktop-only" type="button" (click)="nextImage()">
+      <button class="desktop-next desktop-only" type="button" (click)="nextImage()" aria-label="Next image">
         <img class="desktop-only" src="assets/img/icons/add-task/arrow-right.svg" alt="">
       </button>
       
       <footer>
         <div class="footer-content mobile-only">
-          <button class="previous" type="button" (click)="previousImage()">
+          <button class="previous" type="button" (click)="previousImage()" aria-label="Previous image">
             <img src="assets/img/icons/add-task/arrow-left.svg" alt="">
           </button>
     
-          <div class="zoom">
-            <button class="zoom-out" type="button" (click)="zoomOut()">
+          <div class="zoom" role="group" aria-label="Zoom controls">
+            <button class="zoom-out" type="button" (click)="zoomOut()" aria-label="Zoom out">
               <img src="assets/img/icons/add-task/zoom-out.svg" alt="">
             </button>
-            <button class="zoom-in" type="button" (click)="zoomIn()">
+            <button class="zoom-in" type="button" (click)="zoomIn()" aria-label="Zoom in">
               <img src="assets/img/icons/add-task/zoom-in.svg" alt="">
             </button>
           </div>
     
-          <button class="next" type="button" (click)="nextImage()">
+          <button class="next" type="button" (click)="nextImage()" aria-label="Next image">
             <img src="assets/img/icons/add-task/arrow-right.svg" alt="">
           </button>
         </div>
       </footer>
+
     </div>
   </div>

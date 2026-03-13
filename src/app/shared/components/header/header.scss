@@ -144,7 +144,12 @@ header {
       }
     }
 
+    ul{
+      list-style: none;
+    }
+    
     a, button {
+      display: block;
       width: 100%;
       padding: 12px 8px 12px 16px;
       color: #cdcdcd;
@@ -157,6 +162,7 @@ header {
     button{
       background-color: transparent;
       @include styles.setFlex($jc: flex-start);
+      border-radius: 0;
     }
   }
 }
