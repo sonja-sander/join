@@ -1,14 +1,8 @@
 $g-pad-x: clamp(1.2rem, 6vw, 7.5rem);
 $g-max-width: 1440px;
 $g-frame-gap: clamp(0.8rem, 1.5vw, 1.5rem);
-
 $header-height: clamp(70px, 6dvw, 96px);
-
 $menu-overlay-title-size: clamp(2em, 6vmin, 6em);
-
-//////////////////////////////////////////////////////////////////////////////
-
-// All Colors
 
 // Reds
 $red-error: #e60026;
@@ -37,7 +31,7 @@ $cyan-accent: #00bee8;
 // Blues
 $blue-primary: #0038ff;
 $blue-light: #4589ff;
-$blue-link: #007cee;
+$blue-link: #0074E0;
 $blue-sky: #29abe2;
 
 // Purples / Magenta

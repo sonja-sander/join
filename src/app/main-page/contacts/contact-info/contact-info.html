@@ -15,17 +15,13 @@
       [class.contact-info__profile--animating]="profileAnimating"
       >
       <div class="contact-info__main">
-        <div
-          class="contact-info__avatar"
-          [style.backgroundColor]="activeContact.userColor"
-          aria-hidden="true" 
-        >
-          @if (activeContact.avatar?.base64) {
-            <img class="contact-info__avatar-img" [src]="activeContact.avatar?.base64" alt="Contact profile picture">
-          } @else {
-            <span class="contact-info__initials">{{ getTwoInitials(activeContact.name) }}</span>
-          }
-        </div>
+        <app-avatar
+          [name]="activeContact.name"
+          [color]="activeContact.userColor || '#cccccc'"
+          [avatar]="activeContact.avatar?.base64"
+          [size]="90"
+        ></app-avatar>
+
         <div class="contact-info__identity">
           <h2 class="contact-info__name">{{ activeContact.name }}</h2>
           <div class="contact-info__actions">
@@ -33,8 +29,7 @@
               <img
                 class="contact-info__action-icon"
                 src="assets/img/icons/buttons/edit.svg"
-                alt="Edit icon"
-                aria-hidden="true"
+                alt=""
               />
               <span>Edit</span>
             </button>
@@ -43,8 +38,7 @@
                 <img
                   class="contact-info__action-icon"
                   src="assets/img/icons/buttons/delete.svg"
-                  alt="Delete icon"
-                  aria-hidden="true"
+                  alt=""
                 />
                 <span>Delete</span>
               </button>
@@ -81,7 +75,7 @@
         [attr.aria-expanded]="fabMenuOpen"
         (click)="toggleFabMenu()"
       >
-        <img src="assets/img/icons/buttons/contact-options.svg" alt="" aria-hidden="true" />
+        <img src="assets/img/icons/buttons/contact-options.svg" alt="" />
       </button>
       @if (fabMenuOpen) {
         <div class="contact-info__fab-overlay" (click)="closeFabMenu()"></div>

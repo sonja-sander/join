@@ -5,10 +5,11 @@ import { getTwoInitials } from '../../../../shared/utilities/utils';
 import { NgClass } from '@angular/common';
 import { TaskService } from '../../../../shared/services/task-service';
 import { CdkDrag, DragDropModule } from '@angular/cdk/drag-drop';
+import { Avatar } from '../../../../shared/components/avatar/avatar';
 
 @Component({
   selector: 'app-single-task',
-  imports: [NgClass, DragDropModule, CdkDrag],
+  imports: [NgClass, DragDropModule, CdkDrag, Avatar],
   templateUrl: './single-task.html',
   styleUrl: './single-task.scss',
 })
@@ -130,17 +131,17 @@ export class SingleTask implements OnInit {
   }
 
   /**
-   * Retrieves the initials of an assignee by contact ID.
+   * Retrieves the name of an assignee by contact ID.
    *
    * @param id The contact identifier
-   * @returns The initials of the assignee
+   * @returns The name of the assignee
    */
-  getAssigneeInitials(id: string): string {
+  getAssigneeName(id: string): string {
     const contact = this.contactService.contacts.find((c) => {
       return c.id === id;
     });
 
-    return getTwoInitials(contact?.name || "Unknown");
+    return contact?.name || "Unknown";
   }
 
   /**

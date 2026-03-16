@@ -13,19 +13,16 @@
           <a
             routerLink="/board"
             class="box"
-            aria-label="{{ taskService.getTaskCountByStatus('to-do') }} tasks in To-do. Open board."
           >
             <img
               class="icon icon--default"
               src="assets/img/icons/summary/to-do.svg"
               alt=""
-              aria-hidden="true"
             />
             <img
               class="icon icon--hover"
               src="assets/img/icons/summary/to-do-hover.svg"
               alt=""
-              aria-hidden="true"
             />
             <div class="amount">
               @if (taskService.loading) {
@@ -40,19 +37,16 @@
           <a
             routerLink="/board"
             class="box"
-            aria-label="{{ taskService.getTaskCountByStatus('done') }} tasks done. Open board."
           >
             <img
               class="icon icon--default"
               src="assets/img/icons/summary/done.svg"
               alt=""
-              aria-hidden="true"
             />
             <img
               class="icon icon--hover"
               src="assets/img/icons/summary/done-hover.svg"
               alt=""
-              aria-hidden="true"
             />
             <div class="amount">
               @if (taskService.loading) {
@@ -68,16 +62,12 @@
         <a
           routerLink="/board"
           class="box high-priority-amount"
-          aria-label="{{ taskService.getUrgentTaskCount() }} urgent tasks and next Deadline on {{
-            taskService.getNextDeadline() | date: 'longDate'
-          }}. Open board."
         >
           <div class="urgent">
             <div class="urgent-logo-circle">
               <img
                 src="assets/img/icons/priority/priority-high-white.svg"
                 alt=""
-                aria-hidden="true"
               />
             </div>
             <div class="amount">
@@ -106,7 +96,6 @@
           <a
             routerLink="/board"
             class="box box-amount"
-            aria-label="{{ taskService.tasks.length }} tasks in board. Open board."
           >
             @if (taskService.loading) {
               <span class="loading-spinner"></span>
@@ -122,9 +111,6 @@
           <a
             routerLink="/board"
             class="box box-amount"
-            aria-label="{{
-              taskService.getTaskCountByStatus('in-progress')
-            }} tasks in progress. Open board."
           >
             @if (taskService.loading) {
               <span class="loading-spinner"></span>
@@ -140,9 +126,6 @@
           <a
             routerLink="/board"
             class="box box-amount"
-            aria-label="{{
-              taskService.getTaskCountByStatus('await-feedback')
-            }} tasks awaiting feedback. Open board."
           >
             @if (taskService.loading) {
               <span class="loading-spinner"></span>

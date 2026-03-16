@@ -10,13 +10,14 @@ import {
 import { Contact } from '../../../shared/interfaces/contact';
 import { FirebaseService } from '../../../shared/services/firebase-service';
 import { getTwoInitials } from '../../../shared/utilities/utils';
+import { Avatar } from '../../../shared/components/avatar/avatar';
 
 /**
  * Searchable multi-select dropdown for choosing task assignees.
  */
 @Component({
   selector: 'app-dropdown-assignee',
-  imports: [],
+  imports: [Avatar],
   templateUrl: './dropdown-assignee.html',
   styleUrl: './dropdown-assignee.scss',
 })

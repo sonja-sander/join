@@ -11,20 +11,24 @@
 .confirm-box {
   min-width: 250px;
   max-width: 60dvw;
-  padding: 32px;
+  padding: 28px;
   border-radius: 20px;
   background: white;
   word-break: break-word;
-  font-size: 18px;
   
   @include styles.up-xxl{
     min-width: 380px;
     max-width: 40dvw;
-    font-size: 20px;
+    padding: 40px;
   }
   
   .confirm-text{
     font-weight: 500;
+    font-size: 18px;
+
+    @include styles.up-xxl{
+      font-size: 20px;
+    }
     
     .confirm-highlight{
       color: styles.$red-error;

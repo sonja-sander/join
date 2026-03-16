@@ -22,17 +22,27 @@ article{
   @media(min-width: 1120px){
     padding: 16px 14px;
   }
+
+  .task-card-click{
+    position: absolute;
+    inset: 0;
+    border: none;
+    background: none;
+    border-radius: 20px;
+    cursor: pointer;
+    z-index: 1;
+  }
 }
 
 .header{
   @include styles.setFlex($jc: space-between);
 
   .category{
-    color: white;
+    @include styles.setFlex();
     width: fit-content;
     padding: 4px 18px;
     border-radius: 8px;
-    @include styles.setFlex();
+    color: white;
 
     @include styles.up-xxl{
       padding: 4px 6px;
@@ -56,6 +66,7 @@ article{
     background-color: transparent;
     width: 28px;
     height: 28px;
+    z-index: 2;
 
     @include styles.up-xxl{
       display: none;
@@ -121,10 +132,11 @@ article{
 
 .title{
   margin-bottom: 8px;
+  font-size: 16px;
 }
 
 .description{
-  color: #a8a8a8;
+  color: #757575;
 }
 
 .title, .description{
@@ -180,25 +192,13 @@ article{
   .assignees{
     @include styles.setFlex();
 
-    .avatar{
-      @include styles.setFlex();
-      width: 32px;
-      height: 32px;
+    app-avatar{
       margin-left: -8px;
       border: 1px solid white;
-      border-radius: 50%;
-      color: white;
-      word-break: normal;
+      border-radius: 50%;      
       
       &:first-child{
         margin-left: 0;
-      }
-
-      .avatar-img{
-        width: 100%;
-        height: 100%;
-        border-radius: 50%;
-        object-fit: cover;
       }
     }
   }

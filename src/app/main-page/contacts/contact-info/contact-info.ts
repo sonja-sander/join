@@ -9,10 +9,11 @@ import {
 } from '@angular/core';
 import { Contact } from '../../../shared/interfaces/contact';
 import { getTwoInitials } from '../../../shared/utilities/utils';
+import { Avatar } from '../../../shared/components/avatar/avatar';
 
 @Component({
   selector: 'app-contact-info',
-  imports: [],
+  imports: [Avatar],
   templateUrl: './contact-info.html',
   styleUrl: './contact-info.scss',
 })

@@ -1,7 +1,7 @@
 <header>
   <div class="content-wrapper">
     <div class="content-left">
-      <img class="mobile-logo mobile-only" src="assets/img/icons/logo-dark.svg" alt="Join" />
+      <img class="mobile-logo mobile-only" src="assets/img/icons/logo-dark.svg" alt="Join logo" />
       <p class="desktop-title desktop-only">Kanban Project Management Tool</p>
     </div>
     <div class="content-right">
@@ -22,37 +22,36 @@
           aria-label="Open user menu"
           aria-controls="user-menu"
           [attr.aria-expanded]="menuOpen"
+          aria-haspopup="menu"
         >
-          @if (user$ | async; as user) {
-            @if (user.isAnonymous) {
-              <span aria-hidden="true">G</span>
-            } @else {
-              <span aria-hidden="true">
-                {{ getLoggedInUserInitials(user.displayName) }}
-              </span>
-            }
+          @if (user.isAnonymous) {
+            <span aria-hidden="true">G</span>
+          } @else {
+            <span aria-hidden="true">
+              {{ getLoggedInUserInitials(user.displayName) }}
+            </span>
           }
         </button>
 
         @if (menuOpen) {
           <div class="menu-overlay" (click)="closeMenu()" aria-hidden="true"></div>
-          <nav id="user-menu" class="user-menu" [class.is-open]="menuOpen" aria-label="User menu">
-            <ul>
-              <li class="mobile-only">
-                <a routerLink="/help" (click)="closeMenu()">Help</a>
-              </li>
-              <li>
-                <a routerLink="/imprint" (click)="closeMenu()">Legal Notice</a>
-              </li>
-              <li>
-                <a routerLink="/privacy" (click)="closeMenu()">Privacy Policy</a>
-              </li>
-              <li>
-                <button type="button" (click)="logout()">Log out</button>
-              </li>
-            </ul>
-          </nav>
         }
+        <nav id="user-menu" class="user-menu" [class.is-open]="menuOpen" aria-label="User menu">
+          <ul>
+            <li class="mobile-only">
+              <a routerLink="/help" (click)="closeMenu()">Help</a>
+            </li>
+            <li>
+              <a routerLink="/imprint" (click)="closeMenu()">Legal Notice</a>
+            </li>
+            <li>
+              <a routerLink="/privacy" (click)="closeMenu()">Privacy Policy</a>
+            </li>
+            <li>
+              <button type="button" (click)="logout()">Log out</button>
+            </li>
+          </ul>
+        </nav>
       }
 
     </div>

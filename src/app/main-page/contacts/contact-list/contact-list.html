@@ -17,7 +17,7 @@
     }
 
     @for (contact of contacts; track getContactId(contact, $index); let idx = $index) {
-      <div class="contact-list__alphab-section">
+      <li class="contact-list__alphab-section">
         @if (isNewLetter(idx)) {
           <div class="contact-list__letter">{{ getFirstLetter(contact) }}</div>
           <div class="contact-list__divider"></div>
@@ -29,7 +29,7 @@
           [isActive]="activeContactID === getContactId(contact, idx)"
           (selected)="setActiveContact(contact, idx)"
         />
-      </div>
+      </li>
     }
   </ul>
 </section>

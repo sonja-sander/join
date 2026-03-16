@@ -71,19 +71,18 @@
       </div>
     </div>
 
-    <div class="add-task__footer">
+    <footer class="add-task__footer">
       <span class="add-task__required-note"
         ><span class="required">*</span> This field is required</span
       >
       <div class="add-task__actions">
         @if (!isEditMode) {
-          <button type="button" class="button button--secondary button--icon" (click)="resetForm()" aria-label="Clear all inputs">
+          <button type="button" class="button button--secondary button--icon" (click)="resetForm()">
             Clear
             <img
               class="button__icon"
               src="assets/img/icons/add-task/close.svg"
               alt=""
-              aria-hidden="true"
             />
           </button>
         }
@@ -94,10 +93,10 @@
           [attr.aria-disabled]="!isFormValid ? 'true' : null"
         >
           {{ submitButtonLabel }}
-          <img class="button__icon" src="assets/img/icons/buttons/save.svg" alt="" aria-hidden="true" />
+          <img class="button__icon" src="assets/img/icons/buttons/save.svg" alt="" />
         </button>
       </div>
-    </div>
+    </footer>
   </form>
 </section>
 

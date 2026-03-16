@@ -46,7 +46,7 @@
   padding: clamp(0.5rem, 1.2vw, 0.625rem) clamp(0rem, 0vw, 0rem);
 
   &::placeholder {
-    color: styles.$gray-light;
+    color: #666666;
   }
 }
 

@@ -20,7 +20,6 @@
 }
 
 .priority__button {
-  @include styles.setFlex($gap: 0.5rem);
   @include styles.setFlex($gap: 0);
   flex: 1;
   padding: clamp(0.5rem, 0.5vw, 0.75rem) clamp(0.5rem, 0.5vw, 0.75rem);
@@ -29,18 +28,6 @@
   background-color: styles.$white;
   box-shadow: 0 0.0625rem 0.125rem 0 #0000001a;
   @include styles.setFont($size: 1em, $weight: 500, $color: styles.$gray-dark);
-}
-
-.priority__button--urgent {
-  color: styles.$red-accent;
-}
-
-.priority__button--medium {
-  color: styles.$orange-warning;
-}
-
-.priority__button--low {
-  color: styles.$green-success;
 }
 
 .priority__button.is-active {
@@ -69,11 +56,4 @@
 
 .priority__icon {
   width: 3rem;
-  // height: 1.125rem;
 }
-
-// @include styles.down-md {
-//   .priority {
-//     @include styles.setFlex($d: column, $ai: stretch, $jc: flex-start, $gap: 0rem);
-//   }
-// }

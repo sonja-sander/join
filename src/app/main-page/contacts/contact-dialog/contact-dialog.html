@@ -20,11 +20,11 @@
           aria-label="Close contact dialog"
           (click)="closeDialog()"
         >
-          <img src="assets/img/icons/buttons/close-white.svg" alt="" aria-hidden="true"/>
+          <img src="assets/img/icons/buttons/close-white.svg" alt=""/>
         </button>
 
         <div class="title">
-          <img class="logo desktop-only" src="assets/img/icons/logo-light.svg" alt="" aria-hidden="true"/>
+          <img class="logo desktop-only" src="assets/img/icons/logo-light.svg" alt=""/>
           <h1 id="contact-dialog-title">
             @if (dialogMode === 'add') {
               Add contact
@@ -35,7 +35,7 @@
           @if (dialogMode === 'add') {
             <p>Tasks are better with a team!</p>
           }
-          <div class="line"></div>
+          <div class="line" aria-hidden="true"></div>
         </div>
       </header>
 
@@ -49,13 +49,11 @@
           class="icon icon--default"
           src="assets/img/icons/buttons/close.svg"
           alt=""
-          aria-hidden="true"
         />
         <img
           class="icon icon--hover"
           src="assets/img/icons/buttons/close-hover.svg"
           alt=""
-          aria-hidden="true"
         />
       </button>
 
@@ -66,12 +64,14 @@
               <img class="avatar-img" [src]="contactData.avatar?.base64" alt="Contact profile picture" />
             }
             @else if (dialogMode === 'add') {
-              <img class="avatar-placeholder-img" src="assets/img/icons/forms/contact-white.svg" alt="" aria-hidden="true" />
-            } @else {
+              <img class="avatar-placeholder-img" src="assets/img/icons/forms/contact-white.svg" alt="" />
+            } 
+            @else {
               <span class="initials">
                 {{ getTwoInitials(contactData.name) }}
               </span> 
             }
+
             <div class="avatar-upload-wrapper">
               <button
                 class="upload-btn" 
@@ -79,16 +79,16 @@
                 (click)="openFilePicker()"
                 aria-label="Upload contact profile picture"
               >
-                <img class="upload-icon icon--default" src="assets/img/icons/forms/add-avatar.svg" alt="" aria-hidden="true">
-                <img class="upload-icon icon--hover desktop-only" src="assets/img/icons/forms/add-avatar-hover.svg" alt="" aria-hidden="true">
+                <img class="upload-icon icon--default" src="assets/img/icons/forms/add-avatar.svg" alt="">
+                <img class="upload-icon icon--hover desktop-only" src="assets/img/icons/forms/add-avatar-hover.svg" alt="">
               </button>
             </div>
 
             @if (contactData.avatar?.base64) {
               <div class="avatar-delete-wrapper">
                 <button class="delete-btn" type="button" (click)="onAvatarDelete()" aria-label="Delete contact profile picture">
-                  <img class="delete-icon icon--default" src="assets/img/icons/add-task/delete-white.svg" alt="" aria-hidden="true">
-                  <img class="delete-icon icon--hover desktop-only" src="assets/img/icons/add-task/delete-white-hover.svg" alt="" aria-hidden="true">
+                  <img class="delete-icon icon--default" src="assets/img/icons/add-task/delete-white.svg" alt="">
+                  <img class="delete-icon icon--hover desktop-only" src="assets/img/icons/add-task/delete-white-hover.svg" alt="">
                 </button>
               </div>
             }
@@ -225,13 +225,11 @@
                   class="button__icon button__icon--default"
                   src="assets/img/icons/buttons/cancel.svg"
                   alt=""
-                  aria-hidden="true"
                 />
                 <img
                   class="button__icon button__icon--hover"
                   src="assets/img/icons/buttons/cancel-hover.svg"
                   alt=""
-                  aria-hidden="true"
                 />
               </button>
             } @else if (canDelete) {
@@ -239,7 +237,6 @@
                 type="button"
                 class="button button--secondary"
                 (click)="requestDelete.emit()"
-                aria-label="Delete contact"
               >
                 Delete
               </button>
@@ -248,7 +245,6 @@
               type="submit"
               class="button button--primary button--icon"
               [class.button--disabled]="contactForm.invalid"
-              aria-label="Save changes"
             >
               @if (dialogMode === 'add') {
                 Create contact
@@ -259,25 +255,12 @@
                 class="button__icon"
                 src="assets/img/icons/buttons/save.svg"
                 alt=""
-                aria-hidden="true"
               />
             </button>
           </div>
         </form>
       </section>
-
       
     </div>
   </div>
 }
-
-<!-- <app-confirm-dialog
-  [open]="showDeleteConfirm"
-  [highlight]="'Delete'"
-  [highlightObject]="contactData.name ? contactData.name : 'this contact'"
-  [confirmText]="'Delete'"
-  [cancelText]="'Cancel'"
-  (confirm)="confirmDelete()"
-  (cancel)="cancelDelete()"
->
-</app-confirm-dialog> -->

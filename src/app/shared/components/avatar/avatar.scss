@@ -1,0 +1,24 @@
+@use "../../../../styles/index.scss" as styles;
+
+.avatar {
+  @include styles.setFlex();
+  border-radius: 50%;
+  color: white;
+  overflow: hidden;
+  width: var(--avatar-size);
+  height: var(--avatar-size);
+  font-size: calc(var(--avatar-size) * 0.42);
+
+  .avatar-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  &.initials::after {
+    content: attr(data-initials);
+    color: white;
+    font-weight: 600;
+  }
+}
+

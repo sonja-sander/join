@@ -67,22 +67,6 @@
   flex-wrap: wrap;
 }
 
-.assignees-preview__avatar {
-  @include styles.setFlex();
-  width: 3rem;
-  height: 3rem;
-  border-radius: 50%;
-  @include styles.setFont($size: 1em, $weight: 500, $color: styles.$white);
-  flex: 0 0 auto;
-}
-
-.avatar-img {
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  object-fit: cover;
-}
-
 .dropdown {
   position: absolute;
   top: 100%;
@@ -125,15 +109,6 @@
   &:hover {
     background-color: styles.$white-light;
   }
-}
-
-.dropdown__avatar {
-  @include styles.setFlex();
-  width: 3rem;
-  height: 3rem;
-  border-radius: 50%;
-  @include styles.setFont($size: 1em, $weight: 500, $color: styles.$white);
-  flex: 0 0 auto;
 }
 
 .dropdown__name {

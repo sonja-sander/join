@@ -24,7 +24,7 @@
         class="form-field__icon"
         [class.is-open]="isDropdownOpen"
         src="assets/img/icons/add-task/dropdown-arrow-down.svg"
-        alt="dropdown-arrow icon"
+        alt=""
       />
     </button>
 
@@ -44,22 +44,13 @@
               [class.is-selected]="isSelected(contact)"
               (click)="toggleContact(contact, $event)"
             >
-              <span
-                class="dropdown__avatar"
-                [style.backgroundColor]="contact.userColor ?? '#cccccc'"
-                aria-hidden="true"
-              >
-                @if (contact.avatar?.base64) {
-                  <img
-                    class="avatar-img"
-                    [src]="contact.avatar?.base64"
-                    alt=""
-                    aria-hidden="true"
-                  />
-                } @else {
-                  {{ getTwoInitials(contact.name) }}
-                }
-              </span>
+              <app-avatar
+                [name]="contact.name"
+                [color]="contact.userColor ?? '#cccccc'"
+                [avatar]="contact.avatar?.base64"
+                [size]="30"
+              ></app-avatar>
+              
               <span class="dropdown__name">{{ contact.name }}</span>
               <span class="dropdown__checkbox" aria-hidden="true"></span>
             </button>
@@ -71,27 +62,15 @@
 
   <div class="assignees-preview">
     @for (contact of selectedContacts.slice(0, 7); track getContactId(contact, $index)) {
-      <span
-        class="assignees-preview__avatar"
-        [style.backgroundColor]="contact.userColor ?? '#cccccc'"
-        aria-label="Assigned to {{ contact.name }}"
-      >
-        @if (contact.avatar?.base64) {
-          <img
-            class="avatar-img"
-            [src]="contact.avatar?.base64"
-            alt=""
-            aria-hidden="true"
-          />
-        } @else {
-          {{ getTwoInitials(contact.name) }}
-        }
-      </span>
+      <app-avatar
+        [name]="contact.name"
+        [color]="contact.userColor ?? '#cccccc'"
+        [avatar]="contact.avatar?.base64"
+        [size]="30"
+      ></app-avatar>
     }
     @if(selectedContacts.length > 7){
-      <div aria-label="And assigned to further contacts">
-        <span>+{{selectedContacts.length - 7}}</span>
-      </div>
+      <span>+{{selectedContacts.length - 7}}</span>
     }
   </div>
 </label>

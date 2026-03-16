@@ -3,13 +3,14 @@
     <div class="title-section">
       <h1>Board</h1>
       <div class="search-bar" role="search">
+        <label for="search-input" class="sr-only">Search tasks by category, title or description</label>
         <input
+          id="search-input"
           class="search-bar__input"
           [(ngModel)]="searchTerm"
           (input)="search()"
           type="text"
           placeholder="Find Task"
-          aria-label="Search tasks by title or description"
         />
         <div class="search-bar__divider" aria-hidden="true"></div>
         <button type="button" class="search-bar__button" (click)="search()" aria-label="Search">
@@ -17,33 +18,30 @@
             class="search-bar__icon search-bar__icon--default"
             src="assets/img/icons/board/search.svg"
             alt=""
-            aria-hidden="true"
           />
           <img
             class="search-bar__icon search-bar__icon--hover desktop-only"
             src="assets/img/icons/board/search-hover.svg"
             alt=""
-            aria-hidden="true"
           />
         </button>
       </div>
       <button
         type="button"
         class="add-task-btn button button--primary button--icon"
-        aria-label="Add new task"
         (click)="openAddTaskOverlay()"
+        aria-label="Add task"
       >
         <span class="desktop-only">Add task</span>
         <img
           class="button__icon"
           src="assets/img/icons/buttons/add-task.svg"
           alt=""
-          aria-hidden="true"
         />
       </button>
     </div>
 
-    <div class="board" aria-label="Task board columns">
+    <div class="board">
       <app-task-list
         status="to-do"
         listTitle="To do"
@@ -99,7 +97,6 @@
               class="add-task-overlay__close-icon"
               src="assets/img/icons/buttons/close.svg"
               alt=""
-              aria-hidden="true"
             />
           </button>
 

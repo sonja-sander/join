@@ -8,10 +8,11 @@ import { FileService } from '../../../shared/services/file-service';
 import { ImageViewer } from '../../../shared/components/image-viewer/image-viewer';
 import { ConfirmDialog } from '../../../shared/components/confirm-dialog/confirm-dialog';
 import { A11yModule } from '@angular/cdk/a11y';
+import { Avatar } from '../../../shared/components/avatar/avatar';
 
 @Component({
   selector: 'app-task-dialog',
-  imports: [NgClass, DatePipe, ImageViewer, ConfirmDialog, A11yModule],
+  imports: [NgClass, DatePipe, ImageViewer, ConfirmDialog, A11yModule, Avatar],
   templateUrl: './task-dialog.html',
   styleUrl: './task-dialog.scss',
 })
@@ -129,20 +130,6 @@ export class TaskDialog {
     event.stopPropagation();
     event.preventDefault();
     this.closeDialog();
-  }
-
-  /**
-   * Retrieves the initials of an assignee by contact ID.
-   *
-   * @param id The contact identifier
-   * @returns The initials of the assignee
-   */
-  getAssigneeInitials(id: string): string {
-    const contact = this.contactService.contacts.find((c) => {
-      return c.id === id;
-    });
-
-    return getTwoInitials(contact?.name || 'Unknown');
   }
 
   /**
