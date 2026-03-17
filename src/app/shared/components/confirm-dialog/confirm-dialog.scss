@@ -1,4 +1,4 @@
-@use "../../../../styles/index.scss" as styles;
+@use '../../../../styles/index.scss' as styles;
 
 .confirm-backdrop {
   @include styles.setFlex();
@@ -15,50 +15,50 @@
   border-radius: 20px;
   background: white;
   word-break: break-word;
-  
-  @include styles.up-xxl{
+
+  @include styles.up-xxl {
     min-width: 380px;
     max-width: 40dvw;
     padding: 40px;
   }
-  
-  .confirm-text{
+
+  .confirm-text {
     font-weight: 500;
     font-size: 18px;
 
-    @include styles.up-xxl{
+    @include styles.up-xxl {
       font-size: 20px;
     }
-    
-    .confirm-highlight{
+
+    .confirm-highlight {
       color: styles.$red-error;
     }
   }
 
-  .confirm-actions{
+  .confirm-actions {
     @include styles.setFlex($gap: 24px);
     margin-top: 24px;
 
-    .button{
-      @include styles.up-xxl{
+    .button {
+      @include styles.up-xxl {
         padding-left: 24px;
         padding-right: 24px;
       }
     }
 
-    .confirm-btn{
+    .confirm-btn {
       background-color: styles.$red-error;
 
-      &:hover{
+      &:hover {
         background-color: styles.$gray-dark;
       }
 
-      &:focus-visible{
+      &:focus-visible {
         background-color: styles.$blue-primary;
       }
     }
 
-    .cancel-btn:hover{
+    .cancel-btn:hover {
       border-color: styles.$gray-dark;
       color: styles.$gray-dark;
     }

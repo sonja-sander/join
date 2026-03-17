@@ -19,11 +19,11 @@ aside {
     height: 70px;
     width: 90%;
 
-    @media (hover: none) and (orientation: landscape) and (max-height: 400px){
+    @media (hover: none) and (orientation: landscape) and (max-height: 400px) {
       height: 50px;
     }
 
-    @media(min-width: 650px) and (max-width: 1024px){
+    @media (min-width: 650px) and (max-width: 1024px) {
       width: 80%;
     }
 
@@ -33,7 +33,7 @@ aside {
       max-height: 1024px;
       width: 100%;
 
-      @media(max-height: 800px){
+      @media (max-height: 800px) {
         @include styles.setGrid($rows: 1fr 1fr 1fr, $columns: 1fr);
       }
     }
@@ -43,7 +43,7 @@ aside {
 .logo {
   display: none;
 
-  @include styles.up-xxl{
+  @include styles.up-xxl {
     grid-area: 1/1/2/2;
     @include styles.setFlex();
     width: auto;
@@ -51,12 +51,12 @@ aside {
     max-height: 45%;
     place-self: center;
 
-    @media(max-height: 800px){
+    @media (max-height: 800px) {
       grid-area: 1/1/2/2;
       height: 85%;
     }
 
-    @media(max-height: 380px){
+    @media (max-height: 380px) {
       display: none;
     }
   }
@@ -74,7 +74,7 @@ nav {
         height: 25px;
         object-fit: contain;
 
-        @media (hover: none) and (orientation: landscape) and (max-height: 400px){
+        @media (hover: none) and (orientation: landscape) and (max-height: 400px) {
           display: none;
         }
       }
@@ -84,14 +84,13 @@ nav {
 
 .main-nav {
   width: 100%;
-  
-  @include styles.up-xxl{
+
+  @include styles.up-xxl {
     grid-area: 2/1/3/2;
 
-    @media(max-height: 800px){
+    @media (max-height: 800px) {
       grid-area: 2/1/3/2;
     }
-
   }
 
   ul {
@@ -126,7 +125,7 @@ nav {
           height: 65px;
         }
 
-        @media (hover: none) and (orientation: landscape) and (max-height: 400px){
+        @media (hover: none) and (orientation: landscape) and (max-height: 400px) {
           height: 50px;
         }
 
@@ -155,7 +154,7 @@ nav {
           .icon--active {
             display: block;
 
-            @media (hover: none) and (orientation: landscape) and (max-height: 400px){
+            @media (hover: none) and (orientation: landscape) and (max-height: 400px) {
               display: none;
             }
           }
@@ -165,12 +164,12 @@ nav {
           @media (max-width: 350px) {
             display: none;
           }
-          @include styles.up-xxl{
+          @include styles.up-xxl {
             text-align: left;
           }
         }
 
-        &:focus-visible{
+        &:focus-visible {
           background-color: styles.$blue-primary;
         }
       }
@@ -192,11 +191,11 @@ nav {
     grid-area: 4/1/5/2;
     width: 100%;
 
-    @media(max-height: 800px){
+    @media (max-height: 800px) {
       grid-area: 3/1/4/2;
     }
 
-    @media(max-height: 450px){
+    @media (max-height: 450px) {
       display: none;
     }
   }
@@ -245,8 +244,8 @@ nav {
             font-weight: normal;
           }
         }
-        
-        &:focus-visible{
+
+        &:focus-visible {
           background-color: styles.$blue-primary;
         }
       }
@@ -254,7 +253,7 @@ nav {
   }
 }
 
-.cockpit-loading{
+.cockpit-loading {
   @include styles.setFlex();
   width: 100%;
 }
@@ -272,7 +271,7 @@ nav {
   animation-timing-function: linear;
   animation-iteration-count: infinite;
 
-  @include styles.up-xxl{
+  @include styles.up-xxl {
     width: 36px;
     height: 36px;
     margin-top: 16px;

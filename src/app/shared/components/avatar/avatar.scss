@@ -1,4 +1,4 @@
-@use "../../../../styles/index.scss" as styles;
+@use '../../../../styles/index.scss' as styles;
 
 .avatar {
   @include styles.setFlex();
@@ -21,4 +21,3 @@
     font-weight: 600;
   }
 }
-

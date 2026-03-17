@@ -1,7 +1,7 @@
-@use "../../../../styles/index.scss" as styles;
+@use '../../../../styles/index.scss' as styles;
 
-section{
-  @include styles.up-xxl{
+section {
+  @include styles.up-xxl {
     display: flex;
     flex-direction: column;
     height: 100%;
@@ -9,13 +9,13 @@ section{
     flex: 1;
   }
 
-  .list-head{
+  .list-head {
     @include styles.setFlex($jc: space-between);
     margin-top: 3px;
     margin-bottom: 14px;
     height: 30px;
 
-    @include styles.up-xxl{
+    @include styles.up-xxl {
       position: sticky;
       top: 0;
       width: 100%;
@@ -24,16 +24,16 @@ section{
       background-color: #f6f7f8;
     }
 
-    h2{
+    h2 {
       color: #42526e;
 
-      @include styles.up-xxl{
+      @include styles.up-xxl {
         font-size: clamp(16px, 1.5dvw, 20px);
         padding: 0 4px;
       }
     }
 
-    .add-to-list-btn{
+    .add-to-list-btn {
       @include styles.setFlex();
       background-color: transparent;
       width: 30px;
@@ -41,27 +41,27 @@ section{
       padding: 0;
       margin-right: 2px;
 
-      .add-icon--hover{
+      .add-icon--hover {
         display: none;
       }
 
-      &:hover{
-        .add-icon--default{
+      &:hover {
+        .add-icon--default {
           display: none;
         }
 
-        .add-icon--hover{
+        .add-icon--hover {
           display: block;
         }
       }
     }
   }
 
-  .list{
+  .list {
     margin-bottom: 24px;
     padding: 4px;
-    
-    @include styles.down-xxl{
+
+    @include styles.down-xxl {
       @include styles.setFlex($jc: flex-start, $ai: flex-start, $gap: 16px);
       overflow-x: auto;
 
@@ -70,7 +70,7 @@ section{
       }
     }
 
-    @include styles.up-xxl{
+    @include styles.up-xxl {
       flex: 1;
       display: flex;
       flex-direction: column;
@@ -85,38 +85,38 @@ section{
   }
 }
 
-.loading-tasks-box{
+.loading-tasks-box {
   @include styles.setFlex();
   min-width: 211px;
   width: 235px;
   height: 200px;
-  border: 1px dashed #A8A8A8;
+  border: 1px dashed #a8a8a8;
   border-radius: 20px;
   background-color: #e7e7e7;
   box-shadow: 0px 0px 4px 2px #00000014;
   padding: 16px 14px;
 
-  @include styles.up-xxl{
+  @include styles.up-xxl {
     min-width: 0;
     width: 100%;
     box-shadow: 0px 0px 10px 3px #00000014;
   }
 
-  p{
+  p {
     color: #666666;
   }
 }
 
-.no-tasks-box{
+.no-tasks-box {
   @include styles.setFlex();
   width: 100%;
-  border: 1px dashed #A8A8A8;
+  border: 1px dashed #a8a8a8;
   border-radius: 10px;
   background-color: #e7e7e7;
   box-shadow: 0px 0px 4px 0px #00000029;
-  padding: 16px 14px; 
+  padding: 16px 14px;
 
-  p{
+  p {
     color: #666666;
     word-break: break-all;
   }

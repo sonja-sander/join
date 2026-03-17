@@ -1,4 +1,4 @@
-@use "../../../../styles/index.scss" as styles;
+@use '../../../../styles/index.scss' as styles;
 
 .toast-wrapper {
   position: fixed;
@@ -20,11 +20,11 @@
     transform 0.25s ease,
     opacity 0.25s ease;
 
-  @include styles.down-xxl{
+  @include styles.down-xxl {
     transform: translateY(100%);
-  }  
+  }
 
-  @include styles.up-xxl{
+  @include styles.up-xxl {
     width: 310px;
     transform: translateX(100%);
   }
@@ -33,11 +33,11 @@
 .toast--visible {
   opacity: 1;
 
-  @include styles.down-xxl{
+  @include styles.down-xxl {
     transform: translateY(0);
-  }  
+  }
 
-  @include styles.up-xxl{
+  @include styles.up-xxl {
     transform: translateX(0);
   }
 }
@@ -47,5 +47,5 @@
 }
 
 .toast--error {
-  background-color: #FF3E3E;
+  background-color: #ff3e3e;
 }

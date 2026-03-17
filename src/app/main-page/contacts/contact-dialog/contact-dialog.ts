@@ -6,11 +6,10 @@ import { getTwoInitials } from '../../../shared/utilities/utils';
 import { FileService } from '../../../shared/services/file-service';
 import { Toast } from '../../../shared/components/toast/toast';
 import { A11yModule } from '@angular/cdk/a11y';
-import { Avatar } from '../../../shared/components/avatar/avatar';
 
 @Component({
   selector: 'app-contact-dialog',
-  imports: [FormsModule, Toast, A11yModule, Avatar],
+  imports: [FormsModule, Toast, A11yModule],
   templateUrl: './contact-dialog.html',
   styleUrl: './contact-dialog.scss',
 })

@@ -4,7 +4,10 @@
   background-color: #f6f7f8;
 
   @include styles.up-xxl {
-    @include styles.setGrid($rows: styles.$header-height minmax(0, 1fr) auto, $columns: 232px minmax(0, 1208px) auto);
+    @include styles.setGrid(
+      $rows: styles.$header-height minmax(0, 1fr) auto,
+      $columns: 232px minmax(0, 1208px) auto
+    );
     width: 100%;
     height: 100dvh;
 
@@ -16,30 +19,30 @@
     app-cockpit {
       grid-area: 1/1/4/2;
     }
-    
+
     app-header {
       grid-area: 1/2/2/4;
     }
-    
+
     .content-area {
       grid-area: 2/2/3/3;
     }
-  
-    .empty-content-column{
+
+    .empty-content-column {
       grid-area: 2/3/3/4;
     }
-  
-    .empty-content-row{
+
+    .empty-content-row {
       grid-area: 3/2/4/3;
     }
   }
 }
 
-.white-bg{
+.white-bg {
   background-color: white;
 }
 
-.app-layout-login{
+.app-layout-login {
   background-color: #f6f7f8;
 
   @include styles.up-xxl {
@@ -55,16 +58,16 @@
     .content-area {
       grid-area: 1/2/2/3;
     }
-  
-    .empty-content-column-left{
+
+    .empty-content-column-left {
       grid-area: 1/1/2/2;
     }
-  
-    .empty-content-column-right{
+
+    .empty-content-column-right {
       grid-area: 1/3/2/4;
     }
-  
-    .empty-content-row{
+
+    .empty-content-row {
       grid-area: 2/1/3/4;
     }
   }

@@ -70,21 +70,29 @@
             <p class="subtitle">Attachments:</p>
             <div class="gallery">
               @for (attachment of task.attachments; track attachment.fileName) {
-                <figure class="attachment" role="button" tabindex="0" (click)="openImageViewer($index)" (keydown.enter)="openImageViewer($index)" (keydown.space)="openImageViewer($index)" aria-label="Open attachment {{ attachment.fileName }}">
-                  <div class="image-wrapper">
-                    <img class="attachment-img" [src]="attachment.base64" [alt]="attachment.fileName" >
-                    <button
-                      class="download-btn"
-                      type="button"
-                      (click)="downloadAttachment($event, attachment)"
-                      (keydown.enter)="$event.stopPropagation()"
-                      (keydown.space)="$event.stopPropagation()"
-                      aria-label="Download {{ attachment.fileName }}"
-                    >
-                      <img class="download-icon" src="assets/img/icons/add-task/download-white.svg" alt="">
-                    </button>
-                  </div>
-                  <figcaption>{{ attachment.fileName }}</figcaption>
+                <figure class="attachment">
+                  <button
+                    class="attachment-btn"
+                    type="button"
+                    (click)="openImageViewer($index)"
+                    aria-label="Open attachment {{ attachment.fileName }}"
+                  >
+                    <div class="image-wrapper">
+                      <img class="attachment-img" [src]="attachment.base64" [alt]="attachment.fileName" >
+                    </div>
+                    <figcaption>{{ attachment.fileName }}</figcaption>
+                  </button>
+                  
+                  <button
+                    class="download-btn"
+                    type="button"
+                    (click)="downloadAttachment($event, attachment)"
+                    (keydown.enter)="$event.stopPropagation()"
+                    (keydown.space)="$event.stopPropagation()"
+                    aria-label="Download {{ attachment.fileName }}"
+                  >
+                    <img class="download-icon" src="assets/img/icons/add-task/download-white.svg" alt="">
+                  </button>
                 </figure>
               }
             </div>

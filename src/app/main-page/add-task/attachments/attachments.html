@@ -3,6 +3,7 @@
 
   <div class="description">
     <p id="attachment-description">Allowed file types are JPEG and PNG</p>
+
     @if (attachments.length > 0) {
       <button type="button" (click)="deleteAllAttachments()">
         <img class="icon icon--default" src="assets/img/icons/buttons/delete.svg" alt="" aria-hidden="true">
@@ -23,8 +24,8 @@
     aria-describedby="attachment-description"
   >
     <p>Drag file or browse</p>
-    <img src="assets/img/icons/add-task/add-attachment.svg" alt="" aria-hidden="true">
-</button>
+    <img src="assets/img/icons/add-task/add-attachment.svg" alt="">
+  </button>
 
   <input
     #filePicker
@@ -35,25 +36,45 @@
     multiple
     hidden
   />
-    
+
   <div class="gallery" #gallery>
+
     @for (attachment of attachments; track attachment.fileName) {
-      <figure class="attachment" role="button" tabindex="0" (click)="openImageViewer($index)" (keydown.enter)="openImageViewer($index)" (keydown.space)="openImageViewer($index)" aria-label="Open attachment {{ attachment.fileName }}">
-        <div class="image-wrapper">
-          <img class="attachment-img" [src]="attachment.base64" [alt]="attachment.fileName">
-          <button
-            class="delete-btn"
-            type="button"
-            (click)="deleteSingleAttachment($event, attachment)"
-            (keydown.enter)="$event.stopPropagation()"
-            (keydown.space)="$event.stopPropagation()"
-            aria-label="Delete {{ attachment.fileName }}"
+
+      <figure class="attachment">
+
+        <button
+          class="attachment-btn"
+          type="button"
+          (click)="openImageViewer($index)"
+          aria-label="Open attachment {{ attachment.fileName }}"
+        >
+          <div class="image-wrapper">
+            <img
+              class="attachment-img"
+              [src]="attachment.base64"
+              [alt]="attachment.fileName"
+            >
+          </div>
+
+          <figcaption>{{ attachment.fileName }}</figcaption>
+        </button>
+
+        <button
+          class="delete-btn"
+          type="button"
+          (click)="deleteSingleAttachment($event, attachment)"
+          aria-label="Delete {{ attachment.fileName }}"
+        >
+          <img
+            class="delete-icon"
+            src="assets/img/icons/add-task/delete-white.svg"
+            alt=""
           >
-            <img class="delete-icon" src="assets/img/icons/add-task/delete-white.svg" alt="" aria-hidden="true">
-          </button>
-        </div>
-        <figcaption>{{ attachment.fileName }}</figcaption>
+        </button>
+
       </figure>
+
     }
   </div>
 

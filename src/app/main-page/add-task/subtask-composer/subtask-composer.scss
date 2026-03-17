@@ -85,7 +85,6 @@
 }
 
 .subtask-list {
-  // border: 1px solid red;
   @include styles.setFlex($d: column, $ai: stretch, $jc: flex-start, $gap: 0.5rem);
   width: 100%;
   list-style: none;
@@ -111,7 +110,6 @@
 .subtask-list__item {
   @include styles.setFlex($d: row, $ai: center, $jc: space-between, $gap: 0.5rem);
   width: 100%;
-  // background-color: styles.$white-light;
   border-radius: 1rem;
   padding: clamp(0.45rem, 1vw, 0.65rem) clamp(0.75rem, 1.6vw, 1rem);
 
@@ -126,7 +124,6 @@
 }
 
 .subtask-list__title {
-  // border: 1px solid red;
   @include styles.setFont($size: 1em, $weight: 300, $color: styles.$black);
   flex: 1;
   min-width: 0;

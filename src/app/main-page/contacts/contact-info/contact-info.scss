@@ -27,12 +27,11 @@
   }
 
   &__title {
-    @include styles.setFont(
-      $size: clamp(2.3em, 3vw, 3em),
-      $weight: 800,
-      $line-height: 0.6,
-      $color: styles.$black
-    );
+    font-size: 32px;
+
+    @include styles.up-xxl {
+      font-size: 48px;
+    }
   }
 
   &__header-divider {
@@ -64,7 +63,7 @@
     @include styles.setFlex($jc: flex-start, $gap: clamp(1rem, 2vw, 3rem));
   }
 
-  app-avatar{
+  app-avatar {
     border: 0.3rem solid styles.$white;
     border-radius: 50%;
     box-shadow: 0 4px 12px #0000001a;
