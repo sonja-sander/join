@@ -1,29 +1,39 @@
 <section class="add-task" [class.add-task--overlay]="isOverlay">
   <header class="add-task__header">
-    <h1 id="add-task-title">{{ formTitle }}</h1>
+    <h1 id="add-task-title">{{ isEditMode ? 'Edit Task' : 'Add Task' }}</h1>
   </header>
 
-  <form class="add-task__form" autocomplete="on" (ngSubmit)="createTask()" (focusin)="markAsEdited()" aria-labelledby="add-task-title">
+  <form
+    class="add-task__form"
+    autocomplete="on"
+    (ngSubmit)="createTask()"
+    (focusin)="markAsEdited()"
+    aria-labelledby="add-task-title"
+  >
     <div class="add-task__content">
       <div class="add-task__column">
+
         <app-task-form-field
           label="Title"
           [isRequired]="true"
           placeholder="Enter a title"
           (fieldBlur)="isTitleTouched = true"
-          [hasError]="showTitleError"
-          [(value)]="taskTitle"
+          [hasError]="isTitleTouched && !taskData.title.trim()"
+          [(value)]="taskData.title"
         ></app-task-form-field>
-        <span class="add-task__field-error" [class.is-visible]="showTitleError">
-          {{ titleErrorMessage }}
+
+        <span
+          class="add-task__field-error"
+          [class.is-visible]="isTitleTouched && !taskData.title.trim()"
+        >
+          This field is required
         </span>
 
         <app-task-form-field
           label="Description"
           [isTextarea]="true"
-          [isRequired]="false"
           placeholder="Enter a Description"
-          [(value)]="taskDescription"
+          [(value)]="taskData.description"
         ></app-task-form-field>
 
         <app-task-form-field
@@ -35,66 +45,90 @@
           [useFlatpickr]="true"
           [min]="minDueDate"
           (fieldBlur)="isDueDateTouched = true"
-          [hasError]="showDueDateError"
-          [(value)]="taskDueDate"
+          [hasError]="isDueDateTouched && !taskData.dueDate.trim()"
+          [(value)]="taskData.dueDate"
           iconSrc="assets/img/icons/board/date.svg"
         ></app-task-form-field>
-        <span class="add-task__field-error" [class.is-visible]="showDueDateError">
+
+        <span
+          class="add-task__field-error"
+          [class.is-visible]="isDueDateTouched && !taskData.dueDate.trim()"
+        >
           This field is required
         </span>
       </div>
 
       <div class="add-task__column add-task__column--divider">
-        <app-priority-selector [(selectedPriority)]="activePriority"></app-priority-selector>
+        <app-priority-selector
+          [(selectedPriority)]="taskData.priority"
+        ></app-priority-selector>
+
         <app-dropdown-assignee
           class="add-task__padding-top"
-          [(selectedContacts)]="activeAssignees"
+          [(selectedContacts)]="taskData.assignees"
         ></app-dropdown-assignee>
+
         <app-dropdown-category
           class="add-task__padding-top"
-          [(selectedCategory)]="activeCategory"
+          [(selectedCategory)]="taskData.category"
           (fieldBlur)="isCategoryTouched = true"
-          [hasError]="showCategoryError"
+          [hasError]="isCategoryTouched && !taskData.category"
         ></app-dropdown-category>
-        <span class="add-task__field-error" [class.is-visible]="showCategoryError">
+
+        <span
+          class="add-task__field-error"
+          [class.is-visible]="isCategoryTouched && !taskData.category"
+        >
           This field is required
         </span>
+
         <app-attachments
-          [attachments]="attachments"
-          (attachmentsChange)="attachments = $event; markAsEdited()"
+          [attachments]="taskData.attachments"
+          (attachmentsChange)="taskData.attachments = $event; markAsEdited()"
           (viewerStateChange)="viewerStateChange.emit($event)"
-          (imageTypeError)="showTypeErrorToast()"
-          (taskSizeError)="showSizeErrorToast()"
-          (deleteAll)="showDeleteAllConfirm = true;"
+          (imageTypeError)="showErrorToast('imageTypeError')"
+          (taskSizeError)="showErrorToast('taskSizeError')"
+          (deleteAll)="showDeleteAllConfirm = true"
         ></app-attachments>
-        <app-subtask-composer [(subtasks)]="activeSubtasks"></app-subtask-composer>
+
+        <app-subtask-composer
+          [(subtasks)]="taskData.subtasks"
+        ></app-subtask-composer>
+
       </div>
     </div>
 
     <footer class="add-task__footer">
-      <span class="add-task__required-note"
-        ><span class="required">*</span> This field is required</span
-      >
+      <span class="add-task__required-note">
+        <span class="required">*</span> This field is required
+      </span>
+
       <div class="add-task__actions">
         @if (!isEditMode) {
-          <button type="button" class="button button--secondary button--icon" (click)="resetForm()">
+          <button
+            type="button"
+            class="button button--secondary button--icon"
+            (click)="resetForm()"
+          >
             Clear
-            <img
-              class="button__icon"
-              src="assets/img/icons/add-task/close.svg"
-              alt=""
-            />
+            <app-icon class="button__icon" name="close" aria-hidden="true"/>
           </button>
         }
+
         <button
           type="submit"
           class="button button--primary button--icon"
           [class.add-task__submit-button--disabled]="!isFormValid || isSubmitting"
           [attr.aria-disabled]="!isFormValid ? 'true' : null"
         >
-          {{ submitButtonLabel }}
-          <img class="button__icon" src="assets/img/icons/buttons/save.svg" alt="" />
+          {{
+            isSubmitting
+              ? (isEditMode ? 'Saving...' : 'Creating...')
+              : (isEditMode ? 'Save' : 'Create Task')
+          }}
+          <app-icon class="button__icon" name="check" aria-hidden="true" />
         </button>
+
       </div>
     </footer>
   </form>
@@ -102,31 +136,30 @@
 
 <app-toast
   [message]="'File format not allowed! You can only upload JPEG or PNG.'"
-  [type]="'error'"
+  type="error"
   [visible]="imageTypeError"
-  (close)="imageTypeError = false">
-</app-toast>
+  (close)="imageTypeError = false"
+></app-toast>
 
 <app-toast
   [message]="'Attached files are too large in total. Max allowed is 1 MB.'"
-  [type]="'error'"
+  type="error"
   [visible]="taskSizeError"
-  (close)="taskSizeError = false"> 
-</app-toast>
+  (close)="taskSizeError = false"
+></app-toast>
 
 <app-toast
-  [message]="toastMessage"
-  [type]="'info'" 
+  [message]="isEditMode ? 'Task updated' : 'Task created'"
+  type="info"
   [visible]="addTaskSuccess"
-  >
-</app-toast>
+></app-toast>
 
 <app-confirm-dialog
   [open]="showDeleteAllConfirm"
   [highlight]="'Delete all attachments of'"
-  [highlightObject]="taskTitle"
-  [confirmText]="'Delete'"
-  [cancelText]="'Cancel'"
+  [highlightObject]="taskData.title"
+  confirmText="Delete"
+  cancelText="Cancel"
   (confirm)="confirmDeleteAllAttachments()"
-  (cancel)="showDeleteAllConfirm = false">
-</app-confirm-dialog>
+  (cancel)="showDeleteAllConfirm = false"
+></app-confirm-dialog>

@@ -22,14 +22,6 @@
   z-index: 3;
   background-color: styles.$white;
   width: 100%;
-
-  h1 {
-    font-size: 32px;
-
-    @include styles.up-xxl {
-      font-size: 48px;
-    }
-  }
 }
 
 .add-task__form {

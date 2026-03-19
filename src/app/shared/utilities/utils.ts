@@ -107,3 +107,35 @@ export function getGreeting(): string {
   }
 }
 
+/**
+ * Converts a `Date` to the form input format `YYYY/MM/DD`.
+ * @param date Source date object.
+ * @returns Date string formatted for form controls.
+ */
+export function formatDateForInput(date: Date): string {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}/${month}/${day}`;
+}
+
+/**
+ * Parses a due date string from either `YYYY/MM/DD` or `YYYY-MM-DD`.
+ * @param value Date string entered in the form.
+ * @returns Parsed date or `null` when the value is invalid.
+ */
+export function parseDueDate(value: string): Date | null {
+  const parts = value.split(/[\/-]/);
+  if (parts.length !== 3) return null;
+  const [yearStr, monthStr, dayStr] = parts;
+  const year = Number(yearStr);
+  const month = Number(monthStr);
+  const day = Number(dayStr);
+  if (!Number.isInteger(year) || !Number.isInteger(month) || !Number.isInteger(day)) return null;
+
+  const date = new Date(year, month - 1, day);
+  if (date.getFullYear() !== year || date.getMonth() !== month - 1 || date.getDate() !== day)
+    return null;
+
+  return date;
+}
