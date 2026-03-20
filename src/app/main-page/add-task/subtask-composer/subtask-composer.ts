@@ -1,5 +1,6 @@
 import { Component, ElementRef, EventEmitter, Input, OnChanges, Output, SimpleChanges, inject } from '@angular/core';
 import { Subtask } from '../../../shared/interfaces/task';
+import { SubtaskFormData } from '../../../shared/interfaces/task-form-data';
 
 /**
  * Handles subtask creation, inline editing and removal for the task form.
@@ -12,90 +13,71 @@ import { Subtask } from '../../../shared/interfaces/task';
 })
 export class SubtaskComposer implements OnChanges {
   private hostElement = inject(ElementRef<HTMLElement>);
+  @Input() subtasks: Array<Subtask> = [];
+  @Output() subtasksChange = new EventEmitter<Array<Subtask>>();
+
   readonly subtaskTitleMinLength = 3;
   readonly subtaskTitleMaxLength = 100;
   readonly subtaskTitleMinLetters = 3;
-
-  /** Current list of subtasks managed by the parent form. */
-  @Input() subtasks: Subtask[] = [];
-  /** Emits whenever the subtask list changes. */
-  @Output() subtasksChange = new EventEmitter<Subtask[]>();
-
-  subtaskTitle = '';
-  editingIndex: number | null = null;
   showSubtaskDuplicateError = false;
 
+  subtaskData: SubtaskFormData = {
+    title: '',
+    editingIndex: null,
+  };
+
   /**
- * Reacts to changes of input properties.
- * 
- * If the `subtasks` input changes and the list becomes empty,
- * the subtask editing state and validation flags are reset.
- *
- * @param changes - Object containing all changed input properties with their previous and current values.
- */
+   * Resets form state when subtasks are cleared.
+   *
+   * @param changes Angular input changes
+   * @returns void
+   */
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['subtasks'] && this.subtasks.length === 0) {
-      this.subtaskTitle = '';
-      this.editingIndex = null;
-      this.showSubtaskDuplicateError = false;
+      this.resetFormState();
     }
   }
 
-  /** Indicates whether the subtask input contains non-whitespace text. */
+  /**
+   * Indicates whether input contains text.
+   *
+   * @returns boolean
+   */
   get hasSubtaskInput(): boolean {
-    return this.subtaskTitle.trim().length > 0;
+    return this.subtaskData.title.trim().length > 0;
   }
 
-  /** Shows validation feedback for invalid subtask titles. */
+  /**
+   * Shows validation error for invalid titles.
+   *
+   * @returns boolean
+   */
   get showSubtaskPatternError(): boolean {
-    const title = this.subtaskTitle.trim();
+    const title = this.subtaskData.title.trim();
     return title.length > 0 && !this.isSubtaskTitleValid(title);
   }
 
   /**
-   * Adds a new subtask or confirms edits for an existing one.
-   * Ignores duplicates and invalid input.
+   * Adds a new subtask or updates an existing one.
+   *
+   * @returns void
    */
   addSubtask(): void {
-    const newTitle = this.subtaskTitle.trim();
-    if (!newTitle) {
-      this.showSubtaskDuplicateError = false;
-      return;
-    }
-    if (!this.isSubtaskTitleValid(newTitle)) {
-      this.showSubtaskDuplicateError = false;
-      return;
-    }
-    const hasDuplicate = this.subtasks.some((subtask, index) => {
-      if (this.editingIndex !== null && this.editingIndex === index) return false;
-      return subtask.title.trim().toLowerCase() === newTitle.toLowerCase();
-    });
-    if (hasDuplicate) {
-      this.showSubtaskDuplicateError = true;
-      return;
-    }
-    this.showSubtaskDuplicateError = false;
+    const title = this.subtaskData.title.trim();
 
-    if (this.editingIndex !== null) {
-      const updated = this.subtasks.map((subtask, index) =>
-        index === this.editingIndex ? { ...subtask, title: newTitle } : subtask,
-      );
-      this.subtasks = updated;
-      this.subtasksChange.emit(updated);
-      this.editingIndex = null;
-      this.subtaskTitle = '';
-      return;
-    }
-    const updated = [...this.subtasks, { title: newTitle, done: false }];
-    this.subtasks = updated;
-    this.subtasksChange.emit(updated);
-    this.subtaskTitle = '';
-    this.scrollToLatestSubtask();
+    if (!this.isValidNewTitle(title)) return;
+    if (this.isDuplicate(title)) return;
+
+    this.subtaskData.editingIndex !== null
+      ? this.updateSubtask(title)
+      : this.createSubtask(title);
   }
 
   /**
-   * Handles submit-by-enter behavior from the subtask input field.
-   * @param event Keyboard-triggered submit event.
+   * Handles enter key submit.
+   *
+   * @param event Keyboard event
+   * @returns void
    */
   handleEnter(event: Event): void {
     if (!this.hasSubtaskInput) return;
@@ -103,63 +85,141 @@ export class SubtaskComposer implements OnChanges {
     this.addSubtask();
   }
 
-  /** Clears the current subtask input and cancels edit mode. */
+  /**
+   * Clears input and edit mode.
+   *
+   * @returns void
+   */
   clearSubtaskTitle(): void {
-    this.subtaskTitle = '';
-    this.editingIndex = null;
-    this.showSubtaskDuplicateError = false;
+    this.resetFormState();
   }
 
   /**
-   * Loads a subtask title into the input for inline editing.
-   * @param index Subtask index to edit.
+   * Starts editing a subtask.
+   *
+   * @param index Index of subtask
+   * @returns void
    */
   startEditSubtask(index: number): void {
-    const subtaskToEdit = this.subtasks[index];
-    if (!subtaskToEdit) return;
-    this.subtaskTitle = subtaskToEdit.title;
-    this.editingIndex = index;
+    const subtask = this.subtasks[index];
+    if (!subtask) return;
+
+    this.subtaskData = {
+      title: subtask.title,
+      editingIndex: index,
+    };
+
     this.showSubtaskDuplicateError = false;
   }
 
   /**
-   * Updates the input model and resets duplicate-error feedback while typing.
-   * @param value Current input value.
+   * Updates input value.
+   *
+   * @param value Input value
+   * @returns void
    */
   onSubtaskTitleInput(value: string): void {
-    this.subtaskTitle = value;
+    this.subtaskData.title = value;
     this.showSubtaskDuplicateError = false;
   }
 
   /**
-   * Removes a subtask and keeps edit mode index in sync.
-   * @param index Subtask index to remove.
+   * Removes a subtask.
+   *
+   * @param index Index to remove
+   * @returns void
    */
   removeSubtask(index: number): void {
-    const updated = this.subtasks.filter((_, subtaskIndex) => subtaskIndex !== index);
-    this.subtasks = updated;
+    const updated = this.subtasks.filter((_, i) => i !== index);
     this.subtasksChange.emit(updated);
-    if (this.editingIndex === index) {
-      this.editingIndex = null;
-      this.subtaskTitle = '';
-    } else if (this.editingIndex !== null && this.editingIndex > index) this.editingIndex -= 1;
+
+    this.adjustEditingIndex(index);
   }
 
-  /** Scrolls the newest subtask item into view after rendering. */
+  /**
+   * Creates a new subtask.
+   */
+  private createSubtask(title: string): void {
+    const updated = [...this.subtasks, { title, done: false }];
+    this.subtasksChange.emit(updated);
+
+    this.resetFormState();
+    this.scrollToLatestSubtask();
+  }
+
+  /**
+   * Updates an existing subtask.
+   */
+  private updateSubtask(title: string): void {
+    const updated = this.subtasks.map((s, i) =>
+      i === this.subtaskData.editingIndex ? { ...s, title } : s
+    );
+
+    this.subtasksChange.emit(updated);
+    this.resetFormState();
+  }
+
+  /**
+   * Validates new title input.
+   */
+  private isValidNewTitle(title: string): boolean {
+    if (!title || !this.isSubtaskTitleValid(title)) {
+      this.showSubtaskDuplicateError = false;
+      return false;
+    }
+    return true;
+  }
+
+  /**
+   * Checks for duplicate titles.
+   */
+  private isDuplicate(title: string): boolean {
+    const duplicate = this.subtasks.some((s, i) => {
+      if (this.subtaskData.editingIndex === i) return false;
+      return s.title.trim().toLowerCase() === title.toLowerCase();
+    });
+
+    this.showSubtaskDuplicateError = duplicate;
+    return duplicate;
+  }
+
+  /**
+   * Adjusts editing index after deletion.
+   */
+  private adjustEditingIndex(removedIndex: number): void {
+    const current = this.subtaskData.editingIndex;
+
+    if (current === removedIndex) {
+      this.resetFormState();
+    } else if (current !== null && current > removedIndex) {
+      this.subtaskData.editingIndex = current - 1;
+    }
+  }
+
+  /**
+   * Resets input state.
+   */
+  private resetFormState(): void {
+    this.subtaskData = {
+      title: '',
+      editingIndex: null,
+    };
+    this.showSubtaskDuplicateError = false;
+  }
+
+  /**
+   * Scrolls to newest subtask.
+   */
   private scrollToLatestSubtask(): void {
     requestAnimationFrame(() => {
-      const host: HTMLElement = this.hostElement.nativeElement;
-      const newestSubtask: HTMLElement | null = host.querySelector(
-        '.subtask-list__item:last-child',
-      );
-      newestSubtask?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+      const host = this.hostElement.nativeElement;
+      const el = host.querySelector('.subtask-list__item:last-child');
+      el?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
     });
   }
 
   /**
-   * Validates subtask title length and minimum-letter rules.
-   * @param value Subtask title candidate.
-   * @returns `true` if the title is valid.
+   * Validates subtask title.
    */
   private isSubtaskTitleValid(value: string): boolean {
     return (
@@ -170,13 +230,9 @@ export class SubtaskComposer implements OnChanges {
   }
 
   /**
-   * Checks whether a value contains a minimum amount of latin letters.
-   * @param value Candidate input string.
-   * @param minLetters Minimum amount of letters required.
-   * @returns `true` when the minimum is met.
+   * Checks minimum letters.
    */
-  private hasMinimumLetters(value: string, minLetters: number): boolean {
-    const letterMatches = value.match(/[a-z]/gi);
-    return (letterMatches?.length ?? 0) >= minLetters;
+  private hasMinimumLetters(value: string, min: number): boolean {
+    return (value.match(/[a-z]/gi)?.length ?? 0) >= min;
   }
 }

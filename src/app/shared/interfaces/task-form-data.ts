@@ -7,8 +7,13 @@ export interface TaskFormData {
   description: string;
   dueDate: string; 
   priority: Task['priority'];
-  assignees: Contact[]; 
+  assignees: Array<Contact>; 
   category: TaskCategoryOption | null;
-  subtasks: Subtask[];
-  attachments: Attachment[];
+  subtasks: Array<Subtask>;
+  attachments: Array<Attachment>;
+}
+
+export interface SubtaskFormData {
+  title: string;
+  editingIndex: number | null;
 }
