@@ -35,24 +35,15 @@ section {
 
     .add-to-list-btn {
       @include styles.setFlex();
-      background-color: transparent;
       width: 30px;
       height: 30px;
       padding: 0;
       margin-right: 2px;
-
-      .add-icon--hover {
-        display: none;
-      }
+      background-color: transparent;
+      color: styles.$gray-dark;
 
       &:hover {
-        .add-icon--default {
-          display: none;
-        }
-
-        .add-icon--hover {
-          display: block;
-        }
+        color: styles.$blue-sky;
       }
     }
   }

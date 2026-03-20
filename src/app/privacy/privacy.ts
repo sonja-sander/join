@@ -1,10 +1,11 @@
 import { Location } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
+import { Icon } from '../shared/components/icon/icon';
 
 @Component({
   selector: 'app-privacy',
-  imports: [],
+  imports: [Icon],
   templateUrl: './privacy.html',
   styleUrl: './privacy.scss',
 })

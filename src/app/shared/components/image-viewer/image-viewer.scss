@@ -42,11 +42,7 @@ button {
   height: 32px;
   border-radius: 50%;
   background-color: transparent;
-
-  > img {
-    width: 24px;
-    height: 24px;
-  }
+  color: white;
 }
 
 header {
@@ -123,6 +119,8 @@ header {
 
       .download-btn,
       .close-btn {
+        color: white;
+
         &:hover {
           background-color: styles.$blue-sky;
         }
@@ -155,8 +153,9 @@ header {
 @include styles.up-xxl {
   .desktop-previous,
   .desktop-next {
-    display: block;
     @include styles.setFlex();
+    background-color: #eeeeee;
+    color: styles.$blue-sky;
   }
 
   .desktop-previous {

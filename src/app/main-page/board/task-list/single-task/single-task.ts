@@ -5,10 +5,11 @@ import { NgClass } from '@angular/common';
 import { TaskService } from '../../../../shared/services/task-service';
 import { CdkDrag, DragDropModule } from '@angular/cdk/drag-drop';
 import { Avatar } from '../../../../shared/components/avatar/avatar';
+import { Icon } from '../../../../shared/components/icon/icon';
 
 @Component({
   selector: 'app-single-task',
-  imports: [NgClass, DragDropModule, CdkDrag, Avatar],
+  imports: [NgClass, DragDropModule, CdkDrag, Avatar, Icon],
   templateUrl: './single-task.html',
   styleUrl: './single-task.scss',
 })
@@ -28,6 +29,13 @@ export class SingleTask implements OnInit {
   userColor: string | null = null;
   moveMenuOpen: boolean = false;
   isMobile: boolean = false;
+
+  statuses: Array<'to-do' | 'in-progress' | 'await-feedback' | 'done'> = [
+    'to-do',
+    'in-progress',
+    'await-feedback',
+    'done'
+  ];
 
   /**
    * Initializes the component.
@@ -103,6 +111,27 @@ export class SingleTask implements OnInit {
     this.task.order = 0;
     this.taskService.updateDocument(this.task, 'tasks');
     this.closeMenu(event);
+  }
+
+  /**
+   * Returns the short label for a given task status.
+   *
+   * Maps internal status values (used in the data model) to
+   * shorter labels displayed in the UI.
+   *
+   * @param status - The task status identifier
+   * ('to-do' | 'in-progress' | 'await-feedback' | 'done')
+   *
+   * @returns The corresponding display label for the status.
+   * Returns an empty string if the status is unknown.
+   */
+  getMoveLabel(status: 'to-do' | 'in-progress' | 'await-feedback' | 'done'): string {
+    if (status === 'to-do') return 'To-do';
+    if (status === 'in-progress') return 'Doing';
+    if (status === 'await-feedback') return 'Review';
+    if (status === 'done') return 'Done';
+
+    return '';
   }
 
   /**

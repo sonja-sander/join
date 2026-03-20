@@ -4,10 +4,11 @@ import { SingleTask } from './single-task/single-task';
 import { FirebaseService } from '../../../shared/services/firebase-service';
 import { Task } from '../../../shared/interfaces/task';
 import { CdkDragDrop, DragDropModule } from '@angular/cdk/drag-drop';
+import { Icon } from '../../../shared/components/icon/icon';
 
 @Component({
   selector: 'app-task-list',
-  imports: [SingleTask, DragDropModule],
+  imports: [SingleTask, DragDropModule, Icon],
   templateUrl: './task-list.html',
   styleUrl: './task-list.scss',
 })

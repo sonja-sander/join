@@ -20,7 +20,7 @@
           aria-label="Close contact dialog"
           (click)="closeDialog()"
         >
-          <img src="assets/img/icons/buttons/close-white.svg" alt=""/>
+          <app-icon name="close" aria-hidden="true"></app-icon>
         </button>
 
         <div class="title">
@@ -45,16 +45,7 @@
         aria-label="Close contact dialog"
         (click)="closeDialog()"
       >
-        <img
-          class="icon icon--default"
-          src="assets/img/icons/buttons/close.svg"
-          alt=""
-        />
-        <img
-          class="icon icon--hover"
-          src="assets/img/icons/buttons/close-hover.svg"
-          alt=""
-        />
+        <app-icon name="close" aria-hidden="true"></app-icon>
       </button>
 
       <section class="form-section">
@@ -79,16 +70,14 @@
                 (click)="openFilePicker()"
                 aria-label="Upload contact profile picture"
               >
-                <img class="upload-icon icon--default" src="assets/img/icons/forms/add-avatar.svg" alt="">
-                <img class="upload-icon icon--hover desktop-only" src="assets/img/icons/forms/add-avatar-hover.svg" alt="">
+                <app-icon name="add-avatar" aria-hidden="true"></app-icon>
               </button>
             </div>
 
             @if (contactData.avatar?.base64) {
               <div class="avatar-delete-wrapper">
                 <button class="delete-btn" type="button" (click)="onAvatarDelete()" aria-label="Delete contact profile picture">
-                  <img class="delete-icon icon--default" src="assets/img/icons/add-task/delete-white.svg" alt="">
-                  <img class="delete-icon icon--hover desktop-only" src="assets/img/icons/add-task/delete-white-hover.svg" alt="">
+                  <app-icon name="delete" [size]="20" aria-hidden="true"></app-icon>
                 </button>
               </div>
             }
@@ -136,7 +125,7 @@
               [(ngModel)]="contactData.name"
               #name="ngModel"
             />
-            <img class="form__icon" src="assets/img/icons/forms/name.svg" alt="" aria-hidden="true"/>
+            <app-icon class="form__icon" name="name" [size]="20" aria-hidden="true"></app-icon>
             <div class="input-error-wrapper">
               @if (name.invalid && name.touched) {
                 <span class="form__error" aria-live="assertive">
@@ -167,7 +156,7 @@
               [readonly]="dialogMode === 'edit'"
               [attr.aria-readonly]="dialogMode === 'edit' ? 'true' : null"
             />
-            <img class="form__icon" src="assets/img/icons/forms/email.svg" alt="" aria-hidden="true"/>
+            <app-icon class="form__icon" name="email" [size]="20" aria-hidden="true"></app-icon>
             <div class="input-error-wrapper">
               @if (email.invalid && email.touched) {
                 <span class="form__error" aria-live="assertive">
@@ -196,7 +185,7 @@
               [(ngModel)]="contactData.phone"
               #phone="ngModel"
             />
-            <img class="form__icon" src="assets/img/icons/forms/phone.svg" alt="" aria-hidden="true"/>
+            <app-icon class="form__icon" name="phone" [size]="20" aria-hidden="true"></app-icon>
             <div class="input-error-wrapper">
               @if (phone.invalid && phone.touched) {
                 <span class="form__error" aria-live="assertive">
@@ -220,16 +209,7 @@
                 (click)="closeDialog()"
               >
                 Cancel
-                <img
-                  class="button__icon button__icon--default"
-                  src="assets/img/icons/buttons/cancel.svg"
-                  alt=""
-                />
-                <img
-                  class="button__icon button__icon--hover"
-                  src="assets/img/icons/buttons/cancel-hover.svg"
-                  alt=""
-                />
+                <app-icon name="close" [size]="22" aria-hidden="true"></app-icon>
               </button>
             } @else if (canDelete) {
               <button
@@ -250,11 +230,7 @@
               } @else {
                 Save
               }
-              <img
-                class="button__icon"
-                src="assets/img/icons/buttons/save.svg"
-                alt=""
-              />
+              <app-icon name="check" [size]="22" aria-hidden="true"></app-icon>
             </button>
           </div>
         </form>

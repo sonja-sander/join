@@ -6,7 +6,7 @@ aside {
   @include styles.setFlex();
   width: 100%;
   background-color: styles.$gray-dark;
-  z-index: 2;
+  z-index: 20;
 
   @include styles.up-xxl {
     @include styles.setFlex($ai: flex-start);
@@ -69,11 +69,7 @@ nav {
     a {
       font-weight: 300;
 
-      .icon {
-        width: 25px;
-        height: 25px;
-        object-fit: contain;
-
+      .nav-icon {
         @media (hover: none) and (orientation: landscape) and (max-height: 400px) {
           display: none;
         }
@@ -137,27 +133,12 @@ nav {
 
         &:hover {
           background-color: styles.$navy-dark;
-        }
-
-        .icon--active {
-          display: none;
+          color: white;
         }
 
         &.is-active {
           background-color: styles.$navy-dark;
           color: white;
-
-          .icon--default {
-            display: none;
-          }
-
-          .icon--active {
-            display: block;
-
-            @media (hover: none) and (orientation: landscape) and (max-height: 400px) {
-              display: none;
-            }
-          }
         }
 
         span {

@@ -21,7 +21,6 @@
     @include styles.up-xxl {
       @include styles.setGrid($rows: auto 1fr auto, $columns: auto 1fr);
       width: 90%;
-      height: 100%;
       padding: 7rem 0 2rem;
     }
   }
@@ -35,17 +34,13 @@
 
   @include styles.up-xxl {
     grid-area: 1/1/4/2;
-    padding-left: 0;
-    padding-top: 2rem;
+    padding: 2rem 0 0 0;
   }
 
   img {
     grid-area: 1/1/2/2;
     width: 64px;
-    transition-property: transform, opacity;
-    transition-duration: 1.2s, 0.4s;
-    transition-timing-function: ease, ease;
-    transition-delay: 0s, 0s;
+    transition: transform 1.2s ease 0s, opacity 0.4s ease 0s;
     transform: translate(34dvw, 40dvh) scale(1.6);
 
     @include styles.up-xxl {
@@ -59,13 +54,7 @@
   }
 }
 
-.logo-dark {
-  display: block;
-}
-
 .logo-light {
-  display: block;
-
   @include styles.up-xxl {
     display: none;
   }
@@ -91,11 +80,7 @@
   position: fixed;
   inset: 0;
   background-color: styles.$gray-dark;
-  animation-name: overlayFade;
-  animation-delay: 1s;
-  animation-duration: 0.6s;
-  animation-fill-mode: forwards;
-  animation-timing-function: ease;
+  animation: overlayFade 0.6s ease 1s forwards;
   z-index: 10;
 
   @include styles.up-xxl {
@@ -106,9 +91,8 @@
 .sign-up-option {
   grid-area: 3/1/4/2;
   @include styles.setFlex($gap: 28px);
-  width: 100%;
-  font-size: 20px;
   margin-bottom: 40px;
+  font-size: 20px;
 
   @media (max-width: 400px) {
     gap: 20px;
@@ -155,14 +139,6 @@
         gap: 16px;
       }
 
-      h1 {
-        font-size: 32px;
-
-        @include styles.up-xxl {
-          font-size: 50px;
-        }
-      }
-
       .divider {
         width: 80px;
         height: 3px;
@@ -175,20 +151,15 @@
     }
 
     .sign-title {
-      @include styles.setGrid($rows: auto, $columns: 40px 1fr);
+      @include styles.setGrid($rows: auto, $columns: 60px 1fr);
       width: 100%;
 
       .back-btn {
         grid-area: 1/1/2/2;
-        background-color: transparent;
         align-self: start;
-        cursor: pointer;
+        background-color: transparent;
+        color: styles.$blue-sky;
         z-index: 2;
-
-        img {
-          width: 32px;
-          height: 32px;
-        }
       }
 
       .sign-up {
@@ -253,8 +224,10 @@
       }
     }
 
-    img {
+    app-icon {
       grid-area: 1/2/2/3;
+      justify-content: flex-start;
+      color: #a8a8a8;
     }
 
     .icon-slot {
@@ -269,7 +242,6 @@
       .visibility-btn {
         @include styles.setFlex($jc: flex-start);
         background-color: transparent;
-        padding: auto;
         padding-left: 0;
       }
     }
@@ -416,10 +388,7 @@ footer {
   @include styles.setFlex();
   background-color: #f6f7f8;
   z-index: 8;
-  animation-name: fadeInOut;
-  animation-duration: 2s;
-  animation-timing-function: ease;
-  animation-fill-mode: forwards;
+  animation: fadeInOut 2s ease forwards;
 
   @include styles.up-xxl {
     display: none;

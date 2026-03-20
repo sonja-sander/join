@@ -47,7 +47,7 @@
           (fieldBlur)="isDueDateTouched = true"
           [hasError]="isDueDateTouched && !taskData.dueDate.trim()"
           [(value)]="taskData.dueDate"
-          iconSrc="assets/img/icons/board/date.svg"
+          iconSrc="date"
         ></app-task-form-field>
 
         <span
@@ -111,7 +111,7 @@
             (click)="resetForm()"
           >
             Clear
-            <app-icon class="button__icon" name="close" aria-hidden="true"/>
+            <app-icon class="button__icon" name="close" [size]="22" aria-hidden="true"/>
           </button>
         }
 

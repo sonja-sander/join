@@ -30,11 +30,9 @@ section {
 
   h1 {
     grid-area: 1/1/2/2;
-    font-size: 32px;
 
     @include styles.up-xxl {
       grid-area: 1/1/2/2;
-      font-size: 48px;
     }
   }
 
@@ -57,7 +55,7 @@ section {
       font-size: 16px;
 
       @include styles.up-xxl {
-        font-size: 20px;
+        font-size: 18px;
         padding: 0 20% 0 12px;
       }
 
@@ -76,28 +74,19 @@ section {
 
     .search-bar__button {
       grid-area: 1/3/2/4;
+      @include styles.setFlex();
       padding: 0;
       background-color: transparent;
-      @include styles.setFlex();
-
-      &:hover {
-        .search-bar__icon--default {
-          display: none;
-        }
-
-        .search-bar__icon--hover {
-          display: block;
-        }
+      color: styles.$gray-dark;
+      
+      app-icon {
+        border-radius: 50%;
+        padding: 4px;
       }
-    }
 
-    .search-bar__icon {
-      width: 32px;
-      height: 32px;
-    }
-
-    .search-bar__icon--hover {
-      display: none;
+      &:hover app-icon{
+        background-color: #eeeeee;
+      }
     }
   }
 
@@ -112,21 +101,14 @@ section {
       width: 130px;
       height: 46px;
       place-self: center;
-      font-size: 20px;
       gap: 4px;
       margin-left: 16px;
+      font-size: 18px;
     }
 
     @media (min-width: 1120px) {
       width: 160px;
       gap: 10px;
-    }
-
-    img {
-      @include styles.up-xxl {
-        width: 24px;
-        height: 24px;
-      }
     }
   }
 }
@@ -160,10 +142,10 @@ section {
 .add-task-overlay {
   position: fixed;
   inset: 0;
-  z-index: 20;
+  @include styles.setFlex();
   padding: clamp(0.75rem, 3vw, 2rem);
   background-color: #00000059;
-  @include styles.setFlex();
+  z-index: 20;
 }
 
 .add-task-overlay__panel {
@@ -185,19 +167,16 @@ section {
   position: absolute;
   top: 0.9rem;
   right: 0.9rem;
-  z-index: 5;
+  @include styles.setFlex();
   width: 3.5rem;
   height: 3.5rem;
   border-radius: 50%;
   background-color: transparent;
-  @include styles.setFlex();
+  color: styles.$gray-dark;
+  z-index: 5;
 
   &:hover {
     background-color: styles.$white-light;
-  }
-
-  .add-task-overlay__close-icon {
-    width: 3rem;
   }
 }
 

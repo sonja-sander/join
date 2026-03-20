@@ -52,7 +52,8 @@ header {
       display: none;
     }
 
-    > img {
+    .help-icon {
+      color: #a8a8a8;
       transition: transform 0.15s ease;
 
       &:hover {

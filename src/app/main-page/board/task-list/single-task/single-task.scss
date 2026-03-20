@@ -63,18 +63,14 @@ article {
 
   .mobile-move-btn {
     @include styles.setFlex();
-    background-color: transparent;
     width: 28px;
     height: 28px;
+    background-color: transparent;
+    color: styles.$gray-dark;
     z-index: 2;
 
     @include styles.up-xxl {
       display: none;
-    }
-
-    img {
-      width: 24px;
-      height: 24px;
     }
   }
 }
@@ -84,7 +80,7 @@ article {
     position: fixed;
     inset: 0;
     background: transparent;
-    z-index: 1;
+    z-index: 3;
   }
 
   .move-menu {
@@ -98,7 +94,7 @@ article {
     border-radius: 0 20px 20px 20px;
     background-color: styles.$gray-dark;
     box-shadow: 0px 0px 5px 3px #0000000a;
-    z-index: 2;
+    z-index: 4;
     opacity: 0;
     transform: translateX(8px);
     transition:
@@ -144,6 +140,7 @@ article {
 .title,
 .description {
   display: -webkit-box;
+  line-clamp: 2;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
@@ -151,6 +148,8 @@ article {
 
 .subtasks {
   @include styles.setFlex($jc: space-between, $gap: 8px);
+  z-index: 2;
+  cursor: default;
 
   @include styles.up-xxl {
     @include styles.setFlex($d: column, $ai: flex-start, $gap: 8px);
@@ -196,12 +195,11 @@ article {
     @include styles.setFlex();
 
     app-avatar {
-      margin-left: -8px;
       border: 1px solid white;
       border-radius: 50%;
 
-      &:first-child {
-        margin-left: 0;
+      + app-avatar {
+        margin-left: -8px;
       }
     }
   }

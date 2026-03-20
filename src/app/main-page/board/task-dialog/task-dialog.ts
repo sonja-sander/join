@@ -9,10 +9,11 @@ import { ImageViewer } from '../../../shared/components/image-viewer/image-viewe
 import { ConfirmDialog } from '../../../shared/components/confirm-dialog/confirm-dialog';
 import { A11yModule } from '@angular/cdk/a11y';
 import { Avatar } from '../../../shared/components/avatar/avatar';
+import { Icon } from '../../../shared/components/icon/icon';
 
 @Component({
   selector: 'app-task-dialog',
-  imports: [NgClass, DatePipe, ImageViewer, ConfirmDialog, A11yModule, Avatar],
+  imports: [NgClass, DatePipe, ImageViewer, ConfirmDialog, A11yModule, Avatar, Icon],
   templateUrl: './task-dialog.html',
   styleUrl: './task-dialog.scss',
 })

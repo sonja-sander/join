@@ -5,9 +5,9 @@
     <p class="contact-info__subtitle">Better with a team</p>
   </header>
 
-  <a class="contact-info__back-arrow" href="#" (click)="handleBack($event)">
-    <img src="assets/img/icons/buttons/back.svg" alt="Back icon" />
-  </a>
+  <button class="contact-info__back-arrow" (click)="handleBack($event)" aria-label="Go back to the contacts list">
+    <app-icon name="arrow-left" [size]="30" aria-hidden="true"></app-icon>
+  </button>
 
   @if (activeContact) {
     <div
@@ -26,20 +26,12 @@
           <h2 class="contact-info__name">{{ activeContact.name }}</h2>
           <div class="contact-info__actions">
             <button class="contact-info__action" type="button" (click)="editContact.emit()">
-              <img
-                class="contact-info__action-icon"
-                src="assets/img/icons/buttons/edit.svg"
-                alt=""
-              />
+              <app-icon class="contact-info__action-icon" name="edit" aria-hidden="true"></app-icon>
               <span>Edit</span>
             </button>
             @if (canDelete) {
               <button class="contact-info__action" type="button" (click)="requestDelete.emit()">
-                <img
-                  class="contact-info__action-icon"
-                  src="assets/img/icons/buttons/delete.svg"
-                  alt=""
-                />
+                <app-icon class="contact-info__action-icon" name="delete" [size]="22" aria-hidden="true"></app-icon>
                 <span>Delete</span>
               </button>
             }
@@ -75,7 +67,7 @@
         [attr.aria-expanded]="fabMenuOpen"
         (click)="toggleFabMenu()"
       >
-        <img src="assets/img/icons/buttons/contact-options.svg" alt="" />
+        <app-icon name="contact-options" aria-hidden="true"></app-icon>
       </button>
       @if (fabMenuOpen) {
         <div class="contact-info__fab-overlay" (click)="closeFabMenu()"></div>
@@ -91,12 +83,7 @@
             role="menuitem"
             (click)="handleFabEdit()"
           >
-            <img
-              class="contact-info__fab-action-icon"
-              src="assets/img/icons/buttons/edit.svg"
-              alt=""
-              aria-hidden="true"
-            />
+            <app-icon class="contact-info__fab-action-icon" name="edit" aria-hidden="true"></app-icon>
             <span>Edit</span>
           </button>
           @if (canDelete) {
@@ -106,12 +93,7 @@
               role="menuitem"
               (click)="requestDelete.emit()"
             >
-              <img
-                class="contact-info__fab-action-icon"
-                src="assets/img/icons/buttons/delete.svg"
-                alt=""
-                aria-hidden="true"
-              />
+              <app-icon class="contact-info__fab-action-icon" name="delete" [size]="22" aria-hidden="true"></app-icon>
               <span>Delete</span>
             </button>
           }

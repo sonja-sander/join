@@ -9,7 +9,7 @@
         [class.is-active]="option.value === selectedPriority"
       >
         {{ option.label }}
-        <img class="priority__icon" [src]="option.iconPath" alt="" />
+        <app-icon class="priority__icon" [name]="option.iconPath" aria-hidden="true"></app-icon>
       </button>
     }
   </div>

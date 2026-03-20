@@ -46,12 +46,8 @@ header {
     background-color: transparent;
     justify-self: end;
     padding: 16px 12px;
+    color: white;
     z-index: 7;
-
-    > img {
-      width: 24px;
-      height: 24px;
-    }
   }
 
   .title {
@@ -109,21 +105,13 @@ header {
     align-self: start;
     @include styles.setFlex();
     margin: 28px;
+    border-radius: 50%;
     background-color: transparent;
+    color: #2a3647;
     z-index: 7;
 
-    .icon--hover {
-      display: none;
-    }
-
     &:hover {
-      .icon--default {
-        display: none;
-      }
-
-      .icon--hover {
-        display: block;
-      }
+      background-color: #eeeeee;
     }
   }
 }
@@ -206,203 +194,172 @@ header {
       position: absolute;
       width: 34px;
       height: 34px;
-
-      @include styles.up-xxl {
-        .icon--hover {
-          display: none;
-        }
-
-        &:hover {
-          .icon--default {
-            display: none;
-          }
-
-          .icon--hover {
-            display: block;
-          }
-        }
-      }
-    }
-
-    .avatar-upload-wrapper {
-      bottom: -8px;
-      right: -6px;
-    }
-
-    .avatar-delete-wrapper {
-      @include styles.down-xxl {
-        bottom: -8px;
-        left: -6px;
-      }
-
-      @include styles.up-xxl {
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        opacity: 0;
-        transition: opacity 0.2s ease;
-      }
-
-      &:focus-within {
-        opacity: 1;
-      }
-    }
-
-    .upload-btn,
-    .delete-btn {
-      @include styles.setFlex();
-      width: 34px;
-      height: 34px;
-      border-radius: 50%;
-      box-shadow: 0px 0px 4px 0px #0000001a;
-    }
-
-    .upload-btn {
-      background-color: white;
-
-      &:hover {
-        background-color: styles.$blue-sky;
-      }
-    }
-
-    .delete-btn {
-      background-color: transparent;
-
-      @include styles.down-xxl {
-        background-color: styles.$gray-dark;
-      }
-
-      &:focus-visible {
-        background-color: styles.$blue-sky;
-      }
-    }
-
-    .upload-icon,
-    .delete-icon {
-      width: 20px;
-      height: 20px;
-      object-fit: contain;
-    }
-
-    .delete-icon {
-      @include styles.up-xxl {
-        width: 30px;
-        height: 30px;
-      }
     }
   }
 
-  .form {
-    @include styles.setFlex($d: column, $ai: center);
-    width: 100%;
-    margin-top: 60px;
+  .avatar-upload-wrapper {
+    bottom: -8px;
+    right: -6px;
+  }
 
-    @media (max-width: 390px) {
-      margin-top: 50px;
+  .avatar-delete-wrapper {
+    @include styles.down-xxl {
+      bottom: -8px;
+      left: -6px;
     }
 
     @include styles.up-xxl {
-      @include styles.setFlex($d: column, $ai: flex-start, $jc: flex-start, $gap: 8px);
-      width: 65%;
-      height: 300px;
-      margin-top: 45px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      opacity: 0;
+      transition: opacity 0.2s ease;
     }
 
-    .form__input-box {
-      width: 90%;
+    &:focus-within {
+      opacity: 1;
+    }
+  }
 
-      @include styles.up-xxl {
-        width: 100%;
-      }
+  .upload-btn,
+  .delete-btn {
+    @include styles.setFlex();
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    box-shadow: 0px 0px 4px 0px #0000001a;
+
+    &:hover {
+      background-color: styles.$blue-sky;
+      color: white;
+    }
+  }
+
+  .upload-btn {
+    background-color: white;
+  }
+
+  .delete-btn {
+    background-color: transparent;
+    color: white;
+
+    @include styles.down-xxl {
+      background-color: styles.$gray-dark;
     }
 
-    .form__input {
-      width: 100%;
+    &:focus-visible {
+      background-color: styles.$blue-sky;
+    }
+  }
+
+  .upload-icon,
+  .delete-icon {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+  }
+
+  .delete-icon {
+    @include styles.up-xxl {
+      width: 30px;
       height: 30px;
-      padding: 0 50px 0 16px;
-      border: 1px solid styles.$gray-light;
-      border-radius: 8px;
-      @include styles.setFont();
+    }
+  }
+}
+
+.form {
+  @include styles.setFlex($d: column, $ai: center);
+  width: 100%;
+  margin-top: 60px;
+
+  @media (max-width: 390px) {
+    margin-top: 50px;
+  }
+
+  @include styles.up-xxl {
+    @include styles.setFlex($d: column, $ai: flex-start, $jc: flex-start, $gap: 8px);
+    width: 65%;
+    height: 300px;
+    margin-top: 45px;
+  }
+
+  .form__input-box {
+    width: 90%;
+
+    @include styles.up-xxl {
+      width: 100%;
+    }
+  }
+
+  .form__input {
+    width: 100%;
+    height: 30px;
+    padding: 0 50px 0 16px;
+    border: 1px solid styles.$gray-light;
+    border-radius: 8px;
+    @include styles.setFont();
+
+    @include styles.up-xxl {
+      height: 45px;
+    }
+
+    &::placeholder {
+      color: styles.$gray-light;
+    }
+
+    &:focus {
+      outline: none;
+      border-color: styles.$blue-primary;
+    }
+
+    &.ng-invalid.ng-touched {
+      border-color: styles.$red-error;
+    }
+
+    &[readonly] {
+      background-color: #f5f5f5;
+      color: styles.$gray-dark;
+    }
+  }
+
+  .form__icon {
+    position: absolute;
+    right: 4px;
+    top: 6px;
+    transform: translate(-50%);
+    color: styles.$gray-dark;
+    pointer-events: none;
+
+    @include styles.up-xxl {
+      right: 6px;
+      top: 12px;
+    }
+  }
+
+  .input-error-wrapper {
+    min-height: 20px;
+    margin-bottom: 4px;
+  }
+
+  .form__actions {
+    @include styles.setFlex($gap: 16px);
+
+    button {
+      margin-top: 8px;
+      margin-bottom: 16px;
 
       @include styles.up-xxl {
-        height: 45px;
-      }
-
-      &::placeholder {
-        color: styles.$gray-light;
-      }
-
-      &:focus {
-        outline: none;
-        border-color: styles.$blue-primary;
-      }
-
-      &.ng-invalid.ng-touched {
-        border-color: styles.$red-error;
-      }
-
-      &[readonly] {
-        background-color: #f5f5f5;
-        color: styles.$gray-dark;
+        margin-top: 12px;
       }
     }
 
-    .form__icon {
-      position: absolute;
-      right: 4px;
-      top: 6px;
-      transform: translate(-50%);
-      pointer-events: none;
-      width: 18px;
-      height: 18px;
-
-      @include styles.up-xxl {
-        right: 6px;
-        top: 12px;
-        width: 20px;
-        height: 20px;
-      }
+    .button--secondary {
+      background-color: white;
     }
+  }
 
-    .input-error-wrapper {
-      min-height: 20px;
-      margin-bottom: 4px;
-    }
-
-    .form__actions {
-      @include styles.setFlex($gap: 16px);
-
-      button {
-        margin-top: 8px;
-        margin-bottom: 16px;
-
-        @include styles.up-xxl {
-          margin-top: 12px;
-        }
-
-        .button__icon--hover {
-          display: none;
-        }
-
-        &:hover {
-          .button__icon--default {
-            display: none;
-          }
-
-          .button__icon--hover {
-            display: block;
-          }
-        }
-      }
-
-      .button--secondary {
-        background-color: white;
-      }
-    }
-
-    .form__error {
-      display: block;
-      color: styles.$red-error;
-    }
+  .form__error {
+    display: block;
+    color: styles.$red-error;
   }
 }

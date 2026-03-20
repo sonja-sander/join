@@ -7,10 +7,11 @@ import { AuthService } from '../shared/services/auth-service';
 import { AsyncPipe } from '@angular/common';
 import { getGreeting } from '../shared/utilities/utils';
 import { Toast } from '../shared/components/toast/toast';
+import { Icon } from '../shared/components/icon/icon';
 
 @Component({
   selector: 'app-main-page',
-  imports: [RouterLink, FormsModule, AsyncPipe, Toast],
+  imports: [RouterLink, FormsModule, AsyncPipe, Toast, Icon],
   templateUrl: './main-page.html',
   styleUrl: './main-page.scss',
 })

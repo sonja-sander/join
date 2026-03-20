@@ -11,29 +11,25 @@ import { Contact } from '../../../shared/interfaces/contact';
 import { FirebaseService } from '../../../shared/services/firebase-service';
 import { getTwoInitials } from '../../../shared/utilities/utils';
 import { Avatar } from '../../../shared/components/avatar/avatar';
+import { Icon } from '../../../shared/components/icon/icon';
 
 /**
  * Searchable multi-select dropdown for choosing task assignees.
  */
 @Component({
   selector: 'app-dropdown-assignee',
-  imports: [Avatar],
+  imports: [Avatar, Icon],
   templateUrl: './dropdown-assignee.html',
   styleUrl: './dropdown-assignee.scss',
 })
 export class DropdownAssignee {
   elementRef = inject(ElementRef);
   firebaseService = inject(FirebaseService);
-
-  getTwoInitials = getTwoInitials;
-
-  /** Currently selected contacts. */
   @Input() selectedContacts: Contact[] = [];
-  /** Emits whenever the contact selection changes. */
   @Output() selectedContactsChange = new EventEmitter<Contact[]>();
-
-  isDropdownOpen = false;
-  assigneeQuery = '';
+  getTwoInitials = getTwoInitials;
+  isDropdownOpen: boolean = false;
+  assigneeQuery: string = '';
 
   /** Contacts filtered by the current search query. */
   get filteredContacts(): Contact[] {

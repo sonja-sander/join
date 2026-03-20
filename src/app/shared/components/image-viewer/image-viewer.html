@@ -15,20 +15,20 @@
   
           <div class="zoom desktop-only" role="group" aria-label="Zoom controls">
             <button class="zoom-out" type="button" (click)="zoomOut()" aria-label="Zoom out">
-              <img src="assets/img/icons/add-task/zoom-out.svg" alt="">
+              <app-icon name="zoom-out" aria-hidden="true"></app-icon>
             </button>
             <button class="zoom-in" type="button" (click)="zoomIn()" aria-label="Zoom in">
-              <img src="assets/img/icons/add-task/zoom-in.svg" alt="">
+              <app-icon name="zoom-in" aria-hidden="true"></app-icon>
             </button>
           </div>
     
           <div class="header-actions" role="group" aria-label="Image actions">
             <button class="download-btn" type="button" (click)="this.fileService.downloadAttachment(currentAttachment)" aria-label="Download image">
-              <img src="assets/img/icons/add-task/download-white.svg" alt="">
+              <app-icon name="download" aria-hidden="true"></app-icon>
             </button>
       
             <button class="close-btn" type="button" (click)="closeImageViewer()" aria-label="Close image viewer">
-              <img src="assets/img/icons/add-task/close-white.svg" alt="">
+              <app-icon name="close" [size]="22" aria-hidden="true"></app-icon>
             </button>
           </div>
         </div>
@@ -39,29 +39,29 @@
       </section>
 
       <button class="desktop-previous desktop-only" type="button" (click)="previousImage()" aria-label="Previous image">
-        <img class="desktop-only" src="assets/img/icons/add-task/arrow-left.svg" alt="">
+        <app-icon class="desktop-only" name="arrow-left" aria-hidden="true"></app-icon>
       </button>
       <button class="desktop-next desktop-only" type="button" (click)="nextImage()" aria-label="Next image">
-        <img class="desktop-only" src="assets/img/icons/add-task/arrow-right.svg" alt="">
+        <app-icon class="desktop-only" name="arrow-right" aria-hidden="true"></app-icon>
       </button>
       
       <footer>
         <div class="footer-content mobile-only">
           <button class="previous" type="button" (click)="previousImage()" aria-label="Previous image">
-            <img src="assets/img/icons/add-task/arrow-left.svg" alt="">
+            <app-icon name="arrow-left" aria-hidden="true"></app-icon>
           </button>
     
           <div class="zoom" role="group" aria-label="Zoom controls">
             <button class="zoom-out" type="button" (click)="zoomOut()" aria-label="Zoom out">
-              <img src="assets/img/icons/add-task/zoom-out.svg" alt="">
+              <app-icon name="zoom-out" aria-hidden="true"></app-icon>
             </button>
             <button class="zoom-in" type="button" (click)="zoomIn()" aria-label="Zoom in">
-              <img src="assets/img/icons/add-task/zoom-in.svg" alt="">
+              <app-icon name="zoom-in" aria-hidden="true"></app-icon>
             </button>
           </div>
     
           <button class="next" type="button" (click)="nextImage()" aria-label="Next image">
-            <img src="assets/img/icons/add-task/arrow-right.svg" alt="">
+            <app-icon name="arrow-right" aria-hidden="true"></app-icon>
           </button>
         </div>
       </footer>

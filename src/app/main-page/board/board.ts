@@ -7,10 +7,11 @@ import { Task } from '../../shared/interfaces/task';
 import { AddTask } from '../add-task/add-task';
 import { ConfirmDialog } from '../../shared/components/confirm-dialog/confirm-dialog';
 import { A11yModule } from '@angular/cdk/a11y';
+import { Icon } from '../../shared/components/icon/icon';
 
 @Component({
   selector: 'app-board',
-  imports: [TaskList, FormsModule, TaskDialog, AddTask, ConfirmDialog, A11yModule],
+  imports: [TaskList, FormsModule, TaskDialog, AddTask, ConfirmDialog, A11yModule, Icon],
   templateUrl: './board.html',
   styleUrl: './board.scss',
 })

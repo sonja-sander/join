@@ -2,10 +2,11 @@ import { Component, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../services/auth-service';
 import { AsyncPipe } from '@angular/common';
+import { Icon } from '../icon/icon';
 
 @Component({
   selector: 'app-cockpit',
-  imports: [RouterLink, RouterLinkActive, AsyncPipe],
+  imports: [RouterLink, RouterLinkActive, AsyncPipe, Icon],
   templateUrl: './cockpit.html',
   styleUrl: './cockpit.scss',
 })

@@ -1,72 +1,36 @@
-<aside aria-label="Main navigation sidebar">
+<aside aria-label="Navigation sidebar">
   <div class="content-wrapper">
-    <img class="logo" src="assets/img/icons/logo-light.svg" alt="Join" />
+    <img class="logo" src="assets/img/icons/logo-light.svg" alt="Join logo" />
 
-    @if (authLoading$ | async){
+    @if (authLoading$ | async) {
       <div class="cockpit-loading" role="status" aria-live="polite">
         <div class="loading-spinner"></div>
       </div>
     } @else {
-      <nav class="main-nav" aria-label="Primary navigation">
+      <nav class="main-nav" aria-label="Primary">
         @if (user$ | async) {
           <ul>
             <li>
               <a routerLink="/summary" routerLinkActive="is-active">
-                <img
-                  class="icon icon--default"
-                  src="assets/img/icons/cockpit/summary.svg"
-                  alt=""
-                />
-                <img
-                  class="icon icon--active"
-                  src="assets/img/icons/cockpit/summary-active.svg"
-                  alt=""
-                />
+                <app-icon class="nav-icon" name="summary" aria-hidden="true"></app-icon>
                 <span>Summary</span>
               </a>
             </li>
             <li>
               <a routerLink="/add-task" routerLinkActive="is-active">
-                <img
-                  class="icon icon--default"
-                  src="assets/img/icons/cockpit/add-task.svg"
-                  alt=""
-                />
-                <img
-                  class="icon icon--active"
-                  src="assets/img/icons/cockpit/add-task-active.svg"
-                  alt=""
-                />
+                <app-icon class="nav-icon" name="add-task" aria-hidden="true"></app-icon>
                 <span>Add Task</span>
               </a>
             </li>
             <li>
               <a routerLink="/board" routerLinkActive="is-active">
-                <img
-                  class="icon icon--default"
-                  src="assets/img/icons/cockpit/board.svg"
-                  alt=""
-                />
-                <img
-                  class="icon icon--active"
-                  src="assets/img/icons/cockpit/board-active.svg"
-                  alt=""
-                />
+                <app-icon class="nav-icon" name="board" aria-hidden="true"></app-icon>
                 <span>Board</span>
               </a>
             </li>
             <li>
               <a routerLink="/contacts" routerLinkActive="is-active">
-                <img
-                  class="icon icon--default"
-                  src="assets/img/icons/cockpit/contacts.svg"
-                  alt=""
-                />
-                <img
-                  class="icon icon--active"
-                  src="assets/img/icons/cockpit/contacts-active.svg"
-                  alt=""
-                />
+                <app-icon class="nav-icon" name="contacts" aria-hidden="true"></app-icon>
                 <span>Contacts</span>
               </a>
             </li>
@@ -75,15 +39,15 @@
           <ul>
             <li>
               <a routerLink="/" class="log-in-link">
-                <img src="assets/img/icons/cockpit/log-in.svg" alt="" aria-hidden="true" />
+                <app-icon class="nav-icon" name="log-in" aria-hidden="true"></app-icon>
                 <span>Log In</span>
               </a>
             </li>
           </ul>
         }
       </nav>
-  
-      <nav class="legal-nav" [class.desktop-only]="user$ | async" aria-label="Legal navigation">
+
+      <nav class="legal-nav" [class.desktop-only]="user$ | async" aria-label="Legal">
         <ul>
           <li>
             <a routerLink="/privacy" routerLinkActive="is-active"> Privacy Policy </a>
@@ -94,6 +58,5 @@
         </ul>
       </nav>
     }
-
   </div>
 </aside>

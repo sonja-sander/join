@@ -46,11 +46,7 @@
       ></textarea>
     }
     @if (iconSrc) {
-      <img
-        class="form-field__icon"
-        [src]="iconSrc"
-        [attr.alt]="label ? label + ' icon' : 'form field icon'"
-      />
+      <app-icon class="form-field__icon" [name]="iconSrc" aria-hidden="true"></app-icon>
     }
   </div>
 </label>

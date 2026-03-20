@@ -9,7 +9,8 @@
     [activeContactID]="activeContactID"
     (selected)="setActiveContact($event)"
     (addContact)="openAddDialog()"
-  />
+  ></app-contact-list>
+
   <app-contact-info
     class="contacts__info"
     [activeContact]="activeContact"
@@ -17,14 +18,15 @@
     (back)="closeContactInfo()"
     (editContact)="openEditDialog(activeContact!)"
     (requestDelete)="requestDelete(activeContact!)"
-  />
+  ></app-contact-info>
 </div>
+
 <app-contact-dialog
   [canDelete]="canDeleteContact(activeContact)"
   [confirmOpen]="showDeleteConfirm"
   (saveContact)="onSave($event)"
   (requestDelete)="requestDelete(activeContact!)"
-/>
+></app-contact-dialog>
 
 <app-toast
   [message]="'Contact successfully created'"

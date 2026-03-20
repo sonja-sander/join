@@ -1,9 +1,10 @@
 import { Location } from '@angular/common';
 import { Component, inject } from '@angular/core';
+import { Icon } from '../shared/components/icon/icon';
 
 @Component({
   selector: 'app-help-page',
-  imports: [],
+  imports: [Icon],
   templateUrl: './help-page.html',
   styleUrl: './help-page.scss',
 })

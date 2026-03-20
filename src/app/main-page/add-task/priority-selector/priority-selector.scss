@@ -20,7 +20,7 @@
 }
 
 .priority__button {
-  @include styles.setFlex($gap: 0);
+  @include styles.setFlex($gap: 4px);
   flex: 1;
   padding: clamp(0.5rem, 0.5vw, 0.75rem) clamp(0.5rem, 0.5vw, 0.75rem);
   border-radius: 1rem;
@@ -28,32 +28,36 @@
   background-color: styles.$white;
   box-shadow: 0 0.0625rem 0.125rem 0 #0000001a;
   @include styles.setFont($size: 1em, $weight: 500, $color: styles.$gray-dark);
-}
 
-.priority__button.is-active {
-  color: styles.$white;
-  box-shadow: 0 0.25rem 0.25rem 0 #0000001a;
-
-  .priority__icon {
-    filter: brightness(0) invert(1);
+  &.is-active {
+    color: styles.$white;
+    box-shadow: 0 0.25rem 0.25rem 0 #0000001a;
   }
-}
 
-.priority__button--urgent.is-active {
-  background-color: styles.$red-accent;
-  border-color: styles.$red-accent;
-}
+  &--urgent {
+    color: styles.$red-accent;
 
-.priority__button--medium.is-active {
-  background-color: styles.$orange-warning;
-  border-color: styles.$orange-warning;
-}
+    &.is-active {
+      background-color: styles.$red-accent;
+      border-color: styles.$red-accent;
+    }
+  }
 
-.priority__button--low.is-active {
-  background-color: styles.$green-success;
-  border-color: styles.$green-success;
-}
+  &--medium {
+    color: styles.$orange-warning;
 
-.priority__icon {
-  width: 3rem;
+    &.is-active {
+      background-color: styles.$orange-warning;
+      border-color: styles.$orange-warning;
+    }
+  }
+
+  &--low {
+    color: styles.$green-success;
+
+    &.is-active {
+      background-color: styles.$green-success;
+      border-color: styles.$green-success;
+    }
+  }
 }

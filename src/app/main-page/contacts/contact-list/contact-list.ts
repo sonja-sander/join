@@ -1,10 +1,11 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { SingleContact } from './single-contact/single-contact';
 import { Contact } from '../../../shared/interfaces/contact';
+import { Icon } from '../../../shared/components/icon/icon';
 
 @Component({
   selector: 'app-contact-list',
-  imports: [SingleContact],
+  imports: [SingleContact, Icon],
   templateUrl: './contact-list.html',
   styleUrl: './contact-list.scss',
 })
@@ -12,7 +13,7 @@ import { Contact } from '../../../shared/interfaces/contact';
  * Renders the list of contacts and emits selection events.
  */
 export class ContactList {
-  @Input() contacts: Contact[] = [];
+  @Input() contacts: Array<Contact> = [];
   @Input() activeContactID: string | null = null;
   @Input() loading: boolean = false;
   @Output() selected = new EventEmitter<{ contact: Contact; id: string }>();

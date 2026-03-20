@@ -46,7 +46,10 @@
 }
 
 .form-field__icon {
-  width: 3rem;
+  &:hover {
+    background-color: styles.$white-light;
+    border-radius: 50%;
+  }
 }
 
 .form-field__icon-button {

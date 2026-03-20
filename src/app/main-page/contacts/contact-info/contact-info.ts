@@ -10,10 +10,11 @@ import {
 import { Contact } from '../../../shared/interfaces/contact';
 import { getTwoInitials } from '../../../shared/utilities/utils';
 import { Avatar } from '../../../shared/components/avatar/avatar';
+import { Icon } from '../../../shared/components/icon/icon';
 
 @Component({
   selector: 'app-contact-info',
-  imports: [Avatar],
+  imports: [Avatar, Icon],
   templateUrl: './contact-info.html',
   styleUrl: './contact-info.scss',
 })

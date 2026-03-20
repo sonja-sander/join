@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Task } from '../../../shared/interfaces/task';
+import { Icon } from '../../../shared/components/icon/icon';
 
 /** View model describing one priority button in the selector. */
 type PriorityOption = {
@@ -14,34 +15,31 @@ type PriorityOption = {
  */
 @Component({
   selector: 'app-priority-selector',
-  imports: [],
+  imports: [Icon],
   templateUrl: './priority-selector.html',
   styleUrl: './priority-selector.scss',
 })
 export class PrioritySelector {
-  /** Currently selected priority value. */
   @Input() selectedPriority: Task['priority'] = 'medium';
-  /** Emits when the selected priority changes. */
   @Output() selectedPriorityChange = new EventEmitter<Task['priority']>();
 
-  /** Available priority options rendered in the selector. */
   options: PriorityOption[] = [
     {
       value: 'high',
       label: 'Urgent',
-      iconPath: 'assets/img/icons/priority/priority-high.svg',
+      iconPath: 'priority-high',
       modifierClass: 'priority__button--urgent',
     },
     {
       value: 'medium',
       label: 'Medium',
-      iconPath: 'assets/img/icons/priority/priority-medium.svg',
+      iconPath: 'priority-medium',
       modifierClass: 'priority__button--medium',
     },
     {
       value: 'low',
       label: 'Low',
-      iconPath: 'assets/img/icons/priority/priority-low.svg',
+      iconPath: 'priority-low',
       modifierClass: 'priority__button--low',
     },
   ];

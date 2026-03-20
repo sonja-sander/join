@@ -24,14 +24,6 @@ section {
     margin-bottom: 40px;
   }
 
-  h1 {
-    font-size: 32px;
-
-    @include styles.up-xxl {
-      font-size: 48px;
-    }
-  }
-
   p {
     font-size: 20px;
 
@@ -77,7 +69,7 @@ section {
     row-gap: 24px;
     width: 90%;
     max-width: 500px;
-    height: 537px;
+    height: 500px;
   }
 
   @media (min-width: 1200px) {
@@ -156,26 +148,22 @@ section {
   @include styles.setFlex($gap: 20px);
 
   .icon {
-    width: 32px;
-    height: 32px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: styles.$gray-dark;
+    color: white;
 
     @include styles.up-xxl {
-      width: 60px;
-      height: 60px;
+      width: 50px;
+      height: 50px;
     }
-  }
-
-  .icon--hover {
-    display: none;
   }
 
   a:hover {
-    .icon--default {
-      display: none;
-    }
-
-    .icon--hover {
-      display: block;
+    .icon {
+      background-color: white;
+      color: styles.$gray-dark;
     }
   }
 }
@@ -202,14 +190,15 @@ section {
 
     .urgent-logo-circle {
       @include styles.setFlex();
-      width: 32px;
-      height: 32px;
+      width: 40px;
+      height: 40px;
       border-radius: 50%;
       background-color: styles.$red-accent;
+      color: white;
 
       @include styles.up-xxl {
-        width: 60px;
-        height: 60px;
+        width: 50px;
+        height: 50px;
       }
 
       img {

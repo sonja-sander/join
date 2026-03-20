@@ -1,12 +1,7 @@
 <section class="contact-list">
   <button class="contact-list__button" type="button" (click)="addContact.emit()">
     <span class="contact-list__btn-text">Add new contact</span>
-    <img
-      class="contact-list__btn-icon"
-      src="assets/img/icons/buttons/add-contact.svg"
-      alt="Add contact Icon"
-      aria-hidden="true"
-    />
+    <app-icon class="contact-list__btn-icon" name="add-contact" [size]="26" aria-hidden="true"></app-icon>
   </button>
 
   <ul class="contact-list__scroll">

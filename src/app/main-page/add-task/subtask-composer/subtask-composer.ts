@@ -1,13 +1,14 @@
 import { Component, ElementRef, EventEmitter, Input, OnChanges, Output, SimpleChanges, inject } from '@angular/core';
 import { Subtask } from '../../../shared/interfaces/task';
 import { SubtaskFormData } from '../../../shared/interfaces/task-form-data';
+import { Icon } from '../../../shared/components/icon/icon';
 
 /**
  * Handles subtask creation, inline editing and removal for the task form.
  */
 @Component({
   selector: 'app-subtask-composer',
-  imports: [],
+  imports: [Icon],
   templateUrl: './subtask-composer.html',
   styleUrl: './subtask-composer.scss',
 })

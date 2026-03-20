@@ -1,29 +1,21 @@
 <section>
   <div class="content-wrapper">
-    <div class="header">
+    <header class="header">
       <h1>Join 360</h1>
       <div class="desktop-divider desktop-only" aria-hidden="true"></div>
       <p>Key Metrics at a Glance</p>
       <div class="mobile-divider mobile-only" aria-hidden="true"></div>
-    </div>
+    </header>
 
     <div class="content">
       <div class="boxes">
+
         <div class="status-amount">
           <a
             routerLink="/board"
             class="box"
           >
-            <img
-              class="icon icon--default"
-              src="assets/img/icons/summary/to-do.svg"
-              alt=""
-            />
-            <img
-              class="icon icon--hover"
-              src="assets/img/icons/summary/to-do-hover.svg"
-              alt=""
-            />
+            <app-icon class="icon" name="edit" [size]="24" aria-hidden="true"></app-icon>
             <div class="amount">
               @if (taskService.loading) {
                 <span class="loading-spinner"></span>
@@ -38,16 +30,7 @@
             routerLink="/board"
             class="box"
           >
-            <img
-              class="icon icon--default"
-              src="assets/img/icons/summary/done.svg"
-              alt=""
-            />
-            <img
-              class="icon icon--hover"
-              src="assets/img/icons/summary/done-hover.svg"
-              alt=""
-            />
+            <app-icon class="icon" name="check" [size]="34" aria-hidden="true"></app-icon>
             <div class="amount">
               @if (taskService.loading) {
                 <span class="loading-spinner"></span>
@@ -65,10 +48,7 @@
         >
           <div class="urgent">
             <div class="urgent-logo-circle">
-              <img
-                src="assets/img/icons/priority/priority-high-white.svg"
-                alt=""
-              />
+              <app-icon name="priority-high" [size]="26" aria-hidden="true"></app-icon>
             </div>
             <div class="amount">
               @if (taskService.loading) {

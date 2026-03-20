@@ -6,8 +6,7 @@
 
     @if (attachments.length > 0) {
       <button type="button" (click)="deleteAllAttachments()">
-        <img class="icon icon--default" src="assets/img/icons/buttons/delete.svg" alt="" aria-hidden="true">
-        <img class="icon icon--hover" src="assets/img/icons/buttons/delete-hover.svg" alt="" aria-hidden="true">
+        <app-icon name="delete" [size]="20" aria-hidden="true"></app-icon>
         Delete all
       </button>
     }
@@ -24,7 +23,7 @@
     aria-describedby="attachment-description"
   >
     <p>Drag file or browse</p>
-    <img src="assets/img/icons/add-task/add-attachment.svg" alt="">
+    <app-icon class="add-attachment-icon" name="add" aria-hidden="true"></app-icon>
   </button>
 
   <input
@@ -53,7 +52,7 @@
             <img
               class="attachment-img"
               [src]="attachment.base64"
-              [alt]="attachment.fileName"
+              alt=""
             >
           </div>
 
@@ -66,11 +65,7 @@
           (click)="deleteSingleAttachment($event, attachment)"
           aria-label="Delete {{ attachment.fileName }}"
         >
-          <img
-            class="delete-icon"
-            src="assets/img/icons/add-task/delete-white.svg"
-            alt=""
-          >
+          <app-icon name="delete" aria-hidden="true"></app-icon>
         </button>
 
       </figure>

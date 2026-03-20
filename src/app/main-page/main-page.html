@@ -39,7 +39,7 @@
                   autocomplete="email"
                   aria-describedby="login-email-error"
                 />
-                <img src="assets/img/icons/forms/email.svg" alt="" />
+                <app-icon name="email" aria-hidden="true"/>
                 <div class="input-error-wrapper">
                   <span id="login-email-error" class="form-error">
                     @if (logInEmail.invalid && logInEmail.touched) {
@@ -77,17 +77,10 @@
                       (click)="toggleLogInPassword()"
                       aria-label="Toggle password visibility"
                     >
-                      <img
-                        [src]="
-                          showLogInPassword
-                            ? 'assets/img/icons/forms/visibility.svg'
-                            : 'assets/img/icons/forms/visibility-off.svg'
-                        "
-                        alt=""
-                      />
+                      <app-icon [name]="showLogInPassword ? 'visibility' : 'visibility-off'" aria-hidden="true"/>
                     </button>
                   } @else {
-                    <img class="lock-icon" src="assets/img/icons/forms/password.svg" alt="" />
+                    <app-icon class="lock-icon" name="password" aria-hidden="true"/>
                   }
                 </div>
                 <div class="input-error-wrapper">
@@ -121,11 +114,7 @@
                   [class.button--disabled]="isLoggingIn || logInForm.invalid"
                   class="button button--primary"
                 >
-                  @if (isLoggingIn) {
-                    Logging in…
-                  } @else {
-                    Log in
-                  }
+                  {{ isLoggingIn ? 'Logging in…' : 'Log in' }}
                 </button>
                 <button
                   type="button"
@@ -133,11 +122,7 @@
                   class="button button--secondary"
                   [class.button--disabled]="isGuestLoggingIn"
                 >
-                  @if (isGuestLoggingIn) {
-                    Logging in…
-                  } @else {
-                    Guest Log in
-                  }
+                  {{ isGuestLoggingIn ? 'Logging in…' : 'Guest Log in' }}
                 </button>
               </div>
             </form>
@@ -159,9 +144,9 @@
               <button
                 class="back-btn"
                 (click)="closeSignUp()"
-                aria-label="Go back to previous page"
+                aria-label="Go back to login region"
               >
-                <img src="assets/img/icons/buttons/back.svg" alt="" />
+                <app-icon name="arrow-left" [size]="36" aria-hidden="true"/>
               </button>
               <div class="sign-up">
                 <h1 id="signup-title">Sign up</h1>
@@ -190,7 +175,7 @@
                   autocomplete="name"
                   aria-describedby="signup-name-error"
                 />
-                <img src="assets/img/icons/forms/name.svg" alt="" />
+                <app-icon name="name" aria-hidden="true"/>
                 <div class="input-error-wrapper">
                   <span id="signup-name-error" class="form-error">
                     @if (name.invalid && name.touched) {
@@ -220,7 +205,7 @@
                   autocomplete="email"
                   aria-describedby="signup-email-error"
                 />
-                <img src="assets/img/icons/forms/email.svg" alt="" />
+                <app-icon name="email" aria-hidden="true"/>
                 <div class="input-error-wrapper">
                   <span id="signup-email-error" class="form-error">
                     @if (signUpEmail.invalid && signUpEmail.touched) {
@@ -257,17 +242,10 @@
                       (click)="toggleSignUpPassword()"
                       aria-label="Toggle password visibility"
                     >
-                      <img
-                        [src]="
-                          showSignUpPassword
-                            ? 'assets/img/icons/forms/visibility.svg'
-                            : 'assets/img/icons/forms/visibility-off.svg'
-                        "
-                        alt=""
-                      />
+                      <app-icon [name]="showSignUpPassword ? 'visibility' : 'visibility-off'" aria-hidden="true"/>
                     </button>
                   } @else {
-                    <img class="lock-icon" src="assets/img/icons/forms/password.svg" alt="" />
+                    <app-icon class="lock-icon" name="password" aria-hidden="true"/>
                   }
                 </div>
                 <div class="input-error-wrapper">
@@ -304,17 +282,10 @@
                       (click)="toggleConfirmPassword()"
                       aria-label="Toggle password visibility"
                     >
-                      <img
-                        [src]="
-                          showConfirmPassword
-                            ? 'assets/img/icons/forms/visibility.svg'
-                            : 'assets/img/icons/forms/visibility-off.svg'
-                        "
-                        alt=""
-                      />
+                      <app-icon [name]="showConfirmPassword ? 'visibility' : 'visibility-off'" aria-hidden="true"/>
                     </button>
                   } @else {
-                    <img class="lock-icon" src="assets/img/icons/forms/password.svg" alt="" />
+                    <app-icon class="lock-icon" name="password" aria-hidden="true"/>
                   }
                 </div>
                 <div class="input-error-wrapper">
@@ -372,16 +343,10 @@
               <div class="form-actions">
                 <button
                   type="submit"
-                  [class.button--disabled]="
-                    isSigningUp || signUpForm.invalid || signUpData.password !== confirmPassword
-                  "
+                  [class.button--disabled]="isSigningUp || signUpForm.invalid || signUpData.password !== confirmPassword"
                   class="button button--primary"
                 >
-                  @if (isSigningUp) {
-                    Signing up…
-                  } @else {
-                    Sign up
-                  }
+                  {{ isSigningUp ? 'Signing up…' : 'Sign up' }}
                 </button>
               </div>
             </form>
@@ -417,7 +382,6 @@
         }
       </aside>
     }
-    
   </main>
 </div>
 

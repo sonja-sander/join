@@ -1,9 +1,10 @@
 import { Location } from '@angular/common';
 import { Component, inject } from '@angular/core';
+import { Icon } from '../shared/components/icon/icon';
 
 @Component({
   selector: 'app-imprint',
-  imports: [],
+  imports: [Icon],
   templateUrl: './imprint.html',
   styleUrl: './imprint.scss',
 })

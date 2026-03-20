@@ -4,10 +4,11 @@ import { TaskService } from '../../shared/services/task-service';
 import { AsyncPipe, DatePipe } from '@angular/common';
 import { AuthService } from '../../shared/services/auth-service';
 import { getGreeting } from '../../shared/utilities/utils';
+import { Icon } from '../../shared/components/icon/icon';
 
 @Component({
   selector: 'app-summary',
-  imports: [RouterLink, DatePipe, AsyncPipe],
+  imports: [RouterLink, DatePipe, AsyncPipe, Icon],
   templateUrl: './summary.html',
   styleUrl: './summary.scss',
 })

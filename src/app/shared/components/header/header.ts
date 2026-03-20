@@ -3,10 +3,11 @@ import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth-service';
 import { AsyncPipe } from '@angular/common';
 import { getTwoInitials } from '../../utilities/utils';
+import { Icon } from '../icon/icon';
 
 @Component({
   selector: 'app-header',
-  imports: [RouterLink, AsyncPipe],
+  imports: [RouterLink, AsyncPipe, Icon],
   templateUrl: './header.html',
   styleUrl: './header.scss',
 })
@@ -83,5 +84,4 @@ export class Header {
 
     return getTwoInitials(username);
   }
-
 }

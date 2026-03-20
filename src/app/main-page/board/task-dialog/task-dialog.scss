@@ -59,27 +59,14 @@
 
   .close-btn {
     @include styles.setFlex();
-    background-color: transparent;
     width: 32px;
     height: 32px;
-
-    .icon {
-      width: 24px;
-      height: 24px;
-    }
-
-    .icon--hover {
-      display: none;
-    }
+    border-radius: 50%;
+    background-color: transparent;
+    color: styles.$gray-dark;
 
     &:hover {
-      .icon--default {
-        display: none;
-      }
-
-      .icon--hover {
-        display: block;
-      }
+      background-color: #eeeeee;
     }
   }
 }
@@ -251,6 +238,7 @@
     height: 34px;
     border-radius: 7px 1px 8px 1px;
     background-color: styles.$blue-sky;
+    color: white;
     border: none;
 
     @include styles.up-xxl {
@@ -274,12 +262,6 @@
         background-color: styles.$blue-sky;
         opacity: 1;
       }
-    }
-
-    .download-icon {
-      width: 24px;
-      height: 24px;
-      object-fit: contain;
     }
   }
 
@@ -390,31 +372,14 @@ footer {
   button {
     @include styles.setFlex($gap: 4px);
     background-color: transparent;
-    color: #2a3647;
+    color: styles.$gray-dark;
 
     @include styles.up-xxl {
       font-size: 16px;
     }
 
-    .icon {
-      width: 22px;
-      height: 22px;
-    }
-
-    .icon--hover {
-      display: none;
-    }
-
     &:hover {
       color: styles.$blue-sky;
-
-      .icon--default {
-        display: none;
-      }
-
-      .icon--hover {
-        display: block;
-      }
     }
   }
 

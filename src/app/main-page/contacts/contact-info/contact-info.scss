@@ -16,22 +16,8 @@
     position: absolute;
     top: calc(0.7 * styles.$header-height);
     right: 5%;
-
-    img {
-      width: 3.2rem;
-
-      &:hover {
-        transform: scale(1.1);
-      }
-    }
-  }
-
-  &__title {
-    font-size: 32px;
-
-    @include styles.up-xxl {
-      font-size: 48px;
-    }
+    background-color: transparent;
+    color: styles.$blue-sky;
   }
 
   &__header-divider {
@@ -86,7 +72,7 @@
   }
 
   &__actions {
-    @include styles.setFlex($jc: flex-start, $ai: center, $gap: 2rem);
+    @include styles.setFlex($jc: flex-start, $ai: center, $gap: 4px);
   }
 
   &__action {
@@ -94,28 +80,13 @@
     width: 9rem;
     padding: 0;
     border: none;
-
     border-radius: 0;
     background: transparent;
     @include styles.setFont($size: 1em, $weight: 400, $color: styles.$gray-dark);
 
     &:hover {
       color: styles.$blue-link;
-      font-weight: 700;
-
-      .contact-info__action-icon {
-        filter: brightness(0) saturate(100%) invert(33%) sepia(93%) saturate(2671%)
-          hue-rotate(190deg) brightness(99%) contrast(101%);
-        transform: scale(1.2);
-      }
     }
-  }
-
-  &__action-icon {
-    width: 2.5rem;
-    transition:
-      filter 0.2s ease,
-      transform 0.2s ease;
   }
 
   &__details {
@@ -160,25 +131,19 @@
     position: fixed;
     right: clamp(1.6rem, 4vw, 2.4rem);
     bottom: clamp(1.6rem, 4vw, 2.4rem);
-
     width: clamp(5rem, 12vw, 6rem);
     height: clamp(5rem, 12vw, 6rem);
     border: none;
     border-radius: 50%;
     padding: 0;
     background-color: styles.$gray-dark;
+    color: white;
     box-shadow: 0 6px 16px #00000033;
     cursor: pointer;
     z-index: 2;
 
-    img {
-      width: clamp(2.2rem, 5vw, 2.8rem);
-      height: clamp(2.2rem, 5vw, 2.8rem);
-    }
-
     &:hover {
       background-color: styles.$blue-sky;
-      transform: scale(1.02);
       box-shadow: 0px 4px 4px 0px #00000040;
     }
 
@@ -221,28 +186,6 @@
     cursor: pointer;
     text-align: left;
     @include styles.setFont($size: 1.2em, $weight: 400, $color: styles.$gray-dark);
-
-    &:hover {
-      background-color: #f2f2f2;
-
-      color: styles.$blue-link;
-      font-weight: 700;
-
-      .contact-info__fab-action-icon {
-        filter: brightness(0) saturate(100%) invert(33%) sepia(93%) saturate(2671%)
-          hue-rotate(190deg) brightness(99%) contrast(101%);
-        transform: scale(1.2);
-      }
-    }
-
-    &:active {
-      background-color: #e7e7e7;
-    }
-  }
-
-  &__fab-action-icon {
-    width: 2.4rem;
-    height: 2.4rem;
   }
 }
 

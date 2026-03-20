@@ -2,10 +2,11 @@ import { Component, ElementRef, EventEmitter, inject, Input, Output, ViewChild }
 import { Attachment } from '../../../shared/interfaces/task';
 import { FileService } from '../../../shared/services/file-service';
 import { ImageViewer } from '../../../shared/components/image-viewer/image-viewer';
+import { Icon } from '../../../shared/components/icon/icon';
 
 @Component({
   selector: 'app-attachments',
-  imports: [ImageViewer],
+  imports: [ImageViewer, Icon],
   templateUrl: './attachments.html',
   styleUrl: './attachments.scss',
 })
@@ -20,7 +21,7 @@ export class Attachments {
   @ViewChild('filePicker') filePicker!: ElementRef<HTMLInputElement>;
   @ViewChild('gallery') gallery!: ElementRef<HTMLDivElement>;
   fileService = inject(FileService);
-  @Input() attachments!: Attachment[];
+  @Input() attachments!: Array<Attachment>;
   @Output() deleteAll = new EventEmitter<void>();
   @Output() attachmentsChange = new EventEmitter<Array<Attachment>>();
   @Output() viewerStateChange = new EventEmitter<boolean>();
@@ -28,7 +29,7 @@ export class Attachments {
   @Output() taskSizeError = new EventEmitter<void>(); 
   isDragging: boolean = false;
   showViewer: boolean = false;
-  viewerStartIndex = 0;
+  viewerStartIndex: number = 0;
 
   /**
    * Handles drag-over events for the drop zone.

@@ -1,13 +1,18 @@
-@if(task){
+@if (task) {
   <div class="task-dialog-overlay" (mousedown)="onBackdropClick($event)">
-    <div class="dialog-content" role="dialog" aria-labelledby="task-dialog-title" cdkTrapFocus cdkTrapFocusAutoCapture >
+    <div
+      class="dialog-content"
+      role="dialog"
+      aria-labelledby="task-dialog-title"
+      cdkTrapFocus
+      cdkTrapFocusAutoCapture
+    >
       <div class="header">
         <p class="category" [ngClass]="task.category">
           {{ task.category === 'technical-task' ? 'Technical Task' : 'User Story' }}
         </p>
         <button class="close-btn" (click)="closeDialog()" aria-label="Close dialog">
-          <img class="icon icon--default" src="assets/img/icons/buttons/close.svg" alt="">
-          <img class="icon icon--hover" src="assets/img/icons/buttons/close-hover.svg" alt="">
+          <app-icon name="close" aria-hidden="true"></app-icon>
         </button>
       </div>
 
@@ -18,44 +23,47 @@
             {{ task.description }}
           </p>
         </div>
-    
+
         <div class="due-date">
           <p class="subtitle">Due date:</p>
-          <p>{{ task.dueDate.toDate() | date:'dd/MM/yyyy' }}</p>
+          <p>{{ task.dueDate.toDate() | date: 'dd/MM/yyyy' }}</p>
         </div>
-    
+
         <div class="priority">
           <p class="subtitle">Priority:</p>
-    
+
           <div>
-            @if (task.priority === "low") {
+            @if (task.priority === 'low') {
               <p>Low</p>
-              <img class="priority-icon" src="assets/img/icons/priority/priority-low.svg" alt="Low priority">
-            } @else if (task.priority === "medium") {
+              <app-icon class="priority-low" name="priority-low" aria-hidden="true"></app-icon>
+            } @else if (task.priority === 'medium') {
               <p>Medium</p>
-              <img class="priority-icon" src="assets/img/icons/priority/priority-medium.svg" alt="Medium priority">
-            } @else if (task.priority === "high") {
+              <app-icon
+                class="priority-medium"
+                name="priority-medium"
+                aria-hidden="true"
+              ></app-icon>
+            } @else if (task.priority === 'high') {
               <p>High</p>
-              <img class="priority-icon" src="assets/img/icons/priority/priority-high.svg" alt="High priority">
+              <app-icon class="priority-high" name="priority-high" aria-hidden="true"></app-icon>
             }
           </div>
         </div>
-        
-        @if (task.assignees.length > 0){
+
+        @if (task.assignees.length > 0) {
           <div class="assignees">
             <p class="subtitle">Assigned To:</p>
-      
+
             <div class="assignee-list scroll-shadows" tabindex="-1">
               @for (assignee of task.assignees; track $index) {
                 <div class="assignee-item">
-    
                   <app-avatar
                     [name]="getAssigneeName(assignee)"
                     [color]="getUserColor(assignee)"
                     [avatar]="getAssigneeAvatar(assignee)"
                     [size]="38"
                   ></app-avatar>
-    
+
                   <p class="name">
                     {{ getAssigneeName(assignee) }}
                   </p>
@@ -64,7 +72,7 @@
             </div>
           </div>
         }
-    
+
         @if (task.attachments.length > 0) {
           <div class="attachments">
             <p class="subtitle">Attachments:</p>
@@ -78,11 +86,11 @@
                     aria-label="Open attachment {{ attachment.fileName }}"
                   >
                     <div class="image-wrapper">
-                      <img class="attachment-img" [src]="attachment.base64" [alt]="attachment.fileName" >
+                      <img class="attachment-img" [src]="attachment.base64" alt="" />
                     </div>
                     <figcaption>{{ attachment.fileName }}</figcaption>
                   </button>
-                  
+
                   <button
                     class="download-btn"
                     type="button"
@@ -91,24 +99,29 @@
                     (keydown.space)="$event.stopPropagation()"
                     aria-label="Download {{ attachment.fileName }}"
                   >
-                    <img class="download-icon" src="assets/img/icons/add-task/download-white.svg" alt="">
+                    <app-icon name="download" aria-hidden="true"></app-icon>
                   </button>
                 </figure>
               }
             </div>
           </div>
         }
-    
+
         @if (task.subtasks.length > 0) {
           <div class="subtasks">
             <p class="subtitle">Subtasks:</p>
-      
+
             <div class="subtask-list scroll-shadows">
               @for (subtask of task.subtasks; track $index) {
                 <label class="checkbox-wrapper">
-                  <input class="checkbox" type="checkbox" [checked]="subtask.done" (change)="toggleSubtask($index)">
+                  <input
+                    class="checkbox"
+                    type="checkbox"
+                    [checked]="subtask.done"
+                    (change)="toggleSubtask($index)"
+                  />
                   <span class="checkbox-ui"></span>
-                  <span class="subtask-title" id="subtask-{{$index}}">{{ subtask.title }}</span>
+                  <span class="subtask-title" id="subtask-{{ $index }}">{{ subtask.title }}</span>
                 </label>
               }
             </div>
@@ -118,14 +131,12 @@
 
       <footer>
         <button type="button" (click)="onDeleteClick()">
-          <img class="icon icon--default" src="assets/img/icons/buttons/delete.svg" alt="">
-          <img class="icon icon--hover" src="assets/img/icons/buttons/delete-hover.svg" alt="">
+          <app-icon name="delete" [size]="22" aria-hidden="true"></app-icon>
           Delete
         </button>
         <div class="separator" aria-hidden="true"></div>
         <button type="button" (click)="onEditClick()">
-          <img class="icon icon--default" src="assets/img/icons/buttons/edit.svg" alt="">
-          <img class="icon icon--hover" src="assets/img/icons/buttons/edit-hover.svg" alt="">
+          <app-icon name="edit" aria-hidden="true"></app-icon>
           Edit
         </button>
       </footer>

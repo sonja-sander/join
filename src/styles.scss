@@ -31,6 +31,14 @@ body:has(.task-dialog-overlay) {
   overflow: hidden;
 }
 
+h1 {
+  font-size: 32px;
+
+  @include styles.up-xxl {
+    font-size: 48px;
+  }
+}
+
 // #region Button styles
 button {
   padding: 8px;
@@ -107,11 +115,6 @@ button {
 
 .button--icon {
   @include styles.setFlex($gap: 4px);
-
-  .button__icon {
-    width: 20px;
-    height: 20px;
-  }
 }
 // #endregion
 
@@ -134,19 +137,11 @@ button {
       @include styles.setFlex($jc: space-between);
       padding-bottom: 16px;
 
-      h1 {
-        font-size: 32px;
-
-        @include styles.up-xxl {
-          font-size: 48px;
-        }
-      }
-
       button {
         @include styles.setFlex();
-        width: 32px;
         padding: 0;
         background-color: transparent;
+        color: styles.$blue-sky;
       }
     }
 
@@ -362,4 +357,16 @@ button {
 ::view-transition-new(root) {
   animation-duration: 200ms;
   animation-timing-function: ease;
+}
+
+.priority-low{
+  color: styles.$green-success;
+}
+
+.priority-medium{
+  color: styles.$orange-warning;
+}
+
+.priority-high{
+  color: styles.$red-accent;
 }

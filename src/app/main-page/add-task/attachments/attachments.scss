@@ -18,34 +18,17 @@ section {
 
   button {
     @include styles.setFlex($gap: 4px);
-    background-color: transparent;
-    color: #2a3647;
     padding: 0 8px;
     margin-right: 1px;
+    background-color: transparent;
+    color: styles.$gray-dark;
 
     @include styles.up-xxl {
       font-size: 16px;
     }
 
-    .icon {
-      width: 22px;
-      height: 22px;
-    }
-
-    .icon--hover {
-      display: none;
-    }
-
     &:hover {
       color: styles.$blue-sky;
-
-      .icon--default {
-        display: none;
-      }
-
-      .icon--hover {
-        display: block;
-      }
     }
   }
 }
@@ -62,6 +45,10 @@ section {
   p {
     color: #666666;
     word-break: break-all;
+  }
+
+  .add-attachment-icon {
+    color: #666666cf;
   }
 
   &--active {
@@ -111,6 +98,7 @@ section {
 
       .delete-btn {
         opacity: 1;
+        color: white;
       }
     }
   }
@@ -149,6 +137,7 @@ section {
   border-radius: 7px 1px 8px 1px;
   background-color: styles.$blue-sky;
   border: none;
+  color: white;
 
   @include styles.up-xxl {
     top: 50%;
@@ -162,12 +151,6 @@ section {
     &:hover {
       background-color: styles.$blue-sky;
     }
-  }
-
-  .delete-icon {
-    width: 24px;
-    height: 24px;
-    object-fit: contain;
   }
 
   &:focus-visible {

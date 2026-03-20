@@ -8,29 +8,24 @@ import {
   inject,
 } from '@angular/core';
 import { TaskCategoryOption, TaskService } from '../../../shared/services/task-service';
+import { Icon } from '../../../shared/components/icon/icon';
 
 /**
  * Single-select dropdown used for choosing a task category.
  */
 @Component({
   selector: 'app-dropdown-category',
-  imports: [],
+  imports: [Icon],
   templateUrl: './dropdown-category.html',
   styleUrl: './dropdown-category.scss',
 })
 export class DropdownCategory {
   elementRef = inject(ElementRef);
   taskService = inject(TaskService);
-
-  /** Active category selection. */
   @Input() selectedCategory: TaskCategoryOption | null = null;
-  /** Emits when a new category is selected. */
   @Output() selectedCategoryChange = new EventEmitter<TaskCategoryOption | null>();
-  /** Visual error state passed from the parent form. */
   @Input() hasError = false;
-  /** Emits blur-like events so parent can update touch state. */
   @Output() fieldBlur = new EventEmitter<void>();
-
   isDropdownOpen = false;
 
   /** Human-readable label of the selected category. */

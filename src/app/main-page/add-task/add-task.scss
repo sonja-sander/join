@@ -7,6 +7,7 @@
     $jc: flex-start,
     $gap: clamp(1.5rem, 3vw, 2.5rem)
   );
+  max-height: calc(100dvh - styles.$header-height);
   padding: clamp(1.5rem, 4vw, 4rem) clamp(1.5rem, 4vw, 6rem);
   background-color: styles.$white;
 }
@@ -107,7 +108,7 @@
 
 @include styles.down-xxl {
   .add-task {
-    height: calc(100dvh - 2 * styles.$header-height);
+    height: calc(100dvh - styles.$header-height);
   }
 }
 

@@ -14,16 +14,7 @@
         />
         <div class="search-bar__divider" aria-hidden="true"></div>
         <button type="button" class="search-bar__button" (click)="search()" aria-label="Search">
-          <img
-            class="search-bar__icon search-bar__icon--default"
-            src="assets/img/icons/board/search.svg"
-            alt=""
-          />
-          <img
-            class="search-bar__icon search-bar__icon--hover desktop-only"
-            src="assets/img/icons/board/search-hover.svg"
-            alt=""
-          />
+          <app-icon name="search" aria-hidden="true"/>
         </button>
       </div>
       <button
@@ -33,11 +24,7 @@
         aria-label="Add task"
       >
         <span class="desktop-only">Add task</span>
-        <img
-          class="button__icon"
-          src="assets/img/icons/buttons/add-task.svg"
-          alt=""
-        />
+        <app-icon name="add-new-task" [size]="20" aria-hidden="true"/>
       </button>
     </div>
 
@@ -93,11 +80,7 @@
             aria-label="Close add task overlay"
             (click)="onCloseAddTaskClick()"
           >
-            <img
-              class="add-task-overlay__close-icon"
-              src="assets/img/icons/buttons/close.svg"
-              alt=""
-            />
+            <app-icon name="close" aria-hidden="true"/>
           </button>
 
           <app-add-task

@@ -19,12 +19,7 @@
       aria-label="Toggle category dropdown"
       (click)="toggleDropdownOpen($event)"
     >
-      <img
-        class="form-field__icon"
-        [class.is-open]="isDropdownOpen"
-        src="assets/img/icons/add-task/dropdown-arrow-down.svg"
-        alt="dropdown-arrow icon"
-      />
+      <app-icon class="form-field__icon" [class.is-open]="isDropdownOpen" [size]="30" name="dropdown-arrow-down" aria-hidden="true"></app-icon>
     </button>
   </div>
 
