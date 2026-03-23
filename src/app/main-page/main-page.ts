@@ -27,9 +27,10 @@ export class MainPage implements OnInit {
   firebaseService = inject(FirebaseService);
   authService = inject(AuthService);
   router = inject(Router);
-  user$ = this.authService.user$;
-  loginTitle = viewChild<ElementRef>('loginTitle');
 
+  loginTitle = viewChild<ElementRef>('loginTitle');
+  
+  user$ = this.authService.user$;
   isMobile: boolean = false;
   showSignUp: boolean = false;
   isGuestLoggingIn: boolean = false;

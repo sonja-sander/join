@@ -16,6 +16,7 @@ export class SubtaskComposer implements OnChanges {
   private hostElement = inject(ElementRef<HTMLElement>);
   
   subtasks = input<Array<Subtask>>([]);
+  
   subtasksChange = output<Array<Subtask>>();
 
   readonly subtaskTitleMinLength: number = 3;

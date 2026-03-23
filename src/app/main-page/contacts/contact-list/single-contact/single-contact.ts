@@ -15,6 +15,7 @@ import { Avatar } from '../../../../shared/components/avatar/avatar';
 export class SingleContact {
   contact = input.required<Contact>();
   isActive = input<boolean>(false);
+  
   selected = output<Contact>();
 
   readonly getTwoInitials = getTwoInitials;

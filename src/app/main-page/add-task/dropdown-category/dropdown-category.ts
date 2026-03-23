@@ -22,8 +22,9 @@ export class DropdownCategory {
   elementRef = inject(ElementRef);
   taskService = inject(TaskService);
 
-  hasError = input(false);
+  hasError = input<boolean>(false);
   selectedCategory = input<TaskCategoryOption | null>(null);
+
   selectedCategoryChange = output<TaskCategoryOption | null>();
   fieldBlur = output<void>();
 

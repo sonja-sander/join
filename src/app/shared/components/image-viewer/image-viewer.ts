@@ -21,6 +21,7 @@ export class ImageViewer implements OnInit {
 
   attachments = input<Array<Attachment>>([]);
   startIndex = input<number>(0);
+  
   viewerStateChange = output<boolean>();
   close = output<void>();
 

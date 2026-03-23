@@ -25,6 +25,7 @@ export class TaskList {
 
   status = input<Task['status']>('to-do');
   listTitle = input<string>('');
+  
   openTask = output<Task>();
   addTaskRequested = output<Task['status']>();
 

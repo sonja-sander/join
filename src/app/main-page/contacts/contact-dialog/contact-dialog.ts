@@ -23,13 +23,15 @@ import { Icon } from '../../../shared/components/icon/icon';
  */
 export class ContactDialog {
   fileService = inject(FileService);
-  contactForm = viewChild<NgForm>('contactForm');
-  filePicker = viewChild<ElementRef<HTMLInputElement>>('filePicker');
-
+  
   canDelete = input<boolean>(true);
   confirmOpen = input<boolean>(false);
+  
   saveContact = output<ContactFormData>();
   requestDelete = output<void>();
+
+  contactForm = viewChild<NgForm>('contactForm');
+  filePicker = viewChild<ElementRef<HTMLInputElement>>('filePicker');
 
   isOpen: boolean = false;
   dialogMode: 'add' | 'edit' = 'add';

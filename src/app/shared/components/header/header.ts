@@ -21,6 +21,7 @@ import { Icon } from '../icon/icon';
 export class Header {
   authService = inject(AuthService);
   router = inject(Router);
+  
   user$ = this.authService.user$;
   loggedIn: boolean = true;
   menuOpen: boolean = false;

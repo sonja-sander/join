@@ -26,6 +26,7 @@ import { ConfirmDialog } from '../../shared/components/confirm-dialog/confirm-di
 export class Contacts implements DoCheck {
   firebaseService = inject(FirebaseService);
   authService = inject(AuthService);
+  
   dialog = viewChild<ContactDialog>(ContactDialog);
   
   private readonly mobileMaxWidth: number = 768;

@@ -30,6 +30,7 @@ export class TaskDialog {
   fileService = inject(FileService);
   
   task = input.required<Task>();
+  
   deleteTask = output<string>();
   editTask = output<Task>();
   close = output<void>();

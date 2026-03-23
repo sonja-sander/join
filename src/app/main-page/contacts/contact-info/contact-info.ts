@@ -23,6 +23,7 @@ import { Icon } from '../../../shared/components/icon/icon';
 export class ContactInfo implements OnChanges {
   activeContact = input.required<Contact>();
   canDelete = input<boolean>(true);
+  
   back = output<void>();
   editContact = output<void>();
   requestDelete = output<void>();

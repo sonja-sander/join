@@ -26,6 +26,7 @@ export class SingleTask implements OnInit {
   contactService = inject(FirebaseService);
 
   task = input.required<Task>();
+  
   openTask = output<Task>();
 
   userColor: string | null = null;

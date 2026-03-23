@@ -26,6 +26,7 @@ export class DropdownAssignee {
   firebaseService = inject(FirebaseService);
 
   selectedContacts = input<Array<Contact>>([]);
+  
   selectedContactsChange = output<Array<Contact>>();
 
   getTwoInitials = getTwoInitials;

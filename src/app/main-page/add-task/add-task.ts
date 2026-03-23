@@ -35,6 +35,7 @@ export class AddTask implements OnChanges, OnDestroy {
   isOverlay = input<boolean>(false);
   taskToEdit = input<Task | null>(null);
   initialStatus = input<Task['status']>('to-do');
+  
   closeDialogRequested = output<void>();
   dirtyChange = output<boolean>();
   viewerStateChange = output<boolean>();

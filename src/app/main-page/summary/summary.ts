@@ -22,6 +22,7 @@ import { Icon } from '../../shared/components/icon/icon';
 export class Summary {
   taskService = inject(TaskService);
   authService = inject(AuthService);
+  
   user$ = this.authService.user$;
 
   /**

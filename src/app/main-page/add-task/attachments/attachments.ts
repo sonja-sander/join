@@ -18,16 +18,18 @@ import { Icon } from '../../../shared/components/icon/icon';
  * for tasks.
  */
 export class Attachments {
-  filePicker = viewChild<ElementRef<HTMLInputElement>>('filePicker');
-  gallery = viewChild<ElementRef<HTMLDivElement>>('gallery');
   fileService = inject(FileService);
-
+  
   attachments = input<Array<Attachment>>([]);
+  
   deleteAll = output<void>();
   attachmentsChange = output<Array<Attachment>>();
   viewerStateChange = output<boolean>();
   imageTypeError = output<void>();
   taskSizeError = output<void>();
+
+  filePicker = viewChild<ElementRef<HTMLInputElement>>('filePicker');
+  gallery = viewChild<ElementRef<HTMLDivElement>>('gallery');
 
   isDragging: boolean = false;
   showViewer: boolean = false;
