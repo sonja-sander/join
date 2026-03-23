@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { SingleContact } from './single-contact/single-contact';
 import { Contact } from '../../../shared/interfaces/contact';
 import { Icon } from '../../../shared/components/icon/icon';
@@ -13,11 +13,11 @@ import { Icon } from '../../../shared/components/icon/icon';
  * Renders the list of contacts and emits selection events.
  */
 export class ContactList {
-  @Input() contacts: Array<Contact> = [];
-  @Input() activeContactID: string | null = null;
-  @Input() loading: boolean = false;
-  @Output() selected = new EventEmitter<{ contact: Contact; id: string }>();
-  @Output() addContact = new EventEmitter<void>();
+  contacts = input<Array<Contact>>([]);
+  activeContactID = input<string | null>(null);
+  loading = input<boolean>(false);
+  selected = output<{ contact: Contact; id: string }>();
+  addContact = output<void>();
 
   /**
    * Returns the first letter of a contact name, or a fallback symbol.
@@ -36,7 +36,7 @@ export class ContactList {
   isNewLetter(index: number): boolean {
     if (index === 0) return true;
     const contacts = this.contacts;
-    return this.getFirstLetter(contacts[index]) !== this.getFirstLetter(contacts[index - 1]);
+    return this.getFirstLetter(contacts()[index]) !== this.getFirstLetter(contacts()[index - 1]);
   }
 
   /**

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
+import { Component, inject, input, output } from '@angular/core';
 import { TaskService } from '../../../shared/services/task-service';
 import { SingleTask } from './single-task/single-task';
 import { FirebaseService } from '../../../shared/services/firebase-service';
@@ -22,10 +22,12 @@ import { Icon } from '../../../shared/components/icon/icon';
 export class TaskList {
   taskService = inject(TaskService);
   contactService = inject(FirebaseService);
-  @Input() status: Task['status'] = 'to-do';
-  @Input() listTitle: string = '';
-  @Output() openTask = new EventEmitter<Task>();
-  @Output() addTaskRequested = new EventEmitter<Task['status']>();
+
+  status = input<Task['status']>('to-do');
+  listTitle = input<string>('');
+  openTask = output<Task>();
+  addTaskRequested = output<Task['status']>();
+
   connectedLists: Array<string> = ['to-do', 'in-progress', 'await-feedback', 'done'];
   tasksByStatus: Array<Task> = [];
 
@@ -55,7 +57,7 @@ export class TaskList {
    */
   updateTasks(): void {
     this.tasksByStatus = this.taskService.getFilteredTasks()
-      .filter(task => task.status === this.status);
+      .filter(task => task.status === this.status());
   }
 
   /**
@@ -97,6 +99,6 @@ export class TaskList {
    * @returns void
    */
   onAddTaskClick(): void {
-    this.addTaskRequested.emit(this.status);
+    this.addTaskRequested.emit(this.status());
   }
 }

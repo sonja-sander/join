@@ -1,20 +1,20 @@
-<div class="task-drag-wrapper" cdkDrag [cdkDragData]="task" [cdkDragDisabled]="isMobile">
+<div class="task-drag-wrapper" cdkDrag [cdkDragData]="task()" [cdkDragDisabled]="isMobile">
   <article class="task-card">
     <button
       class="task-card-click"
-      (click)="openTask.emit(task)"
-      aria-label="Open task {{ task.title }}"
+      (click)="openTask.emit(task())"
+      aria-label="Open task {{ task().title }}"
     ></button>
 
     <header class="header">
-      <p class="category" [ngClass]="task.category">
-        {{ task.category === 'technical-task' ? 'Technical Task' : 'User Story' }}
+      <p class="category" [ngClass]="task().category">
+        {{ task().category === 'technical-task' ? 'Technical Task' : 'User Story' }}
       </p>
       <button
         class="mobile-move-btn"
         (click)="openMenu($event)"
         aria-label="Move task to other list"
-        [attr.aria-controls]="'move-menu-' + task.id"
+        [attr.aria-controls]="'move-menu-' + task().id"
         [attr.aria-expanded]="moveMenuOpen"
       >
         <app-icon name="move" aria-hidden="true" />
@@ -24,15 +24,15 @@
     @if (moveMenuOpen) {
       <div class="menu-overlay mobile-only" (click)="closeMenu($event)" aria-hidden="true"></div>
     }
-    <div [id]="'move-menu-' + task.id" class="move-menu mobile-only" [class.is-open]="moveMenuOpen">
+    <div [id]="'move-menu-' + task().id" class="move-menu mobile-only" [class.is-open]="moveMenuOpen">
       <p>Move to</p>
 
       @for (status of statuses; track status) {
-        @if (status !== task.status) {
+        @if (status !== task().status) {
           <button (click)="moveTo(status, $event)">
             <app-icon
               [name]="
-                statuses.indexOf(status) > statuses.indexOf(task.status) ? 'arrow-down' : 'arrow-up'
+                statuses.indexOf(status) > statuses.indexOf(task().status) ? 'arrow-down' : 'arrow-up'
               "
               aria-hidden="true"
             ></app-icon>
@@ -44,21 +44,21 @@
     </div>
 
     <div class="topic">
-      <h3 class="title">{{ task.title }}</h3>
+      <h3 class="title">{{ task().title }}</h3>
       <p class="description">
-        {{ task.description }}
+        {{ task().description }}
       </p>
     </div>
 
     @if (totalCount > 0) {
       <div class="subtasks" title="{{ doneCount }} of {{ totalCount }} subtasks completed">
         <progress
-          [id]="'subtasks-done-' + task.id"
+          [id]="'subtasks-done-' + task().id"
           [value]="doneCount"
           [max]="totalCount"
           aria-valuetext="{{ doneCount }} of {{ totalCount }} subtasks completed"
         ></progress>
-        <label [for]="'subtasks-done-' + task.id">
+        <label [for]="'subtasks-done-' + task().id">
           {{ doneCount }}/{{ totalCount }} Subtasks
         </label>
       </div>
@@ -66,9 +66,9 @@
 
     <div class="assigned-info">
       <div class="assignees">
-        <span class="sr-only">Assigned to {{ task.assignees.length }} people</span>
+        <span class="sr-only">Assigned to {{ task().assignees.length }} people</span>
 
-        @for (assignee of task.assignees.slice(0, 3); track $index) {
+        @for (assignee of task().assignees.slice(0, 3); track $index) {
           <app-avatar
             [name]="getAssigneeName(assignee)"
             [color]="getUserColor(assignee)"
@@ -76,16 +76,16 @@
             [size]="32"
           ></app-avatar>
         }
-        @if (task.assignees.length > 3) {
-          <span>+{{ task.assignees.length - 3 }}</span>
+        @if (task().assignees.length > 3) {
+          <span>+{{ task().assignees.length - 3 }}</span>
         }
       </div>
 
-      @if (task.priority === 'low') {
+      @if (task().priority === 'low') {
         <app-icon class="priority-low" name="priority-low" aria-label="Low priority" />
-      } @else if (task.priority === 'medium') {
+      } @else if (task().priority === 'medium') {
         <app-icon class="priority-medium" name="priority-medium" aria-label="Medium priority" />
-      } @else if (task.priority === 'high') {
+      } @else if (task().priority === 'high') {
         <app-icon class="priority-low" name="priority-low" aria-label="High priority" />
       }
     </div>

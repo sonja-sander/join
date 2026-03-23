@@ -1,5 +1,5 @@
 import { A11yModule } from '@angular/cdk/a11y';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 
 @Component({
   selector: 'app-confirm-dialog',
@@ -14,14 +14,15 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
  * Emits events when the user confirms or cancels the action.
  */
 export class ConfirmDialog {
-  @Input() open: boolean = false;
-  @Input() highlight: string = ''; 
-  @Input() highlightObject: string = '';
-  @Input() message: string = '';
-  @Input() confirmText: string = 'Confirm';
-  @Input() cancelText: string = 'Cancel';
-  @Output() confirm = new EventEmitter<void>();
-  @Output() cancel = new EventEmitter<void>();
+  open = input<boolean>(false);
+  highlight = input<string>('');
+  highlightObject = input<string>('');
+  message = input<string>('');
+  confirmText = input<string>('Confirm');
+  cancelText = input<string>('Cancel');
+  
+  confirm = output<void>();
+  cancel = output<void>();
 
   /**
    * Emits the confirm event.

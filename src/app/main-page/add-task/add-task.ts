@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges, inject } from '@angular/core';
+import { Component, OnChanges, OnDestroy, SimpleChanges, inject, input, output } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { Timestamp } from '@angular/fire/firestore';
@@ -32,24 +32,24 @@ export class AddTask implements OnChanges, OnDestroy {
   private firebaseService = inject(FirebaseService);
   private router = inject(Router);
 
-  @Input() isOverlay: boolean = false;
-  @Input() taskToEdit: Task | null = null;
-  @Input() initialStatus: Task['status'] = 'to-do';
-  @Output() closeDialogRequested = new EventEmitter<void>();
-  @Output() dirtyChange = new EventEmitter<boolean>();
-  @Output() viewerStateChange = new EventEmitter<boolean>();
+  isOverlay = input<boolean>(false);
+  taskToEdit = input<Task | null>(null);
+  initialStatus = input<Task['status']>('to-do');
+  closeDialogRequested = output<void>();
+  dirtyChange = output<boolean>();
+  viewerStateChange = output<boolean>();
 
   minDueDate = getTodayDateString();
-  hasUserEdited = false;
-  isSubmitting = false;
-  addTaskSuccess = false;
+  hasUserEdited: boolean = false;
+  isSubmitting: boolean = false;
+  addTaskSuccess: boolean = false;
   private toastTimer?: number;
-  imageTypeError = false;
-  taskSizeError = false;
-  showDeleteAllConfirm = false;
-  isTitleTouched = false;
-  isDueDateTouched = false;
-  isCategoryTouched = false;
+  imageTypeError: boolean = false;
+  taskSizeError: boolean = false;
+  showDeleteAllConfirm: boolean = false;
+  isTitleTouched: boolean = false;
+  isDueDateTouched: boolean = false;
+  isCategoryTouched: boolean = false;
 
   taskData: TaskFormData = {
     title: '',
@@ -75,7 +75,13 @@ export class AddTask implements OnChanges, OnDestroy {
    */
   ngOnChanges(changes: SimpleChanges): void {
     if (!changes['taskToEdit']) return;
-    this.taskToEdit ? this.populateFormForEdit(this.taskToEdit) : this.resetForm();
+    const task = this.taskToEdit();
+
+    if (task) {
+      this.populateFormForEdit(task);
+    } else {
+      this.resetForm();
+    }
   }
 
   /**
@@ -168,11 +174,11 @@ export class AddTask implements OnChanges, OnDestroy {
     const task = this.buildTask();
 
     const order = this.taskService.tasks
-      .filter(t => t.status === this.initialStatus).length;
+      .filter(t => t.status === this.initialStatus()).length;
 
     return this.taskService.addDocument({
       ...task,
-      status: this.initialStatus,
+      status: this.initialStatus(),
       order,
     }).then(() => this.resetForm());
   }
@@ -185,12 +191,12 @@ export class AddTask implements OnChanges, OnDestroy {
    * @returns Promise resolving after update
    */
   private updateTask(): Promise<void> {
-    if (!this.taskToEdit) return Promise.resolve();
+    if (!this.taskToEdit()) return Promise.resolve();
 
     const updatedTask: Task = {
-      ...this.taskToEdit,
+      ...this.taskToEdit(),
       ...this.buildTask(),
-    };
+    } as Task;
 
     return this.taskService.updateDocument(updatedTask, 'tasks');
   }
@@ -226,7 +232,7 @@ export class AddTask implements OnChanges, OnDestroy {
    * @returns True if a task with an ID exists
    */
   get isEditMode(): boolean {
-    return Boolean(this.taskToEdit?.id);
+    return Boolean(this.taskToEdit()?.id);
   }
 
   /**
@@ -355,7 +361,7 @@ export class AddTask implements OnChanges, OnDestroy {
     this.toastTimer = setTimeout(() => {
       this.addTaskSuccess = false;
 
-      if (this.isOverlay) {
+      if (this.isOverlay()) {
         this.closeDialogRequested.emit();
         return;
       }

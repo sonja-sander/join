@@ -1,4 +1,4 @@
-@if (task) {
+@if (task()) {
   <div class="task-dialog-overlay" (mousedown)="onBackdropClick($event)">
     <div
       class="dialog-content"
@@ -8,8 +8,8 @@
       cdkTrapFocusAutoCapture
     >
       <div class="header">
-        <p class="category" [ngClass]="task.category">
-          {{ task.category === 'technical-task' ? 'Technical Task' : 'User Story' }}
+        <p class="category" [ngClass]="task().category">
+          {{ task().category === 'technical-task' ? 'Technical Task' : 'User Story' }}
         </p>
         <button class="close-btn" (click)="closeDialog()" aria-label="Close dialog">
           <app-icon name="close" aria-hidden="true"></app-icon>
@@ -18,44 +18,44 @@
 
       <div class="dialog-body scroll-shadows">
         <div class="topic">
-          <h2 class="title" id="task-dialog-title">{{ task.title }}</h2>
+          <h2 class="title" id="task-dialog-title">{{ task().title }}</h2>
           <p class="description">
-            {{ task.description }}
+            {{ task().description }}
           </p>
         </div>
 
         <div class="due-date">
           <p class="subtitle">Due date:</p>
-          <p>{{ task.dueDate.toDate() | date: 'dd/MM/yyyy' }}</p>
+          <p>{{ task().dueDate.toDate() | date: 'dd/MM/yyyy' }}</p>
         </div>
 
         <div class="priority">
           <p class="subtitle">Priority:</p>
 
           <div>
-            @if (task.priority === 'low') {
+            @if (task().priority === 'low') {
               <p>Low</p>
               <app-icon class="priority-low" name="priority-low" aria-hidden="true"></app-icon>
-            } @else if (task.priority === 'medium') {
+            } @else if (task().priority === 'medium') {
               <p>Medium</p>
               <app-icon
                 class="priority-medium"
                 name="priority-medium"
                 aria-hidden="true"
               ></app-icon>
-            } @else if (task.priority === 'high') {
+            } @else if (task().priority === 'high') {
               <p>High</p>
               <app-icon class="priority-high" name="priority-high" aria-hidden="true"></app-icon>
             }
           </div>
         </div>
 
-        @if (task.assignees.length > 0) {
+        @if (task().assignees.length > 0) {
           <div class="assignees">
             <p class="subtitle">Assigned To:</p>
 
             <div class="assignee-list scroll-shadows" tabindex="-1">
-              @for (assignee of task.assignees; track $index) {
+              @for (assignee of task().assignees; track $index) {
                 <div class="assignee-item">
                   <app-avatar
                     [name]="getAssigneeName(assignee)"
@@ -73,11 +73,11 @@
           </div>
         }
 
-        @if (task.attachments.length > 0) {
+        @if (task().attachments.length > 0) {
           <div class="attachments">
             <p class="subtitle">Attachments:</p>
             <div class="gallery">
-              @for (attachment of task.attachments; track attachment.fileName) {
+              @for (attachment of task().attachments; track attachment.fileName) {
                 <figure class="attachment">
                   <button
                     class="attachment-btn"
@@ -107,12 +107,12 @@
           </div>
         }
 
-        @if (task.subtasks.length > 0) {
+        @if (task().subtasks.length > 0) {
           <div class="subtasks">
             <p class="subtitle">Subtasks:</p>
 
             <div class="subtask-list scroll-shadows">
-              @for (subtask of task.subtasks; track $index) {
+              @for (subtask of task().subtasks; track $index) {
                 <label class="checkbox-wrapper">
                   <input
                     class="checkbox"
@@ -144,7 +144,7 @@
       <app-confirm-dialog
         [open]="showDeleteConfirm"
         [highlight]="'Delete'"
-        [highlightObject]="task.title ? task.title : 'this task'"
+        [highlightObject]="task().title ? task().title : 'this task'"
         [confirmText]="'Delete'"
         [cancelText]="'Cancel'"
         (confirm)="confirmDelete()"

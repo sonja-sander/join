@@ -1,4 +1,4 @@
-import { Component, DoCheck, ElementRef, HostListener, inject, ViewChild } from '@angular/core';
+import { Component, DoCheck, HostListener, inject, viewChild } from '@angular/core';
 import { ContactList } from './contact-list/contact-list';
 import { ContactInfo } from './contact-info/contact-info';
 import { ContactDialog } from './contact-dialog/contact-dialog';
@@ -26,8 +26,8 @@ import { ConfirmDialog } from '../../shared/components/confirm-dialog/confirm-di
 export class Contacts implements DoCheck {
   firebaseService = inject(FirebaseService);
   authService = inject(AuthService);
-  @ViewChild(ContactDialog) dialog!: ContactDialog;
-  @ViewChild('confirmDialog') confirmDialog!: ElementRef<HTMLDialogElement>;
+  dialog = viewChild<ContactDialog>(ContactDialog);
+  
   private readonly mobileMaxWidth: number = 768;
   private lastContactsVersion: number = 0;
   isMobile: boolean = false;
@@ -120,7 +120,7 @@ export class Contacts implements DoCheck {
    * @returns void
    */
   openAddDialog(): void {
-    this.dialog.openAddDialog();
+    this.dialog()?.openAddDialog();
   }
 
   /**
@@ -131,7 +131,7 @@ export class Contacts implements DoCheck {
    */
   openEditDialog(contact: Contact): void {
     this.activeContact = contact;
-    this.dialog.openEditDialog(contact);
+    this.dialog()?.openEditDialog(contact);
   }
 
   /**
@@ -144,7 +144,7 @@ export class Contacts implements DoCheck {
    * @returns Promise<void>
    */
   async onSave(formData: ContactFormData): Promise<void> {
-    if (this.dialog.dialogMode === 'add') {
+    if (this.dialog()?.dialogMode === 'add') {
       await this.createContactFromForm(formData);
     } else {
       this.updateContactFromForm(formData);
@@ -267,7 +267,7 @@ export class Contacts implements DoCheck {
     this.isDetailOpen = false;
     this.contactToDelete = null;
     this.showDeleteConfirm = false;
-    this.dialog.closeDialog();
+    this.dialog()?.closeDialog();
   }
 
   /**

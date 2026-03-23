@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, HostListener, inject, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, HostListener, inject, input, OnInit, output } from '@angular/core';
 import { Attachment } from '../../interfaces/task';
 import { FileService } from '../../services/file-service';
 import { A11yModule } from '@angular/cdk/a11y';
@@ -18,10 +18,12 @@ import { Icon } from '../icon/icon';
  */
 export class ImageViewer implements OnInit {
   fileService = inject(FileService);
-  @Input() attachments: Array<Attachment> = [];
-  @Input() startIndex: number = 0;
-  @Output() viewerStateChange = new EventEmitter<boolean>();
-  @Output() close = new EventEmitter<void>();
+
+  attachments = input<Array<Attachment>>([]);
+  startIndex = input<number>(0);
+  viewerStateChange = output<boolean>();
+  close = output<void>();
+
   currentIndex: number = 0;
   scale: number = 1;
   minScale: number = 0.25;
@@ -37,7 +39,7 @@ export class ImageViewer implements OnInit {
    * @returns void
    */
   ngOnInit(): void {
-    this.currentIndex = this.startIndex;
+    this.currentIndex = this.startIndex();
     this.viewerStateChange.emit(true);
   }
 
@@ -93,7 +95,7 @@ export class ImageViewer implements OnInit {
    * @returns The current attachment
    */
   get currentAttachment(): Attachment {
-    return this.attachments[this.currentIndex];
+    return this.attachments()[this.currentIndex];
   }
 
   /**

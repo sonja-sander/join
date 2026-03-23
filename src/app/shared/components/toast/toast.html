@@ -1,13 +1,13 @@
 <div class="toast-wrapper">
   <div
     class="toast"
-    [class.toast--visible]="visible"
-    [class.toast--info]="type === 'info'"
-    [class.toast--error]="type === 'error'"
-    [attr.role]="type === 'error' ? 'alert' : 'status'"
+    [class.toast--visible]="visible()"
+    [class.toast--info]="type() === 'info'"
+    [class.toast--error]="type() === 'error'"
+    [attr.role]="type() === 'error' ? 'alert' : 'status'"
   >
     <p>
-      {{ visible ? message : '' }}
+      {{ visible() ? message() : '' }}
     </p>
   </div>
 </div>

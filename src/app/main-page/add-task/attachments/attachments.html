@@ -4,7 +4,7 @@
   <div class="description">
     <p id="attachment-description">Allowed file types are JPEG and PNG</p>
 
-    @if (attachments.length > 0) {
+    @if (attachments().length > 0) {
       <button type="button" (click)="deleteAllAttachments()">
         <app-icon name="delete" [size]="20" aria-hidden="true"></app-icon>
         Delete all
@@ -38,7 +38,7 @@
 
   <div class="gallery" #gallery>
 
-    @for (attachment of attachments; track attachment.fileName) {
+    @for (attachment of attachments(); track attachment.fileName) {
 
       <figure class="attachment">
 
@@ -77,7 +77,7 @@
 
 @if (showViewer) {
   <app-image-viewer
-    [attachments]="attachments"
+    [attachments]="attachments()"
     [startIndex]="viewerStartIndex"
     (close)="closeImageViewer()"
     (viewerStateChange)="viewerStateChange.emit($event)"

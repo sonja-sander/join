@@ -1,11 +1,10 @@
 import {
   Component,
-  EventEmitter,
   HostListener,
-  Input,
-  Output,
   OnChanges,
   SimpleChanges,
+  input,
+  output,
 } from '@angular/core';
 import { Contact } from '../../../shared/interfaces/contact';
 import { getTwoInitials } from '../../../shared/utilities/utils';
@@ -22,11 +21,11 @@ import { Icon } from '../../../shared/components/icon/icon';
  * Shows details for the active contact and provides action shortcuts.
  */
 export class ContactInfo implements OnChanges {
-  @Input() activeContact: Contact | null = null;
-  @Input() canDelete: boolean = true;
-  @Output() back = new EventEmitter<void>();
-  @Output() editContact = new EventEmitter<void>();
-  @Output() requestDelete = new EventEmitter<void>();
+  activeContact = input.required<Contact>();
+  canDelete = input<boolean>(true);
+  back = output<void>();
+  editContact = output<void>();
+  requestDelete = output<void>();
 
   readonly downLgBreakpoint = 768;
   isDownLg = this.isDownLgViewport();
@@ -100,7 +99,7 @@ export class ContactInfo implements OnChanges {
    * Triggers the profile animation when the active contact changes.
    */
   ngOnChanges(changes: SimpleChanges): void {
-    if (!changes['activeContact'] || !this.activeContact) return;
+    if (!changes['activeContact'] || !this.activeContact()) return;
     this.profileAnimating = false;
     setTimeout(() => {
       this.profileAnimating = true;

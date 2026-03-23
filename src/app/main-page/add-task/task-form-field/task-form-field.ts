@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { FlatpickrDirective } from '../../../shared/flatpickr.directive';
 import { Icon } from '../../../shared/components/icon/icon';
@@ -13,16 +13,17 @@ import { Icon } from '../../../shared/components/icon/icon';
   styleUrl: './task-form-field.scss',
 })
 export class TaskFormField {
-  @Input() value = '';
-  @Output() valueChange = new EventEmitter<string>();
-  @Output() fieldBlur = new EventEmitter<void>();
-  @Input() label = '';
-  @Input() isRequired = false;
-  @Input() hasError = false;
-  @Input() placeholder = '';
-  @Input() type = 'text';
-  @Input() useFlatpickr = false;
-  @Input() isTextarea = false;
-  @Input() min: string | null = null;
-  @Input() iconSrc: string | null = null;
+  value = input('');
+  label = input('');
+  isRequired = input(false);
+  hasError = input(false);
+  placeholder = input('');
+  type = input('text');
+  useFlatpickr = input(false);
+  isTextarea = input(false);
+  min = input<string | null>(null);
+  iconSrc = input<string | null>(null);
+
+  valueChange = output<string>();
+  fieldBlur = output<void>();
 }

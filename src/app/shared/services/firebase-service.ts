@@ -28,9 +28,9 @@ import { capitalizeFullname, setUserColor } from '../utilities/utils';
 export class FirebaseService {
   firestore: Firestore = inject(Firestore);
   contacts: Array<Contact> = [];
-  contactsVersion = 0;
+  contactsVersion: number = 0;
   unsubCollection!: Unsubscribe;
-  loading = true;
+  loading: boolean = true;
 
   constructor() {
     this.unsubCollection = this.subCollection();

@@ -19,11 +19,11 @@ import { Icon } from '../icon/icon';
  * Manages menu state, keyboard interactions, and logout behavior.
  */
 export class Header {
-  loggedIn: boolean = true;
-  menuOpen: boolean = false;
   authService = inject(AuthService);
   router = inject(Router);
   user$ = this.authService.user$;
+  loggedIn: boolean = true;
+  menuOpen: boolean = false;
 
   /**
    * Toggles the visibility of the navigation menu.

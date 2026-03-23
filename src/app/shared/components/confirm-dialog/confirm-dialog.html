@@ -1,4 +1,4 @@
-@if (open) {
+@if (open()) {
   <div class="confirm-backdrop">
     <div
       class="confirm-box"
@@ -10,25 +10,25 @@
       cdkTrapFocusAutoCapture
     >
       <h2 id="confirm-title" class="confirm-text">
-        @if (highlight) {
+        @if (highlight()) {
           <span class="confirm-highlight">
-            {{ highlight }}
+            {{ highlight() }}
           </span>
         }
-        "{{ highlightObject }}"?
+        "{{ highlightObject() }}"?
 
-        @if (message) {
-          {{ message }}
+        @if (message()) {
+          {{ message() }}
         }
       </h2>
 
       <footer class="confirm-actions">
         <button class="button button--primary confirm-btn" type="button" (click)="onConfirm()">
-          {{ confirmText }}
+          {{ confirmText() }}
         </button>
 
         <button class="button button--secondary cancel-btn" type="button" (click)="onCancel()">
-          {{ cancelText }}
+          {{ cancelText() }}
         </button>
       </footer>
     </div>

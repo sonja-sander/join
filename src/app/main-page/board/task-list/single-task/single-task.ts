@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
+import { Component, inject, input, OnInit, output } from '@angular/core';
 import { Task } from '../../../../shared/interfaces/task';
 import { FirebaseService } from '../../../../shared/services/firebase-service';
 import { NgClass } from '@angular/common';
@@ -24,8 +24,10 @@ import { Icon } from '../../../../shared/components/icon/icon';
 export class SingleTask implements OnInit {
   taskService = inject(TaskService);
   contactService = inject(FirebaseService);
-  @Input() task!: Task;
-  @Output() openTask = new EventEmitter<Task>();
+
+  task = input.required<Task>();
+  openTask = output<Task>();
+
   userColor: string | null = null;
   moveMenuOpen: boolean = false;
   isMobile: boolean = false;
@@ -99,7 +101,7 @@ export class SingleTask implements OnInit {
    */
   moveTo(status: 'to-do' | 'in-progress' | 'await-feedback' | 'done', event: MouseEvent): void {
     const otherTasks = this.taskService.tasks.filter(
-      t => t.status === status && t.id !== this.task.id
+      t => t.status === status && t.id !== this.task().id
     );
     
     for (const t of otherTasks) {
@@ -107,9 +109,9 @@ export class SingleTask implements OnInit {
       this.taskService.updateDocument(t, 'tasks');
     }
     
-    this.task.status = status;
-    this.task.order = 0;
-    this.taskService.updateDocument(this.task, 'tasks');
+    this.task().status = status;
+    this.task().order = 0;
+    this.taskService.updateDocument(this.task(), 'tasks');
     this.closeMenu(event);
   }
 
@@ -140,10 +142,11 @@ export class SingleTask implements OnInit {
    * @returns The count of subtasks marked as done
    */
   get doneCount(): number {
-    if (!this.task.subtasks) {
+    if (!this.task().subtasks) {
       return 0;
     }
-    return this.task.subtasks.filter((s) => s.done).length;
+
+    return this.task().subtasks.filter((s) => s.done).length;
   }
 
   /**
@@ -152,10 +155,11 @@ export class SingleTask implements OnInit {
    * @returns The total subtask count
    */
   get totalCount(): number {
-    if (!this.task.subtasks) {
+    if (!this.task().subtasks) {
       return 0;
     }
-    return this.task.subtasks.length;
+
+    return this.task().subtasks.length;
   }
 
   /**

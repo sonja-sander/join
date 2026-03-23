@@ -1,4 +1,4 @@
-import { Component, EventEmitter, HostListener, inject, Input, Output } from '@angular/core';
+import { Component, HostListener, inject, input, output } from '@angular/core';
 import { getTwoInitials } from '../../../shared/utilities/utils';
 import { DatePipe, NgClass } from '@angular/common';
 import { Attachment, Task } from '../../../shared/interfaces/task';
@@ -28,12 +28,14 @@ export class TaskDialog {
   taskService = inject(TaskService);
   contactService = inject(FirebaseService);
   fileService = inject(FileService);
+  
+  task = input.required<Task>();
+  deleteTask = output<string>();
+  editTask = output<Task>();
+  close = output<void>();
+
   readonly getTwoInitials = getTwoInitials;
   userColor: string | null = null;
-  @Input() task!: Task;
-  @Output() deleteTask = new EventEmitter<string>();
-  @Output() editTask = new EventEmitter<Task>();
-  @Output() close = new EventEmitter<void>();
   showDeleteConfirm: boolean = false;
   showViewer: boolean = false;
   viewerAttachments: Array<Attachment> = [];
@@ -58,7 +60,7 @@ export class TaskDialog {
    */
   onEditClick(): void {
     this.closeDialog();
-    this.editTask.emit(this.task);
+    this.editTask.emit(this.task());
   }
 
   /**
@@ -70,7 +72,7 @@ export class TaskDialog {
    * @returns void
    */
   confirmDelete(): void {
-    this.deleteTask.emit(this.task.id);
+    this.deleteTask.emit(this.task().id ?? '');
     this.showDeleteConfirm = false;
     this.closeDialog();
   }
@@ -188,8 +190,11 @@ export class TaskDialog {
    * @returns void
    */
   toggleSubtask(index: number): void {
-    this.task.subtasks[index].done = !this.task.subtasks[index].done;
-    this.taskService.updateSubtasks(this.task);
+    const task = this.task();
+    if (!task) return;
+
+    task.subtasks[index].done = !task.subtasks[index].done;
+    this.taskService.updateSubtasks(task);
   }
 
     /**
@@ -202,7 +207,10 @@ export class TaskDialog {
    * @returns void
    */
   openImageViewer(index: number): void {
-    this.viewerAttachments = this.task.attachments;
+    const task = this.task();
+    if (!task) return;
+
+    this.viewerAttachments = task.attachments;
     this.viewerStartIndex = index;
     this.showViewer = true;
   }

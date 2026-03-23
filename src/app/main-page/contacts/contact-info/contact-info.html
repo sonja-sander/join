@@ -9,27 +9,27 @@
     <app-icon name="arrow-left" [size]="30" aria-hidden="true"></app-icon>
   </button>
 
-  @if (activeContact) {
+  @if (activeContact()) {
     <div
       class="contact-info__profile"
       [class.contact-info__profile--animating]="profileAnimating"
       >
       <div class="contact-info__main">
         <app-avatar
-          [name]="activeContact.name"
-          [color]="activeContact.userColor || '#cccccc'"
-          [avatar]="activeContact.avatar?.base64"
+          [name]="activeContact().name"
+          [color]="activeContact().userColor || '#cccccc'"
+          [avatar]="activeContact().avatar?.base64 ?? null"
           [size]="90"
         ></app-avatar>
 
         <div class="contact-info__identity">
-          <h2 class="contact-info__name">{{ activeContact.name }}</h2>
+          <h2 class="contact-info__name">{{ activeContact().name }}</h2>
           <div class="contact-info__actions">
             <button class="contact-info__action" type="button" (click)="editContact.emit()">
               <app-icon class="contact-info__action-icon" name="edit" aria-hidden="true"></app-icon>
               <span>Edit</span>
             </button>
-            @if (canDelete) {
+            @if (canDelete()) {
               <button class="contact-info__action" type="button" (click)="requestDelete.emit()">
                 <app-icon class="contact-info__action-icon" name="delete" [size]="22" aria-hidden="true"></app-icon>
                 <span>Delete</span>
@@ -42,15 +42,15 @@
         <h3 class="contact-info__section-title">Contact Information</h3>
         <div class="contact-info__detail">
           <span class="contact-info__label">Email</span>
-          <a class="contact-info__value" [attr.href]="'mailto:' + activeContact.email">
-            {{ activeContact.email }}
+          <a class="contact-info__value" [attr.href]="'mailto:' + activeContact().email">
+            {{ activeContact().email }}
           </a>
         </div>
         <div class="contact-info__detail">
           <span class="contact-info__label">Phone</span>
-          @if (hasPhoneNumber(activeContact.phone)) {
-            <a class="contact-info__value contact-info__value--phone" [attr.href]="'tel:' + activeContact.phone">
-              {{ activeContact.phone }}
+          @if (hasPhoneNumber(activeContact().phone)) {
+            <a class="contact-info__value contact-info__value--phone" [attr.href]="'tel:' + activeContact().phone">
+              {{ activeContact().phone }}
             </a>
           } @else {
             <span class="contact-info__value contact-info__value--phone contact-info__value--empty-phone">no phone number yet</span>
@@ -86,7 +86,7 @@
             <app-icon class="contact-info__fab-action-icon" name="edit" aria-hidden="true"></app-icon>
             <span>Edit</span>
           </button>
-          @if (canDelete) {
+          @if (canDelete()) {
             <button
               class="contact-info__fab-action"
               type="button"

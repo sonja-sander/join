@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, input } from '@angular/core';
 
 @Component({
   selector: 'app-avatar',
@@ -7,15 +7,15 @@ import { Component, Input } from '@angular/core';
   styleUrl: './avatar.scss',
 })
 export class Avatar {
-  @Input() name!: string;
-  @Input() color?: string;
-  @Input() avatar?: string | null;
-  @Input() size: number = 40;
+  name = input.required<string>();
+  color = input<string>();
+  avatar = input<string | null>(null);
+  size = input<number>(40);
 
   get initials(): string {
     if (!this.name) return '';
 
-    return this.name
+    return this.name()
       .trim()
       .split(/\s+/)
       .slice(0, 2)

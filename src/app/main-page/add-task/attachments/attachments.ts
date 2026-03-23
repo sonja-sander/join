@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, inject, Input, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, inject, input, output, viewChild } from '@angular/core';
 import { Attachment } from '../../../shared/interfaces/task';
 import { FileService } from '../../../shared/services/file-service';
 import { ImageViewer } from '../../../shared/components/image-viewer/image-viewer';
@@ -18,15 +18,17 @@ import { Icon } from '../../../shared/components/icon/icon';
  * for tasks.
  */
 export class Attachments {
-  @ViewChild('filePicker') filePicker!: ElementRef<HTMLInputElement>;
-  @ViewChild('gallery') gallery!: ElementRef<HTMLDivElement>;
+  filePicker = viewChild<ElementRef<HTMLInputElement>>('filePicker');
+  gallery = viewChild<ElementRef<HTMLDivElement>>('gallery');
   fileService = inject(FileService);
-  @Input() attachments!: Array<Attachment>;
-  @Output() deleteAll = new EventEmitter<void>();
-  @Output() attachmentsChange = new EventEmitter<Array<Attachment>>();
-  @Output() viewerStateChange = new EventEmitter<boolean>();
-  @Output() imageTypeError = new EventEmitter<void>();
-  @Output() taskSizeError = new EventEmitter<void>(); 
+
+  attachments = input<Array<Attachment>>([]);
+  deleteAll = output<void>();
+  attachmentsChange = output<Array<Attachment>>();
+  viewerStateChange = output<boolean>();
+  imageTypeError = output<void>();
+  taskSizeError = output<void>();
+
   isDragging: boolean = false;
   showViewer: boolean = false;
   viewerStartIndex: number = 0;
@@ -59,7 +61,7 @@ export class Attachments {
    * @returns void
    */
   openFilePicker(): void {
-    this.filePicker.nativeElement.click();
+    this.filePicker()?.nativeElement.click();
   }
 
   /**
@@ -100,7 +102,7 @@ export class Attachments {
    * @returns Promise<void>
    */
   async handleFiles(files: FileList): Promise<void> {
-    const allImages = Array.from(this.attachments);
+    const allImages = Array.from(this.attachments());
 
     for (const file of Array.from(files)) {
       if (this.hasInvalidFileType(file)) return;
@@ -130,7 +132,10 @@ export class Attachments {
     const isInvalid = !this.fileService.isValidFileType(file);
     if (isInvalid) {
       this.imageTypeError.emit();
-      this.filePicker.nativeElement.value = '';
+      const filePickerEl = this.filePicker()?.nativeElement;
+      if (filePickerEl) {
+        filePickerEl.value = '';
+      } 
     }
     return isInvalid;
   }
@@ -160,7 +165,10 @@ export class Attachments {
     const exceeds = !this.fileService.isWithinSizeLimit(totalSize);
     if (exceeds) {
       this.taskSizeError.emit();
-      this.filePicker.nativeElement.value = '';
+      const filePickerEl = this.filePicker()?.nativeElement;
+      if (filePickerEl) {
+        filePickerEl.value = '';
+      } 
     }
     return exceeds;
   }
@@ -190,8 +198,9 @@ export class Attachments {
    */
   scrollToRight(): void {
     setTimeout(() => {
-      this.gallery.nativeElement.scrollLeft =
-        this.gallery.nativeElement.scrollWidth;
+      const galleryEl = this.gallery()?.nativeElement;
+      if(!galleryEl) return;
+      galleryEl.scrollLeft = galleryEl.scrollWidth;
     });
   }
 
@@ -202,7 +211,10 @@ export class Attachments {
    */
   deleteAllAttachments(): void {
     this.deleteAll.emit();
-    this.filePicker.nativeElement.value = '';
+    const filePickerEl = this.filePicker()?.nativeElement;
+    if (filePickerEl) {
+      filePickerEl.value = '';
+    } 
   }
 
   /**
@@ -215,7 +227,7 @@ export class Attachments {
   deleteSingleAttachment(event: MouseEvent, attachmentToDelete: Attachment): void {
     event.stopPropagation();
 
-    const updatedAttachments = this.attachments.filter(
+    const updatedAttachments = this.attachments().filter(
       attachment => attachment !== attachmentToDelete
     );
 

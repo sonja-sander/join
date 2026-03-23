@@ -13,7 +13,7 @@
 
   <app-contact-info
     class="contacts__info"
-    [activeContact]="activeContact"
+    [activeContact]="activeContact!"
     [canDelete]="canDeleteContact(activeContact)"
     (back)="closeContactInfo()"
     (editContact)="openEditDialog(activeContact!)"
@@ -38,7 +38,7 @@
 <app-confirm-dialog
   [open]="showDeleteConfirm"
   [highlight]="'Delete'"
-  [highlightObject]="contactToDelete?.name ?? 'this task'"
+  [highlightObject]="contactToDelete?.name ?? 'this contact'"
   [confirmText]="'Delete'"
   [cancelText]="'Cancel'"
   (confirm)="confirmDelete()"

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { Contact } from '../../../../shared/interfaces/contact';
 import { getTwoInitials } from '../../../../shared/utilities/utils';
 import { Avatar } from '../../../../shared/components/avatar/avatar';
@@ -13,9 +13,9 @@ import { Avatar } from '../../../../shared/components/avatar/avatar';
  * Displays a single contact row and emits selection when clicked.
  */
 export class SingleContact {
-  @Input() contact?: Contact;
-  @Input() isActive: boolean = false;
-  @Output() selected = new EventEmitter<Contact>();
+  contact = input.required<Contact>();
+  isActive = input<boolean>(false);
+  selected = output<Contact>();
 
   readonly getTwoInitials = getTwoInitials;
 
@@ -23,6 +23,6 @@ export class SingleContact {
    * Emits the current contact as the selected item.
    */
   setContactAsSelected() {
-    this.selected.emit(this.contact);
+    this.selected.emit(this.contact());
   }
 }

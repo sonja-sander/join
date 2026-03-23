@@ -1,11 +1,10 @@
 import {
   Component,
-  EventEmitter,
   HostListener,
-  Input,
-  Output,
   inject,
   ElementRef,
+  input,
+  output,
 } from '@angular/core';
 import { Contact } from '../../../shared/interfaces/contact';
 import { FirebaseService } from '../../../shared/services/firebase-service';
@@ -25,8 +24,10 @@ import { Icon } from '../../../shared/components/icon/icon';
 export class DropdownAssignee {
   elementRef = inject(ElementRef);
   firebaseService = inject(FirebaseService);
-  @Input() selectedContacts: Contact[] = [];
-  @Output() selectedContactsChange = new EventEmitter<Contact[]>();
+
+  selectedContacts = input<Array<Contact>>([]);
+  selectedContactsChange = output<Array<Contact>>();
+
   getTwoInitials = getTwoInitials;
   isDropdownOpen: boolean = false;
   assigneeQuery: string = '';
@@ -71,14 +72,18 @@ export class DropdownAssignee {
    */
   toggleContact(contact: Contact, event?: Event): void {
     event?.stopPropagation();
-    const index = this.selectedContacts.findIndex((item) => item.id === contact.id);
-    if (index === -1) {
-      this.selectedContacts.push(contact);
-      this.selectedContactsChange.emit(this.selectedContacts);
+
+    const current = this.selectedContacts();
+    const exists = current.some(item => item.id === contact.id);
+
+    if (!exists) {
+      this.selectedContactsChange.emit([...current, contact]);
       return;
     }
-    this.selectedContacts = this.selectedContacts.filter((item) => item.id !== contact.id);
-    this.selectedContactsChange.emit(this.selectedContacts);
+
+    this.selectedContactsChange.emit(
+      current.filter(item => item.id !== contact.id)
+    );
   }
 
   /**
@@ -87,7 +92,7 @@ export class DropdownAssignee {
    * @returns `true` if the contact is selected.
    */
   isSelected(contact: Contact): boolean {
-    return this.selectedContacts.some((item) => item.id === contact.id);
+    return this.selectedContacts().some((item) => item.id === contact.id);
   }
 
   /**

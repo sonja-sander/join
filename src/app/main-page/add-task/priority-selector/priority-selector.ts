@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { Task } from '../../../shared/interfaces/task';
 import { Icon } from '../../../shared/components/icon/icon';
 
@@ -20,8 +20,8 @@ type PriorityOption = {
   styleUrl: './priority-selector.scss',
 })
 export class PrioritySelector {
-  @Input() selectedPriority: Task['priority'] = 'medium';
-  @Output() selectedPriorityChange = new EventEmitter<Task['priority']>();
+  selectedPriority = input<Task['priority']>('medium');
+  selectedPriorityChange = output<Task['priority']>();
 
   options: PriorityOption[] = [
     {
@@ -49,7 +49,6 @@ export class PrioritySelector {
    * @param newPrio Priority chosen by the user.
    */
   selectPriority(newPrio: Task['priority']): void {
-    this.selectedPriority = newPrio;
     this.selectedPriorityChange.emit(newPrio);
   }
 }

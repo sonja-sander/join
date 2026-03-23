@@ -1,7 +1,7 @@
 @if (isOpen) {
   <div
     class="overlay-backdrop"
-    (mousedown)="onBackdropClick($event)"
+    (mousedown)="onBackdropClick()"
   >
     <div 
       #contactDialog 
@@ -211,7 +211,7 @@
                 Cancel
                 <app-icon name="close" [size]="22" aria-hidden="true"></app-icon>
               </button>
-            } @else if (canDelete) {
+            } @else if (canDelete()) {
               <button
                 type="button"
                 class="button button--secondary"

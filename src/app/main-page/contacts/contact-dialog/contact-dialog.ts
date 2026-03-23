@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, HostListener, inject, Input, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, inject, input, output, viewChild } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { Contact } from '../../../shared/interfaces/contact';
 import { ContactFormData } from '../../../shared/interfaces/contact-form-data';
@@ -23,12 +23,14 @@ import { Icon } from '../../../shared/components/icon/icon';
  */
 export class ContactDialog {
   fileService = inject(FileService);
-  @ViewChild('contactForm') contactForm!: NgForm;
-  @ViewChild('filePicker') filePicker!: ElementRef<HTMLInputElement>;
-  @Input() canDelete = true;
-  @Input() confirmOpen: boolean = false;
-  @Output() saveContact = new EventEmitter<ContactFormData>();
-  @Output() requestDelete = new EventEmitter<void>();
+  contactForm = viewChild<NgForm>('contactForm');
+  filePicker = viewChild<ElementRef<HTMLInputElement>>('filePicker');
+
+  canDelete = input<boolean>(true);
+  confirmOpen = input<boolean>(false);
+  saveContact = output<ContactFormData>();
+  requestDelete = output<void>();
+
   isOpen: boolean = false;
   dialogMode: 'add' | 'edit' = 'add';
   readonly getTwoInitials = getTwoInitials;
@@ -111,7 +113,7 @@ export class ContactDialog {
    * @returns void
    */
   openFilePicker(): void {
-    this.filePicker.nativeElement.click();
+    this.filePicker()?.nativeElement.click();
   }
 
   /**
@@ -174,7 +176,7 @@ export class ContactDialog {
     this.isOpen = false;
 
     queueMicrotask(() => {
-      this.contactForm.resetForm({
+      this.contactForm()?.resetForm({
         name: '',
         email: '',
         phone: '',
@@ -192,7 +194,7 @@ export class ContactDialog {
    * @param event The mouse event triggered by the click
    * @returns void
    */
-  onBackdropClick(event: MouseEvent): void {
+  onBackdropClick(): void {
     this.closeDialog();
   }
 
@@ -209,7 +211,7 @@ export class ContactDialog {
   @HostListener('document:keydown.escape', ['$event'])
   onEsc(event: Event): void {
     if (!this.isOpen) return;
-    if (this.confirmOpen) return;
+    if (this.confirmOpen()) return;
 
     event.preventDefault();
     this.closeDialog();
@@ -350,6 +352,9 @@ export class ContactDialog {
   onAvatarDelete(): void {
     this.contactData.avatar = null;
     
-    this.filePicker.nativeElement.value = '';
+    const filePickerEl = this.filePicker()?.nativeElement;
+    if(filePickerEl) {
+      filePickerEl.value= '';
+    }
   }
 }

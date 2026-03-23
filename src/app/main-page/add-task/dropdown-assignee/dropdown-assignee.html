@@ -42,7 +42,7 @@
               <app-avatar
                 [name]="contact.name"
                 [color]="contact.userColor ?? '#cccccc'"
-                [avatar]="contact.avatar?.base64"
+                [avatar]="contact.avatar?.base64 ?? null"
                 [size]="30"
               ></app-avatar>
               
@@ -56,16 +56,16 @@
   </div>
 
   <div class="assignees-preview">
-    @for (contact of selectedContacts.slice(0, 7); track getContactId(contact, $index)) {
+    @for (contact of selectedContacts().slice(0, 7); track getContactId(contact, $index)) {
       <app-avatar
         [name]="contact.name"
         [color]="contact.userColor ?? '#cccccc'"
-        [avatar]="contact.avatar?.base64"
+        [avatar]="contact.avatar?.base64 ?? null"
         [size]="30"
       ></app-avatar>
     }
-    @if(selectedContacts.length > 7){
-      <span>+{{selectedContacts.length - 7}}</span>
+    @if(selectedContacts().length > 7){
+      <span>+{{selectedContacts().length - 7}}</span>
     }
   </div>
 </label>

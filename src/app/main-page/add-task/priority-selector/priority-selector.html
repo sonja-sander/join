@@ -6,7 +6,7 @@
         type="button"
         class="priority__button {{ option.modifierClass }}"
         (click)="selectPriority(option.value)"
-        [class.is-active]="option.value === selectedPriority"
+        [class.is-active]="option.value === selectedPriority()"
       >
         {{ option.label }}
         <app-icon class="priority__icon" [name]="option.iconPath" aria-hidden="true"></app-icon>

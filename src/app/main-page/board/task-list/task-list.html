@@ -1,14 +1,14 @@
 <section>
   <header class="list-head">
-    <h2>{{listTitle}}</h2>
-    @if (status !== "done") {
-      <button class="add-to-list-btn" type="button" aria-label="Add new task to {{ listTitle }}" (click)="onAddTaskClick()">
+    <h2>{{ listTitle() }}</h2>
+    @if (status() !== "done") {
+      <button class="add-to-list-btn" type="button" aria-label="Add new task to {{ listTitle() }}" (click)="onAddTaskClick()">
         <app-icon name="add-task-to-list" aria-hidden="true"/>
       </button>
     }
   </header>
 
-  <div class="list" cdkDropList (cdkDropListDropped)="onDrop($event)" [id]="status" [cdkDropListConnectedTo]="connectedLists" [cdkDropListData]="tasksByStatus">
+  <div class="list" cdkDropList (cdkDropListDropped)="onDrop($event)" [id]="status()" [cdkDropListConnectedTo]="connectedLists" [cdkDropListData]="tasksByStatus">
     @if(taskService.loading || contactService.loading){
       <div class="loading-tasks-box" role="status" aria-live="polite">
         <p>Loading...</p>

@@ -1,11 +1,10 @@
 import {
   Component,
-  EventEmitter,
   HostListener,
   ElementRef,
-  Input,
-  Output,
   inject,
+  input,
+  output,
 } from '@angular/core';
 import { TaskCategoryOption, TaskService } from '../../../shared/services/task-service';
 import { Icon } from '../../../shared/components/icon/icon';
@@ -22,15 +21,17 @@ import { Icon } from '../../../shared/components/icon/icon';
 export class DropdownCategory {
   elementRef = inject(ElementRef);
   taskService = inject(TaskService);
-  @Input() selectedCategory: TaskCategoryOption | null = null;
-  @Output() selectedCategoryChange = new EventEmitter<TaskCategoryOption | null>();
-  @Input() hasError = false;
-  @Output() fieldBlur = new EventEmitter<void>();
-  isDropdownOpen = false;
+
+  hasError = input(false);
+  selectedCategory = input<TaskCategoryOption | null>(null);
+  selectedCategoryChange = output<TaskCategoryOption | null>();
+  fieldBlur = output<void>();
+
+  isDropdownOpen: boolean = false;
 
   /** Human-readable label of the selected category. */
   get selectedCategoryLabel(): string {
-    return this.selectedCategory?.label ?? '';
+    return this.selectedCategory()?.label ?? '';
   }
 
   /**
@@ -52,7 +53,6 @@ export class DropdownCategory {
    */
   selectCategory(newCat: TaskCategoryOption, event?: Event): void {
     event?.stopPropagation();
-    this.selectedCategory = newCat;
     this.selectedCategoryChange.emit(newCat);
     this.isDropdownOpen = false;
     this.fieldBlur.emit();

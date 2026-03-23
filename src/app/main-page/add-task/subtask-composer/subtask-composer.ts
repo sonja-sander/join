@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, Input, OnChanges, Output, SimpleChanges, inject } from '@angular/core';
+import { Component, ElementRef, OnChanges, SimpleChanges, inject, input, output } from '@angular/core';
 import { Subtask } from '../../../shared/interfaces/task';
 import { SubtaskFormData } from '../../../shared/interfaces/task-form-data';
 import { Icon } from '../../../shared/components/icon/icon';
@@ -14,13 +14,14 @@ import { Icon } from '../../../shared/components/icon/icon';
 })
 export class SubtaskComposer implements OnChanges {
   private hostElement = inject(ElementRef<HTMLElement>);
-  @Input() subtasks: Array<Subtask> = [];
-  @Output() subtasksChange = new EventEmitter<Array<Subtask>>();
+  
+  subtasks = input<Array<Subtask>>([]);
+  subtasksChange = output<Array<Subtask>>();
 
-  readonly subtaskTitleMinLength = 3;
-  readonly subtaskTitleMaxLength = 100;
-  readonly subtaskTitleMinLetters = 3;
-  showSubtaskDuplicateError = false;
+  readonly subtaskTitleMinLength: number = 3;
+  readonly subtaskTitleMaxLength: number = 100;
+  readonly subtaskTitleMinLetters: number = 3;
+  showSubtaskDuplicateError: boolean = false;
 
   subtaskData: SubtaskFormData = {
     title: '',
@@ -34,7 +35,7 @@ export class SubtaskComposer implements OnChanges {
    * @returns void
    */
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['subtasks'] && this.subtasks.length === 0) {
+    if (changes['subtasks'] && this.subtasks().length === 0) {
       this.resetFormState();
     }
   }
@@ -102,7 +103,7 @@ export class SubtaskComposer implements OnChanges {
    * @returns void
    */
   startEditSubtask(index: number): void {
-    const subtask = this.subtasks[index];
+    const subtask = this.subtasks()[index];
     if (!subtask) return;
 
     this.subtaskData = {
@@ -131,7 +132,7 @@ export class SubtaskComposer implements OnChanges {
    * @returns void
    */
   removeSubtask(index: number): void {
-    const updated = this.subtasks.filter((_, i) => i !== index);
+    const updated = this.subtasks().filter((_, i) => i !== index);
     this.subtasksChange.emit(updated);
 
     this.adjustEditingIndex(index);
@@ -141,7 +142,7 @@ export class SubtaskComposer implements OnChanges {
    * Creates a new subtask.
    */
   private createSubtask(title: string): void {
-    const updated = [...this.subtasks, { title, done: false }];
+    const updated = [...this.subtasks(), { title, done: false }];
     this.subtasksChange.emit(updated);
 
     this.resetFormState();
@@ -152,7 +153,7 @@ export class SubtaskComposer implements OnChanges {
    * Updates an existing subtask.
    */
   private updateSubtask(title: string): void {
-    const updated = this.subtasks.map((s, i) =>
+    const updated = this.subtasks().map((s, i) =>
       i === this.subtaskData.editingIndex ? { ...s, title } : s
     );
 
@@ -175,7 +176,7 @@ export class SubtaskComposer implements OnChanges {
    * Checks for duplicate titles.
    */
   private isDuplicate(title: string): boolean {
-    const duplicate = this.subtasks.some((s, i) => {
+    const duplicate = this.subtasks().some((s, i) => {
       if (this.subtaskData.editingIndex === i) return false;
       return s.title.trim().toLowerCase() === title.toLowerCase();
     });

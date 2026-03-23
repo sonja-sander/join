@@ -1,4 +1,4 @@
-import { Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, inject, OnInit, viewChild } from '@angular/core';
 import { FirebaseService } from '../shared/services/firebase-service';
 import { Router, RouterLink } from '@angular/router';
 import { FormsModule, NgForm } from '@angular/forms';
@@ -28,7 +28,7 @@ export class MainPage implements OnInit {
   authService = inject(AuthService);
   router = inject(Router);
   user$ = this.authService.user$;
-  @ViewChild('loginTitle') loginTitle!: ElementRef;
+  loginTitle = viewChild<ElementRef>('loginTitle');
 
   isMobile: boolean = false;
   showSignUp: boolean = false;
@@ -45,7 +45,7 @@ export class MainPage implements OnInit {
   introActive: boolean = true;
   logoMoving: boolean = false;
 
-  confirmPassword = '';
+  confirmPassword: string = '';
   showLogInPassword: boolean = false;
   showSignUpPassword: boolean = false;
   showConfirmPassword: boolean = false;
@@ -132,7 +132,7 @@ export class MainPage implements OnInit {
     this.showSignUp = false;
 
     setTimeout(() => {
-      this.loginTitle.nativeElement.focus();
+      this.loginTitle()?.nativeElement.focus();
     });
   }
 

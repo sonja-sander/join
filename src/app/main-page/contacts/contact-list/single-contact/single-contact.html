@@ -1,17 +1,17 @@
 <button
   class="single-contact"
-  [class.single-contact--active]="isActive"
+  [class.single-contact--active]="isActive()"
   (click)="setContactAsSelected()"
 >
   <app-avatar
-    [name]="contact?.name || 'Unknown'"
-    [color]="contact?.userColor || '#cccccc'"
-    [avatar]="contact?.avatar?.base64"
+    [name]="contact().name || 'Unknown'"
+    [color]="contact().userColor || '#cccccc'"
+    [avatar]="contact().avatar?.base64 ?? null"
     [size]="50"
   ></app-avatar>
 
   <div class="single-contact__text">
-    <div class="single-contact__name">{{ contact?.name }}</div>
-    <div class="single-contact__email">{{ contact?.email }}</div>
+    <div class="single-contact__name">{{ contact().name }}</div>
+    <div class="single-contact__email">{{ contact().email }}</div>
   </div>
 </button>

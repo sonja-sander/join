@@ -3,7 +3,7 @@
   <div
     class="form-field__control"
     [class.is-open]="isDropdownOpen"
-    [class.form-field__control--error]="hasError"
+    [class.form-field__control--error]="hasError()"
     (click)="toggleDropdownOpen($event)"
   >
     <input

@@ -1,4 +1,4 @@
-<section class="add-task" [class.add-task--overlay]="isOverlay">
+<section class="add-task" [class.add-task--overlay]="isOverlay()">
   <header class="add-task__header">
     <h1 id="add-task-title">{{ isEditMode ? 'Edit Task' : 'Add Task' }}</h1>
   </header>
@@ -70,7 +70,8 @@
 
         <app-dropdown-category
           class="add-task__padding-top"
-          [(selectedCategory)]="taskData.category"
+          [selectedCategory]="taskData.category"
+          (selectedCategoryChange)="taskData.category = $event"
           (fieldBlur)="isCategoryTouched = true"
           [hasError]="isCategoryTouched && !taskData.category"
         ></app-dropdown-category>

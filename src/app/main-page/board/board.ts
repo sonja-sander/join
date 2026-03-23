@@ -1,4 +1,4 @@
-import { Component, EventEmitter, HostListener, inject, Output, ViewChild } from '@angular/core';
+import { Component, HostListener, inject } from '@angular/core';
 import { TaskList } from './task-list/task-list';
 import { TaskService } from '../../shared/services/task-service';
 import { FormsModule } from '@angular/forms';
@@ -25,7 +25,7 @@ import { Icon } from '../../shared/components/icon/icon';
  */
 export class Board {
   taskService = inject(TaskService);
-  @ViewChild('taskDialog') taskDialog!: TaskDialog;
+  
   searchTerm: string = '';
   isAddTaskOverlayOpen: boolean = false;
   taskToEdit: Task | null = null;

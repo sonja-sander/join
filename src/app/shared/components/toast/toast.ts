@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, input, Input } from '@angular/core';
 
 @Component({
   selector: 'app-toast',
@@ -13,7 +13,7 @@ import { Component, Input } from '@angular/core';
  * Supports informational and error message types.
  */
 export class Toast {
-  @Input() message: string = '';
-  @Input() type: 'info' | 'error' = 'info';
-  @Input() visible: boolean = false;
+  message = input<string>('');
+  type = input<'info' | 'error'>('info');
+  visible = input<boolean>(false);
 }

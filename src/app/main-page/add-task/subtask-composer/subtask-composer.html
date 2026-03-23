@@ -60,9 +60,9 @@
     </span>
   }
 
-  @if (subtasks.length) {
+  @if (subtasks().length) {
     <ul class="subtask-list scroll-shadows">
-      @for (subtask of subtasks; track $index) {
+      @for (subtask of subtasks(); track $index) {
         <li class="subtask-list__item">
           <span class="subtask-list__bullet" aria-hidden="true">•</span>
 
