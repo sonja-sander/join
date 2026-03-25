@@ -2,7 +2,7 @@
   <span class="form-field__label">Category<span class="required">*</span></span>
   <div
     class="form-field__control"
-    [class.is-open]="isDropdownOpen"
+    [class.is-open]="isDropdownOpen()"
     [class.form-field__control--error]="hasError()"
     (click)="toggleDropdownOpen($event)"
   >
@@ -19,11 +19,17 @@
       aria-label="Toggle category dropdown"
       (click)="toggleDropdownOpen($event)"
     >
-      <app-icon class="form-field__icon" [class.is-open]="isDropdownOpen" [size]="30" name="dropdown-arrow-down" aria-hidden="true"></app-icon>
+      <app-icon
+        class="form-field__icon"
+        [class.is-open]="isDropdownOpen()"
+        [size]="30"
+        name="dropdown-arrow-down"
+        aria-hidden="true"
+      ></app-icon>
     </button>
   </div>
 
-  @if (isDropdownOpen) {
+  @if (isDropdownOpen()) {
     <div class="dropdown">
       @for (category of taskService.taskCategories; track category.value) {
         <button type="button" class="dropdown__item" (click)="selectCategory(category, $event)">

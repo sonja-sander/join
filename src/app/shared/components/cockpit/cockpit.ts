@@ -18,6 +18,7 @@ import { Icon } from '../icon/icon';
  */
 export class Cockpit {
   authService = inject(AuthService);
+  
   authLoading$ = this.authService.authLoading$;
   user$ = this.authService.user$;
 }

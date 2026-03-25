@@ -11,12 +11,10 @@ import { Cockpit } from './shared/components/cockpit/cockpit';
 })
 export class App {
   constructor(public router: Router) {
-    
     this.router.events.subscribe(() => {
       setTimeout(() => {
         document.getElementById('main-content')?.focus();
       });
     });
   }
-
 }

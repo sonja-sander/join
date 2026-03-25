@@ -1,12 +1,21 @@
-import { Component, ElementRef, HostListener, inject, input, output, viewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  HostListener,
+  inject,
+  input,
+  output,
+  signal,
+  viewChild,
+} from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { Contact } from '../../../shared/interfaces/contact';
 import { ContactFormData } from '../../../shared/interfaces/contact-form-data';
-import { getTwoInitials } from '../../../shared/utilities/utils';
 import { FileService } from '../../../shared/services/file-service';
 import { Toast } from '../../../shared/components/toast/toast';
 import { A11yModule } from '@angular/cdk/a11y';
 import { Icon } from '../../../shared/components/icon/icon';
+import { getTwoInitials } from '../../../shared/utilities/utils';
 
 @Component({
   selector: 'app-contact-dialog',
@@ -23,28 +32,29 @@ import { Icon } from '../../../shared/components/icon/icon';
  */
 export class ContactDialog {
   fileService = inject(FileService);
-  
+
   canDelete = input<boolean>(true);
   confirmOpen = input<boolean>(false);
-  
+
   saveContact = output<ContactFormData>();
   requestDelete = output<void>();
 
   contactForm = viewChild<NgForm>('contactForm');
   filePicker = viewChild<ElementRef<HTMLInputElement>>('filePicker');
 
-  isOpen: boolean = false;
+  isOpen = signal(false);
+  imageTypeError = signal(false);
+  imageSizeError = signal(false);
+
   dialogMode: 'add' | 'edit' = 'add';
-  readonly getTwoInitials = getTwoInitials;
   userColor: string | null = null;
-  imageTypeError: boolean = false;
-  imageSizeError: boolean = false;
+  readonly getTwoInitials = getTwoInitials;
 
   contactData: ContactFormData = {
     name: '',
     email: '',
     phone: '',
-    avatar: null
+    avatar: null,
   };
 
   // #region Opening dialog
@@ -64,7 +74,7 @@ export class ContactDialog {
       name: '',
       email: '',
       phone: '',
-      avatar: null
+      avatar: null,
     };
 
     this.userColor = null;
@@ -87,7 +97,7 @@ export class ContactDialog {
       name: contact.name,
       email: contact.email,
       phone: String(contact.phone),
-      avatar: contact.avatar ?? null
+      avatar: contact.avatar ?? null,
     };
 
     this.userColor = contact.userColor ?? null;
@@ -102,11 +112,11 @@ export class ContactDialog {
    * @returns void
    */
   openDialog(): void {
-    this.isOpen = true;
+    this.isOpen.set(true);
   }
   // #endregion
 
-    /**
+  /**
    * Opens the file picker dialog.
    *
    * Triggers the hidden file input element
@@ -138,7 +148,7 @@ export class ContactDialog {
       name: this.contactData.name,
       email: this.contactData.email,
       phone: this.contactData.phone,
-      avatar: this.contactData.avatar
+      avatar: this.contactData.avatar,
     });
 
     this.closeDialog();
@@ -175,14 +185,14 @@ export class ContactDialog {
    * @returns void
    */
   closeDialog(): void {
-    this.isOpen = false;
+    this.isOpen.set(false);
 
     queueMicrotask(() => {
       this.contactForm()?.resetForm({
         name: '',
         email: '',
         phone: '',
-        avatar: null
+        avatar: null,
       });
     });
   }
@@ -200,7 +210,7 @@ export class ContactDialog {
     this.closeDialog();
   }
 
-    /**
+  /**
    * Handles the Escape key interaction.
    *
    * Prevents the default browser behavior and
@@ -212,7 +222,7 @@ export class ContactDialog {
    */
   @HostListener('document:keydown.escape', ['$event'])
   onEsc(event: Event): void {
-    if (!this.isOpen) return;
+    if (!this.isOpen()) return;
     if (this.confirmOpen()) return;
 
     event.preventDefault();
@@ -232,8 +242,8 @@ export class ContactDialog {
   }
 
   // #endregion
-  
-    /**
+
+  /**
    * Handles avatar selection from the file input.
    *
    * Extracts the selected file, validates the file type
@@ -251,7 +261,7 @@ export class ContactDialog {
     const compressedBase64 = await this.fileService.compressImage(file, 250, 250, 0.7);
     const sizeInBytes = this.fileService.base64SizeInBytes(compressedBase64);
     if (this.exceedsSizeLimit(sizeInBytes)) return;
-    
+
     this.contactData.avatar = this.createAvatarObject(file, sizeInBytes, compressedBase64);
   }
 
@@ -279,6 +289,7 @@ export class ContactDialog {
     const isInvalid = !this.fileService.isValidFileType(file);
     if (isInvalid) {
       this.showTypeErrorToast();
+      this.resetFilePicker();
     }
     return isInvalid;
   }
@@ -296,6 +307,7 @@ export class ContactDialog {
     const exceeds = !this.fileService.isWithinSizeLimit(size);
     if (exceeds) {
       this.showSizeErrorToast();
+      this.resetFilePicker();
     }
     return exceeds;
   }
@@ -306,10 +318,10 @@ export class ContactDialog {
    * @returns void
    */
   showTypeErrorToast(): void {
-    this.imageTypeError = true;
+    this.imageTypeError.set(true);
 
     setTimeout(() => {
-      this.imageTypeError = false;
+      this.imageTypeError.set(false);
     }, 2500);
   }
 
@@ -320,10 +332,10 @@ export class ContactDialog {
    * @returns void
    */
   showSizeErrorToast(): void {
-    this.imageSizeError = true;
+    this.imageSizeError.set(true);
 
     setTimeout(() => {
-      this.imageSizeError = false;
+      this.imageSizeError.set(false);
     }, 2500);
   }
 
@@ -340,7 +352,7 @@ export class ContactDialog {
       fileName: file.name,
       fileType: file.type,
       base64Size: size,
-      base64: base64
+      base64: base64,
     };
   }
 
@@ -353,10 +365,21 @@ export class ContactDialog {
    */
   onAvatarDelete(): void {
     this.contactData.avatar = null;
-    
+    this.resetFilePicker();
+  }
+
+  /**
+   * Resets the file input element.
+   *
+   * Clears the currently selected file(s) by setting the input value to an empty string.
+   * This allows the same file to be selected again if needed.
+   *
+   * @returns void
+   */
+  resetFilePicker(): void {
     const filePickerEl = this.filePicker()?.nativeElement;
-    if(filePickerEl) {
-      filePickerEl.value= '';
+    if (filePickerEl) {
+      filePickerEl.value = '';
     }
   }
 }

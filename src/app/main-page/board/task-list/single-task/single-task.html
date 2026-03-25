@@ -15,16 +15,20 @@
         (click)="openMenu($event)"
         aria-label="Move task to other list"
         [attr.aria-controls]="'move-menu-' + task().id"
-        [attr.aria-expanded]="moveMenuOpen"
+        [attr.aria-expanded]="moveMenuOpen()"
       >
         <app-icon name="move" aria-hidden="true" />
       </button>
     </header>
 
-    @if (moveMenuOpen) {
+    @if (moveMenuOpen()) {
       <div class="menu-overlay mobile-only" (click)="closeMenu($event)" aria-hidden="true"></div>
     }
-    <div [id]="'move-menu-' + task().id" class="move-menu mobile-only" [class.is-open]="moveMenuOpen">
+    <div
+      [id]="'move-menu-' + task().id"
+      class="move-menu mobile-only"
+      [class.is-open]="moveMenuOpen()"
+    >
       <p>Move to</p>
 
       @for (status of statuses; track status) {
@@ -32,7 +36,9 @@
           <button (click)="moveTo(status, $event)">
             <app-icon
               [name]="
-                statuses.indexOf(status) > statuses.indexOf(task().status) ? 'arrow-down' : 'arrow-up'
+                statuses.indexOf(status) > statuses.indexOf(task().status)
+                  ? 'arrow-down'
+                  : 'arrow-up'
               "
               aria-hidden="true"
             ></app-icon>
@@ -50,16 +56,21 @@
       </p>
     </div>
 
-    @if (totalCount > 0) {
-      <div class="subtasks" title="{{ doneCount }} of {{ totalCount }} subtasks completed">
+    @if (totalSubtasksCount() > 0) {
+      <div
+        class="subtasks"
+        title="{{ doneSubtasksCount() }} of {{ totalSubtasksCount() }} subtasks completed"
+      >
         <progress
           [id]="'subtasks-done-' + task().id"
-          [value]="doneCount"
-          [max]="totalCount"
-          aria-valuetext="{{ doneCount }} of {{ totalCount }} subtasks completed"
+          [value]="doneSubtasksCount()"
+          [max]="totalSubtasksCount()"
+          aria-valuetext="{{ doneSubtasksCount() }} of {{
+            totalSubtasksCount()
+          }} subtasks completed"
         ></progress>
         <label [for]="'subtasks-done-' + task().id">
-          {{ doneCount }}/{{ totalCount }} Subtasks
+          {{ doneSubtasksCount() }}/{{ totalSubtasksCount() }} Subtasks
         </label>
       </div>
     }
@@ -69,10 +80,12 @@
         <span class="sr-only">Assigned to {{ task().assignees.length }} people</span>
 
         @for (assignee of task().assignees.slice(0, 3); track $index) {
+          @let contact = contactService.getContactById(assignee);
+
           <app-avatar
-            [name]="getAssigneeName(assignee)"
-            [color]="getUserColor(assignee)"
-            [avatar]="getAssigneeAvatar(assignee)"
+            [name]="contact?.name || 'Unknown'"
+            [color]="contact?.userColor || '#9327ff'"
+            [avatar]="contact?.avatar?.base64 ?? null"
             [size]="32"
           ></app-avatar>
         }

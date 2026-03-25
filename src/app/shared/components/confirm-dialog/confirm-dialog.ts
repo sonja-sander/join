@@ -20,7 +20,7 @@ export class ConfirmDialog {
   message = input<string>('');
   confirmText = input<string>('Confirm');
   cancelText = input<string>('Cancel');
-  
+
   confirm = output<void>();
   cancel = output<void>();
 

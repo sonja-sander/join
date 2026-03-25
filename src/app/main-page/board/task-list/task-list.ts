@@ -1,7 +1,7 @@
-import { Component, inject, input, output } from '@angular/core';
+import { Component, computed, inject, input, output } from '@angular/core';
 import { TaskService } from '../../../shared/services/task-service';
 import { SingleTask } from './single-task/single-task';
-import { FirebaseService } from '../../../shared/services/firebase-service';
+import { ContactService } from '../../../shared/services/contact-service';
 import { Task } from '../../../shared/interfaces/task';
 import { CdkDragDrop, DragDropModule } from '@angular/cdk/drag-drop';
 import { Icon } from '../../../shared/components/icon/icon';
@@ -21,45 +21,19 @@ import { Icon } from '../../../shared/components/icon/icon';
  */
 export class TaskList {
   taskService = inject(TaskService);
-  contactService = inject(FirebaseService);
+  contactService = inject(ContactService);
 
   status = input<Task['status']>('to-do');
   listTitle = input<string>('');
-  
+
   openTask = output<Task>();
   addTaskRequested = output<Task['status']>();
 
+  tasksByStatus = computed(() => {
+    return this.taskService.filteredTasks().filter((task) => task.status === this.status());
+  });
+
   connectedLists: Array<string> = ['to-do', 'in-progress', 'await-feedback', 'done'];
-  tasksByStatus: Array<Task> = [];
-
-  /**
-   * Initializes the component.
-   *
-   * Loads the tasks for the current status and
-   * listens for task update events to refresh the list.
-   *
-   * @returns void
-   */
-  ngOnInit(): void {
-    this.updateTasks();
-
-    window.addEventListener('tasks-updated', () => {
-      this.updateTasks();
-    });
-  }
-
-  /**
-   * Updates the task list based on the current status.
-   *
-   * Retrieves filtered tasks from the service
-   * and keeps only those matching the list status.
-   *
-   * @returns void
-   */
-  updateTasks(): void {
-    this.tasksByStatus = this.taskService.getFilteredTasks()
-      .filter(task => task.status === this.status());
-  }
 
   /**
    * Handles drag-and-drop operations between task lists.
@@ -80,12 +54,20 @@ export class TaskList {
     targetTasks.splice(event.currentIndex, 0, movedTask);
     movedTask.status = this.status;
 
-    sourceTasks.forEach((task, index) => {
-      task.order = index;
-      this.taskService.updateDocument(task, 'tasks');
-    });
+    this.updateOrders(sourceTasks);
+    if (sourceTasks !== targetTasks) {
+      this.updateOrders(targetTasks);
+    }
+  }
 
-    targetTasks.forEach((task, index) => {
+  /**
+   * Recalculates and persists the order of a task list.
+   *
+   * @param tasks The tasks to update
+   * @returns void
+   */
+  updateOrders(tasks: Array<Task>): void {
+    tasks.forEach((task, index) => {
       task.order = index;
       this.taskService.updateDocument(task, 'tasks');
     });

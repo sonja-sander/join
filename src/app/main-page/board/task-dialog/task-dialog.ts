@@ -1,9 +1,8 @@
-import { Component, HostListener, inject, input, output } from '@angular/core';
-import { getTwoInitials } from '../../../shared/utilities/utils';
+import { Component, HostListener, inject, input, output, signal } from '@angular/core';
 import { DatePipe, NgClass } from '@angular/common';
 import { Attachment, Task } from '../../../shared/interfaces/task';
 import { TaskService } from '../../../shared/services/task-service';
-import { FirebaseService } from '../../../shared/services/firebase-service';
+import { ContactService } from '../../../shared/services/contact-service';
 import { FileService } from '../../../shared/services/file-service';
 import { ImageViewer } from '../../../shared/components/image-viewer/image-viewer';
 import { ConfirmDialog } from '../../../shared/components/confirm-dialog/confirm-dialog';
@@ -26,21 +25,19 @@ import { Icon } from '../../../shared/components/icon/icon';
  */
 export class TaskDialog {
   taskService = inject(TaskService);
-  contactService = inject(FirebaseService);
+  contactService = inject(ContactService);
   fileService = inject(FileService);
-  
+
   task = input.required<Task>();
-  
+
   deleteTask = output<string>();
   editTask = output<Task>();
   close = output<void>();
 
-  readonly getTwoInitials = getTwoInitials;
-  userColor: string | null = null;
-  showDeleteConfirm: boolean = false;
-  showViewer: boolean = false;
-  viewerAttachments: Array<Attachment> = [];
-  viewerStartIndex: number = 0;
+  showDeleteConfirm = signal(false);
+  showViewer = signal(false);
+  viewerAttachments = signal<Array<Attachment>>([]);
+  viewerStartIndex = signal(0);
 
   /**
    * Initiates the delete confirmation state.
@@ -48,7 +45,7 @@ export class TaskDialog {
    * @returns void
    */
   onDeleteClick(): void {
-    this.showDeleteConfirm = true;
+    this.showDeleteConfirm.set(true);
   }
 
   /**
@@ -74,7 +71,7 @@ export class TaskDialog {
    */
   confirmDelete(): void {
     this.deleteTask.emit(this.task().id ?? '');
-    this.showDeleteConfirm = false;
+    this.showDeleteConfirm.set(false);
     this.closeDialog();
   }
 
@@ -84,7 +81,7 @@ export class TaskDialog {
    * @returns void
    */
   cancelDelete(): void {
-    this.showDeleteConfirm = false;
+    this.showDeleteConfirm.set(false);
   }
 
   /**
@@ -116,7 +113,7 @@ export class TaskDialog {
     }
   }
 
-    /**
+  /**
    * Handles the Escape key interaction.
    *
    * Prevents the default browser behavior and
@@ -128,57 +125,12 @@ export class TaskDialog {
    */
   @HostListener('document:keydown.escape', ['$event'])
   onEsc(event: Event): void {
-    if (this.showViewer) return;
-    if (this.showDeleteConfirm) return;
+    if (this.showViewer()) return;
+    if (this.showDeleteConfirm()) return;
 
     event.stopPropagation();
     event.preventDefault();
     this.closeDialog();
-  }
-
-  /**
-   * Retrieves the full name of an assignee by contact ID.
-   *
-   * @param id The contact identifier
-   * @returns The name of the assignee
-   */
-  getAssigneeName(id: string): string {
-    const contact = this.contactService.contacts.find((c) => {
-      return c.id === id;
-    });
-
-    return contact?.name || 'Unknown';
-  }
-
-    /**
-   * Retrieves the avatar image of an assignee by contact ID.
-   *
-   * Looks up the contact and returns the base64-encoded avatar
-   * if available.
-   *
-   * @param id The contact identifier
-   * @returns The base64 avatar string or null if none exists
-   */
-  getAssigneeAvatar(id: string): string | null {
-    const contact = this.contactService.contacts.find((c) => {
-      return c.id === id;
-    });
-    
-    return contact?.avatar?.base64 || null;
-  }
-
-  /**
-   * Retrieves the display color of an assignee by contact ID.
-   *
-   * @param id The contact identifier
-   * @returns The color assigned to the contact
-   */
-  getUserColor(id: string): string {
-    const contact = this.contactService.contacts.find((c) => {
-      return c.id === id;
-    });
-
-    return contact?.userColor || '#9327ff';
   }
 
   /**
@@ -198,7 +150,7 @@ export class TaskDialog {
     this.taskService.updateSubtasks(task);
   }
 
-    /**
+  /**
    * Opens the image viewer for task attachments.
    *
    * Initializes the viewer with the task's attachments
@@ -211,9 +163,9 @@ export class TaskDialog {
     const task = this.task();
     if (!task) return;
 
-    this.viewerAttachments = task.attachments;
-    this.viewerStartIndex = index;
-    this.showViewer = true;
+    this.viewerAttachments.set(task.attachments);
+    this.viewerStartIndex.set(index);
+    this.showViewer.set(true);
   }
 
   /**

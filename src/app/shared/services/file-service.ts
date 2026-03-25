@@ -11,7 +11,6 @@ import { Attachment } from '../interfaces/task';
  * size calculations, and downloading attachments.
  */
 export class FileService {
-
   /**
    * Compresses an image file.
    *
@@ -25,7 +24,12 @@ export class FileService {
    * @param quality The compression quality
    * @returns A compressed base64 image string
    */
-  async compressImage(file: File | Blob, maxWidth = 800, maxHeight = 800, quality = 0.7): Promise<string> {
+  async compressImage(
+    file: File | Blob,
+    maxWidth = 800,
+    maxHeight = 800,
+    quality = 0.7,
+  ): Promise<string> {
     const img = await this.blobToImage(file);
     const { width, height } = this.calculateImageSize(img, maxWidth, maxHeight);
     return this.drawAndExportBase64(img, width, height, quality);
@@ -69,7 +73,7 @@ export class FileService {
   calculateImageSize(
     img: HTMLImageElement,
     maxWidth: number,
-    maxHeight: number
+    maxHeight: number,
   ): { width: number; height: number } {
     let width = img.width;
     let height = img.height;
@@ -100,7 +104,7 @@ export class FileService {
     img: HTMLImageElement,
     width: number,
     height: number,
-    quality: number
+    quality: number,
   ): string {
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d');
@@ -175,7 +179,6 @@ export class FileService {
       downloadLink.click();
 
       URL.revokeObjectURL(objectUrl);
-
     } catch (error) {
       console.error('Error while downloading attachment:', error);
     }

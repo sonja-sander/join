@@ -3,7 +3,9 @@
     <div class="title-section">
       <h1>Board</h1>
       <div class="search-bar" role="search">
-        <label for="search-input" class="sr-only">Search tasks by category, title or description</label>
+        <label for="search-input" class="sr-only"
+          >Search tasks by category, title or description</label
+        >
         <input
           id="search-input"
           class="search-bar__input"
@@ -14,7 +16,7 @@
         />
         <div class="search-bar__divider" aria-hidden="true"></div>
         <button type="button" class="search-bar__button" (click)="search()" aria-label="Search">
-          <app-icon name="search" aria-hidden="true"/>
+          <app-icon name="search" aria-hidden="true" />
         </button>
       </div>
       <button
@@ -24,7 +26,7 @@
         aria-label="Add task"
       >
         <span class="desktop-only">Add task</span>
-        <app-icon name="add-new-task" [size]="20" aria-hidden="true"/>
+        <app-icon name="add-new-task" [size]="20" aria-hidden="true" />
       </button>
     </div>
 
@@ -55,21 +57,21 @@
       ></app-task-list>
     </div>
 
-    @if (selectedTask) {
+    @if (selectedTask()) {
       <app-task-dialog
-        [task]="selectedTask"
-        (close)="selectedTask = null"
+        [task]="selectedTask()!"
+        (close)="selectedTask.set(null)"
         (deleteTask)="deleteTask($event)"
         (editTask)="openEditTaskOverlay($event)"
       ></app-task-dialog>
     }
 
-    @if (isAddTaskOverlayOpen) {
+    @if (isAddTaskOverlayOpen()) {
       <div
         class="add-task-overlay"
         role="dialog"
         aria-modal="true"
-        [attr.aria-label]="taskToEdit ? 'Edit task' : 'Add new task'"
+        [attr.aria-label]="taskToEdit() ? 'Edit task' : 'Add new task'"
         (mousedown)="onAddTaskOverlayMouseDown($event)"
       >
         <div class="add-task-overlay__panel" cdkTrapFocus cdkTrapFocusAutoCapture>
@@ -79,15 +81,15 @@
             aria-label="Close add task overlay"
             (click)="onCloseAddTaskClick()"
           >
-            <app-icon name="close" aria-hidden="true"/>
+            <app-icon name="close" aria-hidden="true" />
           </button>
 
           <app-add-task
             [isOverlay]="true"
-            [taskToEdit]="taskToEdit"
-            [initialStatus]="addTaskStatus"
+            [taskToEdit]="taskToEdit()"
+            [initialStatus]="addTaskStatus()"
             (closeDialogRequested)="closeAddTaskOverlay()"
-            (viewerStateChange)="viewerOpen = $event"
+            (viewerStateChange)="viewerOpen.set($event)"
             (dirtyChange)="onAddTaskDirtyChange($event)"
           ></app-add-task>
         </div>
@@ -97,9 +99,9 @@
 </section>
 
 <app-confirm-dialog
-  [open]="showCloseConfirm"
+  [open]="showCloseConfirm()"
   [highlight]="'Close'"
-  [highlightObject]="taskToEdit?.title ?? 'this task'"
+  [highlightObject]="taskToEdit()?.title ?? 'this task'"
   [message]="'Your changes will be lost.'"
   [confirmText]="'Close'"
   [cancelText]="'Cancel'"

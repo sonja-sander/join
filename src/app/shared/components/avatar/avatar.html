@@ -5,13 +5,9 @@
   [style.width.px]="size()"
   [style.height.px]="size()"
   [style.--avatar-size.px]="size()"
-  [attr.data-initials]="initials"
+  [attr.data-initials]="initials()"
 >
   @if (avatar()) {
-    <img
-      class="avatar-img"
-      [src]="avatar()"
-      alt=""
-    />
+    <img class="avatar-img" [src]="avatar()" alt="" />
   }
 </span>

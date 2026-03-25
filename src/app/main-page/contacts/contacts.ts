@@ -1,8 +1,8 @@
-import { Component, DoCheck, HostListener, inject, viewChild } from '@angular/core';
+import { Component, computed, HostListener, inject, signal, viewChild } from '@angular/core';
 import { ContactList } from './contact-list/contact-list';
 import { ContactInfo } from './contact-info/contact-info';
 import { ContactDialog } from './contact-dialog/contact-dialog';
-import { FirebaseService } from '../../shared/services/firebase-service';
+import { ContactService } from '../../shared/services/contact-service';
 import { Contact } from '../../shared/interfaces/contact';
 import { ContactFormData } from '../../shared/interfaces/contact-form-data';
 import { capitalizeFullname, setUserColor } from '../../shared/utilities/utils';
@@ -23,46 +23,27 @@ import { ConfirmDialog } from '../../shared/components/confirm-dialog/confirm-di
  * Coordinates list, detail, dialog, and deletion flows
  * and manages responsive behavior.
  */
-export class Contacts implements DoCheck {
-  firebaseService = inject(FirebaseService);
+export class Contacts {
+  contactService = inject(ContactService);
   authService = inject(AuthService);
-  
+
   dialog = viewChild<ContactDialog>(ContactDialog);
-  
-  private readonly mobileMaxWidth: number = 768;
-  private lastContactsVersion: number = 0;
-  isMobile: boolean = false;
-  isDetailOpen: boolean = false;
-  activeContactID: string | null = null;
-  activeContact: Contact | null = null;
-  addContactSuccess: boolean = false;
-  showDeleteConfirm: boolean = false;
-  contactToDelete: Contact | null = null;
 
-  constructor() {
-    this.updateIsMobile();
-  }
+  isMobile = signal(window.innerWidth <= 768);
+  isDetailOpen = signal(false);
+  addContactSuccess = signal(false);
+  showDeleteConfirm = signal(false);
+  contactToDelete = signal<Contact | null>(null);
+  activeContactID = signal<string | null>(null);
 
-  /**
-   * Detects changes to the contacts collection.
-   *
-   * Keeps the active contact in sync when
-   * contact data is updated externally.
-   *
-   * @returns void
-   */
-  ngDoCheck(): void {
-    if (this.lastContactsVersion === this.firebaseService.contactsVersion) return;
-    this.lastContactsVersion = this.firebaseService.contactsVersion;
-    if (!this.activeContactID) return;
+  activeContact = computed(() => {
+    const id = this.activeContactID();
+    if (!id) return null;
 
-    const updatedContact = this.firebaseService.contacts.find(
-      (contact) => contact.id === this.activeContactID,
-    );
+    return this.contactService.contacts().find((contact) => contact.id === id) ?? null;
+  });
 
-    if (!updatedContact) return;
-    this.activeContact = updatedContact;
-  }
+  canDeleteActiveContact = computed(() => this.canDeleteContact(this.activeContact()));
 
   /**
    * Updates the responsive state on viewport resize.
@@ -71,16 +52,7 @@ export class Contacts implements DoCheck {
    */
   @HostListener('window:resize')
   onResize(): void {
-    this.updateIsMobile();
-  }
-
-  /**
-   * Updates the mobile state based on the viewport width.
-   *
-   * @returns void
-   */
-  private updateIsMobile(): void {
-    this.isMobile = window.innerWidth <= this.mobileMaxWidth;
+    this.isMobile.set(window.innerWidth <= 768);
   }
 
   /**
@@ -90,9 +62,8 @@ export class Contacts implements DoCheck {
    * @returns void
    */
   setActiveContact(selection: { id: string; contact: Contact }): void {
-    this.activeContactID = selection.id;
-    this.activeContact = selection.contact;
-    this.isDetailOpen = true;
+    this.activeContactID.set(selection.id);
+    this.isDetailOpen.set(true);
   }
 
   /**
@@ -101,18 +72,7 @@ export class Contacts implements DoCheck {
    * @returns void
    */
   closeContactInfo(): void {
-    this.isDetailOpen = false;
-  }
-
-  /**
-   * Prevents the default browser context menu.
-   *
-   * @param event The context menu event
-   * @returns void
-   */
-  @HostListener('contextmenu', ['$event'])
-  onContextMenu(event: Event): void {
-    event.preventDefault();
+    this.isDetailOpen.set(false);
   }
 
   /**
@@ -131,7 +91,7 @@ export class Contacts implements DoCheck {
    * @returns void
    */
   openEditDialog(contact: Contact): void {
-    this.activeContact = contact;
+    this.activeContactID.set(contact.id ?? null);
     this.dialog()?.openEditDialog(contact);
   }
 
@@ -152,7 +112,7 @@ export class Contacts implements DoCheck {
     }
   }
 
-    /**
+  /**
    * Creates a new contact from submitted form data.
    *
    * Builds the contact object, saves it to the database,
@@ -193,7 +153,7 @@ export class Contacts implements DoCheck {
       phone: data.phone,
       isAvailable: true,
       userColor: setUserColor(),
-      avatar: data.avatar
+      avatar: data.avatar,
     };
   }
 
@@ -207,7 +167,7 @@ export class Contacts implements DoCheck {
    * @returns The identifier of the created contact or null
    */
   private async saveContact(contact: Contact): Promise<string | null> {
-    const newContactId = await this.firebaseService.addDocument(contact);
+    const newContactId = await this.contactService.addDocument(contact);
     this.showToast();
     return newContactId ?? null;
   }
@@ -219,21 +179,19 @@ export class Contacts implements DoCheck {
    * @returns void
    */
   updateContactFromForm(data: ContactFormData): void {
-    if (!this.activeContact) return;
+    if (!this.activeContact()) return;
 
     const contact: Contact = {
-      id: this.activeContact.id,
+      id: this.activeContact()?.id,
       name: capitalizeFullname(data.name),
       email: data.email,
       phone: data.phone,
-      isAvailable: this.activeContact.isAvailable,
-      userColor: this.activeContact.userColor,
-      avatar: data.avatar
+      isAvailable: this.activeContact()?.isAvailable ?? true,
+      userColor: this.activeContact()?.userColor,
+      avatar: data.avatar,
     };
 
-    this.firebaseService.updateDocument(contact, 'contacts');
-    this.activeContact = contact;
-    this.activeContactID = contact.id ?? null;
+    this.contactService.updateDocument(contact, 'contacts');
   }
 
   /**
@@ -247,8 +205,8 @@ export class Contacts implements DoCheck {
   requestDelete(contact: Contact): void {
     if (!this.canDeleteContact(contact)) return;
 
-    this.contactToDelete = contact;
-    this.showDeleteConfirm = true;
+    this.contactToDelete.set(contact);
+    this.showDeleteConfirm.set(true);
   }
 
   /**
@@ -259,15 +217,15 @@ export class Contacts implements DoCheck {
    * @returns void
    */
   confirmDelete(): void {
-    if (!this.contactToDelete?.id) return;
+    const contact = this.contactToDelete();
+    if (!contact?.id) return;
 
-    this.firebaseService.deleteDocument('contacts', this.contactToDelete.id);
+    this.contactService.deleteDocument('contacts', contact.id);
 
-    this.activeContact = null;
-    this.activeContactID = null;
-    this.isDetailOpen = false;
-    this.contactToDelete = null;
-    this.showDeleteConfirm = false;
+    this.activeContactID.set(null);
+    this.isDetailOpen.set(false);
+    this.contactToDelete.set(null);
+    this.showDeleteConfirm.set(false);
     this.dialog()?.closeDialog();
   }
 
@@ -277,8 +235,8 @@ export class Contacts implements DoCheck {
    * @returns void
    */
   cancelDelete(): void {
-    this.contactToDelete = null;
-    this.showDeleteConfirm = false;
+    this.contactToDelete.set(null);
+    this.showDeleteConfirm.set(false);
   }
 
   /**
@@ -292,23 +250,11 @@ export class Contacts implements DoCheck {
   canDeleteContact(contact: Contact | null): boolean {
     if (!contact) return false;
 
-    const currentUserEmail = this.normalizeEmail(
-      this.authService.firebaseAuth.currentUser?.email,
-    );
-    const contactEmail = this.normalizeEmail(contact.email);
+    const currentUserEmail = this.authService.firebaseAuth.currentUser?.email?.trim().toLowerCase();
+    const contactEmail = contact.email.trim().toLowerCase();
 
     if (!currentUserEmail) return true;
     return currentUserEmail !== contactEmail;
-  }
-
-  /**
-   * Normalizes email values for comparison.
-   *
-   * @param email The email value to normalize
-   * @returns A normalized email string
-   */
-  private normalizeEmail(email: string | null | undefined): string {
-    return String(email ?? '').trim().toLowerCase();
   }
 
   /**
@@ -317,10 +263,10 @@ export class Contacts implements DoCheck {
    * @returns void
    */
   showToast(): void {
-    this.addContactSuccess = true;
+    this.addContactSuccess.set(true);
 
     setTimeout(() => {
-      this.addContactSuccess = false;
+      this.addContactSuccess.set(false);
     }, 2000);
   }
 }

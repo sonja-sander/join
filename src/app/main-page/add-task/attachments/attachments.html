@@ -12,10 +12,10 @@
     }
   </div>
 
-  <button 
+  <button
     type="button"
-    class="drag-area" 
-    [class.drag-area--active]="isDragging"
+    class="drag-area"
+    [class.drag-area--active]="isDragging()"
     (dragover)="onDragOver($event)"
     (dragleave)="onDragLeave($event)"
     (drop)="onDrop($event)"
@@ -37,11 +37,8 @@
   />
 
   <div class="gallery" #gallery>
-
     @for (attachment of attachments(); track attachment.fileName) {
-
       <figure class="attachment">
-
         <button
           class="attachment-btn"
           type="button"
@@ -49,11 +46,7 @@
           aria-label="Open attachment {{ attachment.fileName }}"
         >
           <div class="image-wrapper">
-            <img
-              class="attachment-img"
-              [src]="attachment.base64"
-              alt=""
-            >
+            <img class="attachment-img" [src]="attachment.base64" alt="" />
           </div>
 
           <figcaption>{{ attachment.fileName }}</figcaption>
@@ -67,18 +60,15 @@
         >
           <app-icon name="delete" aria-hidden="true"></app-icon>
         </button>
-
       </figure>
-
     }
   </div>
-
 </section>
 
-@if (showViewer) {
+@if (showViewer()) {
   <app-image-viewer
     [attachments]="attachments()"
-    [startIndex]="viewerStartIndex"
+    [startIndex]="viewerStartIndex()"
     (close)="closeImageViewer()"
     (viewerStateChange)="viewerStateChange.emit($event)"
   >

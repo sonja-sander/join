@@ -5,6 +5,7 @@ import {
   SimpleChanges,
   input,
   output,
+  signal,
 } from '@angular/core';
 import { Contact } from '../../../shared/interfaces/contact';
 import { getTwoInitials } from '../../../shared/utilities/utils';
@@ -23,18 +24,45 @@ import { Icon } from '../../../shared/components/icon/icon';
 export class ContactInfo implements OnChanges {
   activeContact = input.required<Contact>();
   canDelete = input<boolean>(true);
-  
+
   back = output<void>();
   editContact = output<void>();
   requestDelete = output<void>();
 
-  readonly downLgBreakpoint = 768;
-  isDownLg = this.isDownLgViewport();
-  fabMenuOpen: boolean = false;
-  profileAnimating: boolean = false;
+  fabMenuOpen = signal(false);
+  profileAnimating = signal(false);
+  isDownLg = signal(window.innerWidth <= 768);
+
   readonly getTwoInitials = getTwoInitials;
 
-    /**
+  /**
+   * Handles viewport resize events.
+   *
+   * Updates the responsive state and closes
+   * the floating action menu when switching
+   * to larger screen sizes.
+   *
+   * @returns void
+   */
+  @HostListener('window:resize')
+  onResize(): void {
+    this.isDownLg.set(window.innerWidth <= 768);
+    if (!this.isDownLg()) this.closeFabMenu();
+  }
+
+  /**
+   * Triggers the profile animation when the active contact changes.
+   */
+  ngOnChanges(changes: SimpleChanges): void {
+    if (!changes['activeContact'] || !this.activeContact()) return;
+    this.profileAnimating.set(false);
+
+    setTimeout(() => {
+      this.profileAnimating.set(true);
+    }, 0);
+  }
+
+  /**
    * Checks whether a contact has a valid phone number.
    *
    * @param phone The phone number to evaluate
@@ -56,14 +84,14 @@ export class ContactInfo implements OnChanges {
    * Toggles the floating action menu visibility.
    */
   toggleFabMenu(): void {
-    this.fabMenuOpen = !this.fabMenuOpen;
+    this.fabMenuOpen.update((open) => !open);
   }
 
   /**
    * Closes the floating action menu.
    */
   closeFabMenu(): void {
-    this.fabMenuOpen = false;
+    this.fabMenuOpen.set(false);
   }
 
   /**
@@ -79,41 +107,5 @@ export class ContactInfo implements OnChanges {
    */
   handleFabDelete(): void {
     this.requestDelete.emit();
-  }
-
-  /**
-   * Handles viewport resize events.
-   *
-   * Updates the responsive state and closes
-   * the floating action menu when switching
-   * to larger screen sizes.
-   *
-   * @returns void
-   */
-  @HostListener('window:resize')
-  onResize(): void {
-    this.isDownLg = this.isDownLgViewport();
-    if (!this.isDownLg) this.closeFabMenu();
-  }
-
-  /**
-   * Triggers the profile animation when the active contact changes.
-   */
-  ngOnChanges(changes: SimpleChanges): void {
-    if (!changes['activeContact'] || !this.activeContact()) return;
-    this.profileAnimating = false;
-    setTimeout(() => {
-      this.profileAnimating = true;
-    }, 0);
-  }
-
-    /**
-   * Determines whether the viewport width is
-   * below the defined large-screen breakpoint.
-   *
-   * @returns True if the viewport is smaller than or equal to the breakpoint
-   */
-  private isDownLgViewport(): boolean {
-    return window.innerWidth <= this.downLgBreakpoint;
   }
 }

@@ -1,11 +1,4 @@
-import {
-  Component,
-  HostListener,
-  ElementRef,
-  inject,
-  input,
-  output,
-} from '@angular/core';
+import { Component, HostListener, ElementRef, inject, input, output, signal } from '@angular/core';
 import { TaskCategoryOption, TaskService } from '../../../shared/services/task-service';
 import { Icon } from '../../../shared/components/icon/icon';
 
@@ -28,7 +21,7 @@ export class DropdownCategory {
   selectedCategoryChange = output<TaskCategoryOption | null>();
   fieldBlur = output<void>();
 
-  isDropdownOpen: boolean = false;
+  isDropdownOpen = signal(false);
 
   /** Human-readable label of the selected category. */
   get selectedCategoryLabel(): string {
@@ -41,8 +34,8 @@ export class DropdownCategory {
    */
   toggleDropdownOpen(event?: Event): void {
     event?.stopPropagation();
-    this.isDropdownOpen = !this.isDropdownOpen;
-    if (!this.isDropdownOpen) {
+    this.isDropdownOpen.update((open) => !open);
+    if (!this.isDropdownOpen()) {
       this.fieldBlur.emit();
     }
   }
@@ -55,7 +48,7 @@ export class DropdownCategory {
   selectCategory(newCat: TaskCategoryOption, event?: Event): void {
     event?.stopPropagation();
     this.selectedCategoryChange.emit(newCat);
-    this.isDropdownOpen = false;
+    this.isDropdownOpen.set(false);
     this.fieldBlur.emit();
   }
 
@@ -65,10 +58,10 @@ export class DropdownCategory {
    */
   @HostListener('document:pointerdown', ['$event'])
   closeOnOutsidePointerDown(event: Event): void {
-    if (!this.isDropdownOpen) return;
+    if (!this.isDropdownOpen()) return;
     const target = event.target;
     if (target && this.elementRef.nativeElement.contains(target)) return;
-    this.isDropdownOpen = false;
+    this.isDropdownOpen.set(false);
     this.fieldBlur.emit();
   }
 }

@@ -5,19 +5,23 @@
     <p class="contact-info__subtitle">Better with a team</p>
   </header>
 
-  <button class="contact-info__back-arrow" (click)="handleBack($event)" aria-label="Go back to the contacts list">
+  <button
+    class="contact-info__back-arrow"
+    (click)="handleBack($event)"
+    aria-label="Go back to the contacts list"
+  >
     <app-icon name="arrow-left" [size]="30" aria-hidden="true"></app-icon>
   </button>
 
   @if (activeContact()) {
     <div
       class="contact-info__profile"
-      [class.contact-info__profile--animating]="profileAnimating"
-      >
+      [class.contact-info__profile--animating]="profileAnimating()"
+    >
       <div class="contact-info__main">
         <app-avatar
           [name]="activeContact().name"
-          [color]="activeContact().userColor || '#cccccc'"
+          [color]="activeContact().userColor || '#9327ff'"
           [avatar]="activeContact().avatar?.base64 ?? null"
           [size]="90"
         ></app-avatar>
@@ -31,7 +35,12 @@
             </button>
             @if (canDelete()) {
               <button class="contact-info__action" type="button" (click)="requestDelete.emit()">
-                <app-icon class="contact-info__action-icon" name="delete" [size]="22" aria-hidden="true"></app-icon>
+                <app-icon
+                  class="contact-info__action-icon"
+                  name="delete"
+                  [size]="22"
+                  aria-hidden="true"
+                ></app-icon>
                 <span>Delete</span>
               </button>
             }
@@ -49,27 +58,33 @@
         <div class="contact-info__detail">
           <span class="contact-info__label">Phone</span>
           @if (hasPhoneNumber(activeContact().phone)) {
-            <a class="contact-info__value contact-info__value--phone" [attr.href]="'tel:' + activeContact().phone">
+            <a
+              class="contact-info__value contact-info__value--phone"
+              [attr.href]="'tel:' + activeContact().phone"
+            >
               {{ activeContact().phone }}
             </a>
           } @else {
-            <span class="contact-info__value contact-info__value--phone contact-info__value--empty-phone">no phone number yet</span>
+            <span
+              class="contact-info__value contact-info__value--phone contact-info__value--empty-phone"
+              >no phone number yet</span
+            >
           }
         </div>
       </div>
     </div>
-    @if (isDownLg) {
+    @if (isDownLg()) {
       <button
         class="contact-info__fab"
         type="button"
         aria-label="Contact options"
         aria-controls="contact-info-fab-menu"
-        [attr.aria-expanded]="fabMenuOpen"
+        [attr.aria-expanded]="fabMenuOpen()"
         (click)="toggleFabMenu()"
       >
         <app-icon name="contact-options" aria-hidden="true"></app-icon>
       </button>
-      @if (fabMenuOpen) {
+      @if (fabMenuOpen()) {
         <div class="contact-info__fab-overlay" (click)="closeFabMenu()"></div>
         <div
           id="contact-info-fab-menu"
@@ -83,7 +98,11 @@
             role="menuitem"
             (click)="handleFabEdit()"
           >
-            <app-icon class="contact-info__fab-action-icon" name="edit" aria-hidden="true"></app-icon>
+            <app-icon
+              class="contact-info__fab-action-icon"
+              name="edit"
+              aria-hidden="true"
+            ></app-icon>
             <span>Edit</span>
           </button>
           @if (canDelete()) {
@@ -93,7 +112,12 @@
               role="menuitem"
               (click)="requestDelete.emit()"
             >
-              <app-icon class="contact-info__fab-action-icon" name="delete" [size]="22" aria-hidden="true"></app-icon>
+              <app-icon
+                class="contact-info__fab-action-icon"
+                name="delete"
+                [size]="22"
+                aria-hidden="true"
+              ></app-icon>
               <span>Delete</span>
             </button>
           }
@@ -102,4 +126,3 @@
     }
   }
 </section>
-

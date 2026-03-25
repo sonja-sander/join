@@ -1,18 +1,15 @@
-@if (isOpen) {
-  <div
-    class="overlay-backdrop"
-    (mousedown)="onBackdropClick()"
-  >
-    <div 
-      #contactDialog 
-      class="dialog-content" 
-      (mousedown)="$event.stopPropagation()" 
-      role="dialog" 
-      aria-modal="true" 
-      aria-labelledby="contact-dialog-title" 
-      cdkTrapFocus 
-      cdkTrapFocusAutoCapture 
-      >
+@if (isOpen()) {
+  <div class="overlay-backdrop" (mousedown)="onBackdropClick()">
+    <div
+      #contactDialog
+      class="dialog-content"
+      (mousedown)="$event.stopPropagation()"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="contact-dialog-title"
+      cdkTrapFocus
+      cdkTrapFocusAutoCapture
+    >
       <header>
         <button
           class="close-btn-mobile mobile-only"
@@ -24,7 +21,7 @@
         </button>
 
         <div class="title">
-          <img class="logo desktop-only" src="assets/img/icons/logo-light.svg" alt=""/>
+          <img class="logo desktop-only" src="assets/img/icons/logo-light.svg" alt="" />
           <h1 id="contact-dialog-title">
             @if (dialogMode === 'add') {
               Add contact
@@ -51,22 +48,28 @@
       <section class="form-section">
         <div class="avatar-wrapper">
           <div class="avatar" [style.backgroundColor]="userColor">
-            @if(contactData.avatar?.base64){
-              <img class="avatar-img" [src]="contactData.avatar?.base64" alt="Contact profile picture" />
-            }
-            @else if (dialogMode === 'add') {
-              <img class="avatar-placeholder-img" src="assets/img/icons/forms/contact-white.svg" alt="" />
-            } 
-            @else {
+            @if (contactData.avatar?.base64) {
+              <img
+                class="avatar-img"
+                [src]="contactData.avatar?.base64"
+                alt="Contact profile picture"
+              />
+            } @else if (dialogMode === 'add') {
+              <img
+                class="avatar-placeholder-img"
+                src="assets/img/icons/forms/contact-white.svg"
+                alt=""
+              />
+            } @else {
               <span class="initials">
                 {{ getTwoInitials(contactData.name) }}
-              </span> 
+              </span>
             }
 
             <div class="avatar-upload-wrapper">
               <button
-                class="upload-btn" 
-                type="button" 
+                class="upload-btn"
+                type="button"
                 (click)="openFilePicker()"
                 aria-label="Upload contact profile picture"
               >
@@ -76,13 +79,18 @@
 
             @if (contactData.avatar?.base64) {
               <div class="avatar-delete-wrapper">
-                <button class="delete-btn" type="button" (click)="onAvatarDelete()" aria-label="Delete contact profile picture">
+                <button
+                  class="delete-btn"
+                  type="button"
+                  (click)="onAvatarDelete()"
+                  aria-label="Delete contact profile picture"
+                >
                   <app-icon name="delete" [size]="20" aria-hidden="true"></app-icon>
                 </button>
               </div>
             }
           </div>
-            
+
           <input
             #filePicker
             class="avatarFilePicker"
@@ -96,13 +104,15 @@
         <app-toast
           [message]="'File format not allowed! You can only upload JPEG or PNG.'"
           [type]="'error'"
-          [visible]="imageTypeError">
+          [visible]="imageTypeError()"
+        >
         </app-toast>
 
         <app-toast
           [message]="'File is too large. Max allowed is 1 MB.'"
           [type]="'error'"
-          [visible]="imageSizeError">
+          [visible]="imageSizeError()"
+        >
         </app-toast>
 
         <form
@@ -212,11 +222,7 @@
                 <app-icon name="close" [size]="22" aria-hidden="true"></app-icon>
               </button>
             } @else if (canDelete()) {
-              <button
-                type="button"
-                class="button button--secondary"
-                (click)="requestDelete.emit()"
-              >
+              <button type="button" class="button button--secondary" (click)="requestDelete.emit()">
                 Delete
               </button>
             }
@@ -235,7 +241,6 @@
           </div>
         </form>
       </section>
-      
     </div>
   </div>
 }

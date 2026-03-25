@@ -1,6 +1,6 @@
-import { Component, inject, input, OnInit, output } from '@angular/core';
+import { Component, computed, HostListener, inject, input, output, signal } from '@angular/core';
 import { Task } from '../../../../shared/interfaces/task';
-import { FirebaseService } from '../../../../shared/services/firebase-service';
+import { ContactService } from '../../../../shared/services/contact-service';
 import { NgClass } from '@angular/common';
 import { TaskService } from '../../../../shared/services/task-service';
 import { CdkDrag, DragDropModule } from '@angular/cdk/drag-drop';
@@ -21,37 +21,26 @@ import { Icon } from '../../../../shared/components/icon/icon';
  * and displays task-related information such as assignees
  * and subtask progress.
  */
-export class SingleTask implements OnInit {
+export class SingleTask {
   taskService = inject(TaskService);
-  contactService = inject(FirebaseService);
+  contactService = inject(ContactService);
 
   task = input.required<Task>();
-  
+
   openTask = output<Task>();
 
-  userColor: string | null = null;
-  moveMenuOpen: boolean = false;
-  isMobile: boolean = false;
+  moveMenuOpen = signal(false);
+  isMobile = signal(this.checkIsMobile());
+
+  doneSubtasksCount = computed(() => this.task().subtasks?.filter((s) => s.done).length ?? 0);
+  totalSubtasksCount = computed(() => this.task().subtasks?.length ?? 0);
 
   statuses: Array<'to-do' | 'in-progress' | 'await-feedback' | 'done'> = [
     'to-do',
     'in-progress',
     'await-feedback',
-    'done'
+    'done',
   ];
-
-  /**
-   * Initializes the component.
-   *
-   * Detects the current device type and listens
-   * for resize events to update the device state.
-   *
-   * @returns void
-   */
-  ngOnInit(): void {
-    this.checkDevice();
-    window.addEventListener('resize', () => this.checkDevice());
-  }
 
   /**
    * Checks whether the current device is a mobile device.
@@ -59,13 +48,20 @@ export class SingleTask implements OnInit {
    * Updates the mobile state based on pointer
    * and hover capabilities.
    *
+   * @returns boolean
+   */
+  checkIsMobile(): boolean {
+    return window.innerWidth <= 1024 || 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+  }
+
+  /**
+   * Checks whether the current device is still a mobile device after resizing.
+   *
    * @returns void
    */
-  checkDevice(): void {
-    this.isMobile =
-      window.innerWidth <= 1024 ||
-      'ontouchstart' in window ||
-      navigator.maxTouchPoints > 0;
+  @HostListener('window:resize')
+  onResize(): void {
+    this.isMobile.set(this.checkIsMobile());
   }
 
   /**
@@ -76,7 +72,7 @@ export class SingleTask implements OnInit {
    */
   openMenu(event: MouseEvent): void {
     event.stopPropagation();
-    this.moveMenuOpen = true;
+    this.moveMenuOpen.set(true);
   }
 
   /**
@@ -87,7 +83,7 @@ export class SingleTask implements OnInit {
    */
   closeMenu(event: MouseEvent): void {
     event.stopPropagation();
-    this.moveMenuOpen = false;
+    this.moveMenuOpen.set(false);
   }
 
   /**
@@ -101,15 +97,15 @@ export class SingleTask implements OnInit {
    * @returns void
    */
   moveTo(status: 'to-do' | 'in-progress' | 'await-feedback' | 'done', event: MouseEvent): void {
-    const otherTasks = this.taskService.tasks.filter(
-      t => t.status === status && t.id !== this.task().id
-    );
-    
+    const otherTasks = this.taskService
+      .tasks()
+      .filter((t) => t.status === status && t.id !== this.task().id);
+
     for (const t of otherTasks) {
       t.order = t.order + 1;
       this.taskService.updateDocument(t, 'tasks');
     }
-    
+
     this.task().status = status;
     this.task().order = 0;
     this.taskService.updateDocument(this.task(), 'tasks');
@@ -135,76 +131,5 @@ export class SingleTask implements OnInit {
     if (status === 'done') return 'Done';
 
     return '';
-  }
-
-  /**
-   * Returns the number of completed subtasks.
-   *
-   * @returns The count of subtasks marked as done
-   */
-  get doneCount(): number {
-    if (!this.task().subtasks) {
-      return 0;
-    }
-
-    return this.task().subtasks.filter((s) => s.done).length;
-  }
-
-  /**
-   * Returns the total number of subtasks.
-   *
-   * @returns The total subtask count
-   */
-  get totalCount(): number {
-    if (!this.task().subtasks) {
-      return 0;
-    }
-
-    return this.task().subtasks.length;
-  }
-
-  /**
-   * Retrieves the name of an assignee by contact ID.
-   *
-   * @param id The contact identifier
-   * @returns The name of the assignee
-   */
-  getAssigneeName(id: string): string {
-    const contact = this.contactService.contacts.find((c) => {
-      return c.id === id;
-    });
-
-    return contact?.name || "Unknown";
-  }
-
-  /**
-   * Retrieves the display color of an assignee by contact ID.
-   *
-   * @param id The contact identifier
-   * @returns The color assigned to the contact
-   */
-  getUserColor(id: string): string {
-    const contact = this.contactService.contacts.find((c) => {
-      return c.id === id;
-    });
-
-    return contact?.userColor || '#9327ff';
-  }
-
-    /**
-   * Retrieves the avatar image of an assignee.
-   *
-   * Searches the contact list for the specified ID
-   * and returns the base64 encoded avatar if available.
-   *
-   * @param id The identifier of the assignee
-   * @returns The base64 avatar string or null if no avatar exists
-   */
-  getAssigneeAvatar(id: string): string | null {
-    const contact = this.contactService.contacts.find((c) => {
-      return c.id === id;
-    });
-    
-    return contact?.avatar?.base64 || null;
   }
 }

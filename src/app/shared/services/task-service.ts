@@ -1,5 +1,16 @@
-import { inject, Injectable } from '@angular/core';
-import { addDoc, collection, deleteDoc, doc, Firestore, onSnapshot, orderBy, query, updateDoc, where } from '@angular/fire/firestore';
+import { computed, inject, Injectable, signal } from '@angular/core';
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  Firestore,
+  onSnapshot,
+  orderBy,
+  query,
+  updateDoc,
+  where,
+} from '@angular/fire/firestore';
 import { Task } from '../interfaces/task';
 import { Unsubscribe } from '@angular/fire/auth';
 
@@ -17,89 +28,65 @@ export type TaskCategoryOption = { value: Task['category']; label: string };
  */
 export class TaskService {
   firestore: Firestore = inject(Firestore);
-  tasks: Array<Task> = [];
-  taskCategories: TaskCategoryOption[] = [
-    { value: 'technical-task', label: 'Technical Task' },
-    { value: 'user-story', label: 'User Story' },
-  ];
-  unsubCollection!: Unsubscribe;
-  loading: boolean = true;
-  searchTerm: string = '';
 
-  constructor() {
-    this.unsubCollection = this.subCollection();
-  }
+  tasks = signal<Array<Task>>([]);
+  loading = signal(true);
+  searchTerm = signal('');
 
-  /**
-   * Returns the number of tasks for a given status.
-   *
-   * @param status The task status to count
-   * @returns The number of tasks with the specified status
-   */
-  getTaskCountByStatus(status: 'to-do' | 'in-progress' | 'await-feedback' | 'done'): number {
-    return this.tasks.filter(task => task.status === status).length;
-  }
+  filteredTasks = computed(() => {
+    const term = this.searchTerm().toLowerCase();
+    const tasks = this.tasks();
 
-    /**
-   * Returns the number of tasks marked with high priority.
-   *
-   * @returns The count of urgent tasks
-   */
-  getUrgentTaskCount(): number {
-    return this.tasks.filter(task => task.priority === 'high').length;
-  }
+    if (!term) return tasks;
 
-  /**
-   * Determines the nearest upcoming task deadline.
-   *
-   * Iterates through all tasks and returns the earliest
-   * due date if available.
-   *
-   * @returns The next deadline date or null if no tasks exist
-   */
-  getNextDeadline(): Date | null {
+    return tasks.filter(
+      (task) =>
+        task.title.toLowerCase().includes(term) ||
+        task.description.toLowerCase().includes(term) ||
+        task.category.toLowerCase().includes(term),
+    );
+  });
+
+  taskCountByStatus = computed(() => {
+    const counts = {
+      'to-do': 0,
+      'in-progress': 0,
+      'await-feedback': 0,
+      done: 0,
+    };
+
+    for (const task of this.tasks()) {
+      counts[task.status]++;
+    }
+
+    return counts;
+  });
+
+  urgentTaskCount = computed(() => this.tasks().filter((t) => t.priority === 'high').length);
+
+  nextDeadline = computed(() => {
     let nextDate: Date | null = null;
 
-    for (const task of this.tasks) {
-      const date = task.dueDate.toDate();
+    for (const task of this.tasks()) {
+      const date = task.dueDate?.toDate?.();
+      if (!date) continue;
 
       if (!nextDate || date < nextDate) {
         nextDate = date;
       }
     }
+
     return nextDate;
-  }
+  });
 
-  /**
-   * Updates the current task search term.
-   *
-   * Stores the search term and dispatches a custom
-   * event to notify components that tasks should
-   * be refreshed.
-   *
-   * @param term The search term used to filter tasks
-   * @returns void
-   */
-  setSearchTerm(term: string): void {
-    this.searchTerm = term;
-    window.dispatchEvent(new Event('tasks-updated'));
-  }
+  unsubCollection!: Unsubscribe;
+  taskCategories: TaskCategoryOption[] = [
+    { value: 'technical-task', label: 'Technical Task' },
+    { value: 'user-story', label: 'User Story' },
+  ];
 
-  /**
-   * Returns tasks filtered by the current search term.
-   *
-   * @returns An array of filtered tasks
-   */
-  getFilteredTasks(): Array<Task> {
-    if (!this.searchTerm) return this.tasks;
-
-    return this.tasks.filter((task) => {
-      return (
-        task.title.toLowerCase().includes(this.searchTerm) ||
-        task.description.toLowerCase().includes(this.searchTerm) || 
-        task.category.toLowerCase().includes(this.searchTerm)
-      );
-    });
+  constructor() {
+    this.unsubCollection = this.subCollection();
   }
 
   /**
@@ -111,17 +98,17 @@ export class TaskService {
    * @returns The unsubscribe function for the listener
    */
   subCollection(): Unsubscribe {
-    this.loading = true;
+    this.loading.set(true);
     const tasksQuery = query(this.getTasksRef(), orderBy('status'), orderBy('order'));
 
     return onSnapshot(tasksQuery, (snapshot) => {
-      this.tasks.length = 0;
+      const loadedTasks: Array<Task> = [];
       snapshot.forEach((task) => {
-        this.tasks.push(this.mapTaskObj(task.data(), task.id));
+        loadedTasks.push(this.mapTaskObj(task.data(), task.id));
       });
 
-      this.loading = false;
-      window.dispatchEvent(new Event('tasks-updated'));
+      this.tasks.set(loadedTasks);
+      this.loading.set(false);
     });
   }
 
@@ -198,7 +185,7 @@ export class TaskService {
       priority: task.priority,
       assignees: task.assignees,
       category: task.category,
-      attachments: task. attachments,
+      attachments: task.attachments,
       subtasks: task.subtasks,
     };
   }
@@ -228,7 +215,7 @@ export class TaskService {
    */
   getCleanJsonSubtasks(task: Task): {} {
     return {
-      subtasks: task.subtasks
+      subtasks: task.subtasks,
     };
   }
 
@@ -257,7 +244,7 @@ export class TaskService {
    */
   getCleanJsonAttachments(task: Task): {} {
     return {
-      attachments: task.attachments ?? []
+      attachments: task.attachments ?? [],
     };
   }
 
@@ -275,6 +262,16 @@ export class TaskService {
       console.error(err);
       return null;
     }
+  }
+
+  /**
+   * Updates the current task search term.
+   *
+   * @param term The search term used to filter tasks
+   * @returns void
+   */
+  setSearchTerm(term: string): void {
+    this.searchTerm.set(term);
   }
 
   /**

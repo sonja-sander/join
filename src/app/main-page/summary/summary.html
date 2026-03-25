@@ -9,78 +9,65 @@
 
     <div class="content">
       <div class="boxes">
-
         <div class="status-amount">
-          <a
-            routerLink="/board"
-            class="box"
-          >
+          <a routerLink="/board" class="box">
             <app-icon class="icon" name="edit" [size]="24" aria-hidden="true"></app-icon>
             <div class="amount">
-              @if (taskService.loading) {
+              @if (taskService.loading()) {
                 <span class="loading-spinner"></span>
               } @else {
-                <p class="number">{{ taskService.getTaskCountByStatus('to-do') }}</p>
+                <p class="number">{{ taskService.taskCountByStatus()['to-do'] }}</p>
               }
               <p>To-do</p>
             </div>
           </a>
 
-          <a
-            routerLink="/board"
-            class="box"
-          >
+          <a routerLink="/board" class="box">
             <app-icon class="icon" name="check" [size]="34" aria-hidden="true"></app-icon>
             <div class="amount">
-              @if (taskService.loading) {
+              @if (taskService.loading()) {
                 <span class="loading-spinner"></span>
               } @else {
-                <p class="number">{{ taskService.getTaskCountByStatus('done') }}</p>
+                <p class="number">{{ taskService.taskCountByStatus()['done'] }}</p>
               }
               <p>Done</p>
             </div>
           </a>
         </div>
 
-        <a
-          routerLink="/board"
-          class="box high-priority-amount"
-        >
+        <a routerLink="/board" class="box high-priority-amount">
           <div class="urgent">
             <div class="urgent-logo-circle">
               <app-icon name="priority-high" [size]="26" aria-hidden="true"></app-icon>
             </div>
             <div class="amount">
-              @if (taskService.loading) {
+              @if (taskService.loading()) {
                 <span class="loading-spinner"></span>
               } @else {
-                <p class="number">{{ taskService.getUrgentTaskCount() }}</p>
+                <p class="number">{{ taskService.urgentTaskCount() }}</p>
               }
               <p>Urgent</p>
             </div>
           </div>
           <div class="divider" aria-hidden="true"></div>
           <div class="priority-info">
-            @if (taskService.loading) {
+            @if (taskService.loading()) {
               <span class="loading-spinner"></span>
-            } @else if (taskService.tasks.length === 0) {
+            } @else if (taskService.tasks().length === 0) {
               <p>No upcoming deadline</p>
             } @else {
-              <p class="deadline">{{ taskService.getNextDeadline() | date: 'longDate' }}</p>
+              <p class="deadline">{{ taskService.nextDeadline() | date: 'longDate' }}</p>
               <p>Upcoming deadline</p>
             }
           </div>
         </a>
 
         <div class="tasks-amount">
-          <a
-            routerLink="/board"
-            class="box box-amount"
-          >
-            @if (taskService.loading) {
+          <a routerLink="/board" class="box box-amount">
+            @if (taskService.loading()) {
               <span class="loading-spinner"></span>
             } @else {
-              <p class="number">{{ taskService.tasks.length }}</p>
+              <p class="number">{{ taskService.tasks().length }}</p>
             }
             <p>
               Tasks in <br />
@@ -88,14 +75,11 @@
             </p>
           </a>
 
-          <a
-            routerLink="/board"
-            class="box box-amount"
-          >
-            @if (taskService.loading) {
+          <a routerLink="/board" class="box box-amount">
+            @if (taskService.loading()) {
               <span class="loading-spinner"></span>
             } @else {
-              <p class="number">{{ taskService.getTaskCountByStatus('in-progress') }}</p>
+              <p class="number">{{ taskService.taskCountByStatus()['in-progress'] }}</p>
             }
             <p>
               Tasks in <br />
@@ -103,14 +87,11 @@
             </p>
           </a>
 
-          <a
-            routerLink="/board"
-            class="box box-amount"
-          >
-            @if (taskService.loading) {
+          <a routerLink="/board" class="box box-amount">
+            @if (taskService.loading()) {
               <span class="loading-spinner"></span>
             } @else {
-              <p class="number">{{ taskService.getTaskCountByStatus('await-feedback') }}</p>
+              <p class="number">{{ taskService.taskCountByStatus()['await-feedback'] }}</p>
             }
             <p>
               Awaiting <br />
@@ -123,9 +104,9 @@
       <div class="good-day-message">
         @if (user$ | async; as user) {
           @if (user.isAnonymous) {
-            <p class="desktop-only">{{ greeting }}!</p>
+            <p class="desktop-only">{{ greeting() }}!</p>
           } @else {
-            <p class="desktop-only">{{ greeting }},</p>
+            <p class="desktop-only">{{ greeting() }},</p>
             <p class="user-name desktop-only">{{ user.displayName }}</p>
           }
         }

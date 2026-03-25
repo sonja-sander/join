@@ -1,70 +1,105 @@
-  <div class="viewer-overlay" (click)="onBackdropClick($event)" role="dialog" aria-modal="true" aria-labelledby="viewer-title">
-    <div class="viewer-content" cdkTrapFocus cdkTrapFocusAutoCapture>
-
-      <header>
-        <div class="header-content">
-          <div class="metadata">
-            <h2 id="viewer-title" class="file-name">
-              {{ currentAttachment.fileName }} 
-            </h2>
-            <p class="file-type-and-size">
-              {{ currentAttachment.fileType.split('/')[1].toUpperCase() }} / 
-              {{ (currentAttachment.base64Size / 1024).toFixed(0) }} KB
-            </p>
-          </div>
-  
-          <div class="zoom desktop-only" role="group" aria-label="Zoom controls">
-            <button class="zoom-out" type="button" (click)="zoomOut()" aria-label="Zoom out">
-              <app-icon name="zoom-out" aria-hidden="true"></app-icon>
-            </button>
-            <button class="zoom-in" type="button" (click)="zoomIn()" aria-label="Zoom in">
-              <app-icon name="zoom-in" aria-hidden="true"></app-icon>
-            </button>
-          </div>
-    
-          <div class="header-actions" role="group" aria-label="Image actions">
-            <button class="download-btn" type="button" (click)="this.fileService.downloadAttachment(currentAttachment)" aria-label="Download image">
-              <app-icon name="download" aria-hidden="true"></app-icon>
-            </button>
-      
-            <button class="close-btn" type="button" (click)="closeImageViewer()" aria-label="Close image viewer">
-              <app-icon name="close" [size]="22" aria-hidden="true"></app-icon>
-            </button>
-          </div>
+<div
+  class="viewer-overlay"
+  (click)="onBackdropClick($event)"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="viewer-title"
+>
+  <div class="viewer-content" cdkTrapFocus cdkTrapFocusAutoCapture>
+    <header>
+      <div class="header-content">
+        <div class="metadata">
+          <h2 id="viewer-title" class="file-name">
+            {{ currentAttachment().fileName }}
+          </h2>
+          <p class="file-type-and-size">
+            {{ currentAttachment().fileType.split('/')[1].toUpperCase() }} /
+            {{ (currentAttachment().base64Size / 1024).toFixed(0) }} KB
+          </p>
         </div>
-      </header>
-  
-      <section class="image-section">
-        <img class="attachment-img" [src]="currentAttachment.base64" [style.transform]="`scale(${scale})`" (wheel)="onWheel($event)" alt="{{ currentAttachment.fileName }}">
-      </section>
 
-      <button class="desktop-previous desktop-only" type="button" (click)="previousImage()" aria-label="Previous image">
-        <app-icon class="desktop-only" name="arrow-left" aria-hidden="true"></app-icon>
-      </button>
-      <button class="desktop-next desktop-only" type="button" (click)="nextImage()" aria-label="Next image">
-        <app-icon class="desktop-only" name="arrow-right" aria-hidden="true"></app-icon>
-      </button>
-      
-      <footer>
-        <div class="footer-content mobile-only">
-          <button class="previous" type="button" (click)="previousImage()" aria-label="Previous image">
-            <app-icon name="arrow-left" aria-hidden="true"></app-icon>
+        <div class="zoom desktop-only" role="group" aria-label="Zoom controls">
+          <button class="zoom-out" type="button" (click)="zoomOut()" aria-label="Zoom out">
+            <app-icon name="zoom-out" aria-hidden="true"></app-icon>
           </button>
-    
-          <div class="zoom" role="group" aria-label="Zoom controls">
-            <button class="zoom-out" type="button" (click)="zoomOut()" aria-label="Zoom out">
-              <app-icon name="zoom-out" aria-hidden="true"></app-icon>
-            </button>
-            <button class="zoom-in" type="button" (click)="zoomIn()" aria-label="Zoom in">
-              <app-icon name="zoom-in" aria-hidden="true"></app-icon>
-            </button>
-          </div>
-    
-          <button class="next" type="button" (click)="nextImage()" aria-label="Next image">
-            <app-icon name="arrow-right" aria-hidden="true"></app-icon>
+          <button class="zoom-in" type="button" (click)="zoomIn()" aria-label="Zoom in">
+            <app-icon name="zoom-in" aria-hidden="true"></app-icon>
           </button>
         </div>
-      </footer>
 
-    </div>
+        <div class="header-actions" role="group" aria-label="Image actions">
+          <button
+            class="download-btn"
+            type="button"
+            (click)="this.fileService.downloadAttachment(currentAttachment())"
+            aria-label="Download image"
+          >
+            <app-icon name="download" aria-hidden="true"></app-icon>
+          </button>
+
+          <button
+            class="close-btn"
+            type="button"
+            (click)="closeImageViewer()"
+            aria-label="Close image viewer"
+          >
+            <app-icon name="close" [size]="22" aria-hidden="true"></app-icon>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <section class="image-section">
+      <img
+        class="attachment-img"
+        [src]="currentAttachment().base64"
+        [style.transform]="`scale(${scale})`"
+        (wheel)="onWheel($event)"
+        alt="{{ currentAttachment().fileName }}"
+      />
+    </section>
+
+    <button
+      class="desktop-previous desktop-only"
+      type="button"
+      (click)="previousImage()"
+      aria-label="Previous image"
+    >
+      <app-icon class="desktop-only" name="arrow-left" aria-hidden="true"></app-icon>
+    </button>
+    <button
+      class="desktop-next desktop-only"
+      type="button"
+      (click)="nextImage()"
+      aria-label="Next image"
+    >
+      <app-icon class="desktop-only" name="arrow-right" aria-hidden="true"></app-icon>
+    </button>
+
+    <footer>
+      <div class="footer-content mobile-only">
+        <button
+          class="previous"
+          type="button"
+          (click)="previousImage()"
+          aria-label="Previous image"
+        >
+          <app-icon name="arrow-left" aria-hidden="true"></app-icon>
+        </button>
+
+        <div class="zoom" role="group" aria-label="Zoom controls">
+          <button class="zoom-out" type="button" (click)="zoomOut()" aria-label="Zoom out">
+            <app-icon name="zoom-out" aria-hidden="true"></app-icon>
+          </button>
+          <button class="zoom-in" type="button" (click)="zoomIn()" aria-label="Zoom in">
+            <app-icon name="zoom-in" aria-hidden="true"></app-icon>
+          </button>
+        </div>
+
+        <button class="next" type="button" (click)="nextImage()" aria-label="Next image">
+          <app-icon name="arrow-right" aria-hidden="true"></app-icon>
+        </button>
+      </div>
+    </footer>
   </div>
+</div>

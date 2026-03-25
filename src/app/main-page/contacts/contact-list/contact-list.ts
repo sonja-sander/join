@@ -16,7 +16,7 @@ export class ContactList {
   contacts = input<Array<Contact>>([]);
   activeContactID = input<string | null>(null);
   loading = input<boolean>(false);
-  
+
   selected = output<{ contact: Contact; id: string }>();
   addContact = output<void>();
 

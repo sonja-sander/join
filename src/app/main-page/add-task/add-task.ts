@@ -1,11 +1,21 @@
-import { Component, OnChanges, OnDestroy, SimpleChanges, inject, input, output } from '@angular/core';
+import {
+  Component,
+  OnChanges,
+  OnDestroy,
+  SimpleChanges,
+  computed,
+  inject,
+  input,
+  output,
+  signal,
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { Timestamp } from '@angular/fire/firestore';
 import { Contact } from '../../shared/interfaces/contact';
 import { Task } from '../../shared/interfaces/task';
 import { TaskCategoryOption, TaskService } from '../../shared/services/task-service';
-import { FirebaseService } from '../../shared/services/firebase-service';
+import { ContactService } from '../../shared/services/contact-service';
 import { formatDateForInput, getTodayDateString, parseDueDate } from '../../shared/utilities/utils';
 import { DropdownAssignee } from './dropdown-assignee/dropdown-assignee';
 import { DropdownCategory } from './dropdown-category/dropdown-category';
@@ -23,34 +33,48 @@ import { TaskFormData } from '../../shared/interfaces/task-form-data';
  */
 @Component({
   selector: 'app-add-task',
-  imports: [FormsModule, TaskFormField, PrioritySelector, DropdownAssignee, DropdownCategory, Attachments, SubtaskComposer, Toast, ConfirmDialog, Icon],
+  imports: [
+    FormsModule,
+    TaskFormField,
+    PrioritySelector,
+    DropdownAssignee,
+    DropdownCategory,
+    Attachments,
+    SubtaskComposer,
+    Toast,
+    ConfirmDialog,
+    Icon,
+  ],
   templateUrl: './add-task.html',
   styleUrl: './add-task.scss',
 })
 export class AddTask implements OnChanges, OnDestroy {
   taskService = inject(TaskService);
-  private firebaseService = inject(FirebaseService);
+  private contactService = inject(ContactService);
   private router = inject(Router);
 
   isOverlay = input<boolean>(false);
   taskToEdit = input<Task | null>(null);
   initialStatus = input<Task['status']>('to-do');
-  
+
   closeDialogRequested = output<void>();
   dirtyChange = output<boolean>();
   viewerStateChange = output<boolean>();
 
+  hasUserEdited = signal(false);
+  isSubmitting = signal(false);
+  addTaskSuccess = signal(false);
+  imageTypeError = signal(false);
+  taskSizeError = signal(false);
+  showDeleteAllConfirm = signal(false);
+  isTitleTouched = signal(false);
+  isDueDateTouched = signal(false);
+  isCategoryTouched = signal(false);
+
+  isEditMode = computed(() => Boolean(this.taskToEdit()?.id));
+
   minDueDate = getTodayDateString();
-  hasUserEdited: boolean = false;
-  isSubmitting: boolean = false;
-  addTaskSuccess: boolean = false;
   private toastTimer?: number;
-  imageTypeError: boolean = false;
-  taskSizeError: boolean = false;
-  showDeleteAllConfirm: boolean = false;
-  isTitleTouched: boolean = false;
-  isDueDateTouched: boolean = false;
-  isCategoryTouched: boolean = false;
 
   taskData: TaskFormData = {
     title: '',
@@ -123,7 +147,7 @@ export class AddTask implements OnChanges, OnDestroy {
       priority: task.priority,
       assignees: this.mapAssignees(task.assignees),
       category: this.findCategory(task.category),
-      subtasks: task.subtasks.map(s => ({ ...s })),
+      subtasks: task.subtasks.map((s) => ({ ...s })),
       attachments: Array.from(task.attachments ?? []),
     };
 
@@ -132,7 +156,6 @@ export class AddTask implements OnChanges, OnDestroy {
   }
 
   // #endregion
-
 
   // #region Submit Flow
 
@@ -145,16 +168,16 @@ export class AddTask implements OnChanges, OnDestroy {
    * @returns Promise resolving when operation is complete
    */
   async createTask(): Promise<void> {
-    if (this.isSubmitting) return;
+    if (this.isSubmitting()) return;
 
     if (!this.isFormValid) {
       this.markInvalidFields();
       return;
     }
 
-    this.isSubmitting = true;
+    this.isSubmitting.set(true);
 
-    if (this.isEditMode) {
+    if (this.isEditMode()) {
       await this.updateTask();
     } else {
       await this.createNewTask();
@@ -174,14 +197,15 @@ export class AddTask implements OnChanges, OnDestroy {
   private createNewTask(): Promise<void> {
     const task = this.buildTask();
 
-    const order = this.taskService.tasks
-      .filter(t => t.status === this.initialStatus()).length;
+    const order = this.taskService.tasks().filter((t) => t.status === this.initialStatus()).length;
 
-    return this.taskService.addDocument({
-      ...task,
-      status: this.initialStatus(),
-      order,
-    }).then(() => this.resetForm());
+    return this.taskService
+      .addDocument({
+        ...task,
+        status: this.initialStatus(),
+        order,
+      })
+      .then(() => this.resetForm());
   }
 
   /**
@@ -215,7 +239,7 @@ export class AddTask implements OnChanges, OnDestroy {
       description: this.taskData.description.trim(),
       dueDate: Timestamp.fromDate(parseDueDate(this.taskData.dueDate)!),
       priority: this.taskData.priority,
-      assignees: this.taskData.assignees.map(a => a.id!).filter(Boolean),
+      assignees: this.taskData.assignees.map((a) => a.id!).filter(Boolean),
       category: this.taskData.category!.value,
       attachments: this.taskData.attachments,
       subtasks: [...this.taskData.subtasks],
@@ -224,17 +248,7 @@ export class AddTask implements OnChanges, OnDestroy {
 
   // #endregion
 
-
   // #region Validation
-
-  /**
-   * Indicates whether the component is in edit mode.
-   *
-   * @returns True if a task with an ID exists
-   */
-  get isEditMode(): boolean {
-    return Boolean(this.taskToEdit()?.id);
-  }
 
   /**
    * Validates required form fields.
@@ -243,9 +257,7 @@ export class AddTask implements OnChanges, OnDestroy {
    */
   get isFormValid(): boolean {
     return Boolean(
-      this.taskData.title.trim() &&
-      this.taskData.dueDate.trim() &&
-      this.taskData.category
+      this.taskData.title.trim() && this.taskData.dueDate.trim() && this.taskData.category,
     );
   }
 
@@ -257,9 +269,9 @@ export class AddTask implements OnChanges, OnDestroy {
    * @returns void
    */
   private markInvalidFields(): void {
-    if (!this.taskData.title.trim()) this.isTitleTouched = true;
-    if (!this.taskData.dueDate.trim()) this.isDueDateTouched = true;
-    if (!this.taskData.category) this.isCategoryTouched = true;
+    if (!this.taskData.title.trim()) this.isTitleTouched.set(true);
+    if (!this.taskData.dueDate.trim()) this.isDueDateTouched.set(true);
+    if (!this.taskData.category) this.isCategoryTouched.set(true);
   }
 
   /**
@@ -268,13 +280,12 @@ export class AddTask implements OnChanges, OnDestroy {
    * @returns void
    */
   private resetTouchedStates(): void {
-    this.isTitleTouched = false;
-    this.isDueDateTouched = false;
-    this.isCategoryTouched = false;
+    this.isTitleTouched.set(false);
+    this.isDueDateTouched.set(false);
+    this.isCategoryTouched.set(false);
   }
 
   // #endregion
-
 
   // #region Mapping
 
@@ -288,7 +299,7 @@ export class AddTask implements OnChanges, OnDestroy {
    */
   private mapAssignees(ids: string[]): Contact[] {
     return ids
-      .map(id => this.firebaseService.contacts.find(c => c.id === id))
+      .map((id) => this.contactService.contacts().find((c) => c.id === id))
       .filter((c): c is Contact => Boolean(c));
   }
 
@@ -299,11 +310,10 @@ export class AddTask implements OnChanges, OnDestroy {
    * @returns Matching category option or null if not found
    */
   private findCategory(value: Task['category']): TaskCategoryOption | null {
-    return this.taskService.taskCategories.find(c => c.value === value) ?? null;
+    return this.taskService.taskCategories.find((c) => c.value === value) ?? null;
   }
 
   // #endregion
-
 
   // #region UI Actions
 
@@ -313,8 +323,8 @@ export class AddTask implements OnChanges, OnDestroy {
    * @returns void
    */
   markAsEdited(): void {
-    if (this.hasUserEdited) return;
-    this.hasUserEdited = true;
+    if (this.hasUserEdited()) return;
+    this.hasUserEdited.set(true);
     this.dirtyChange.emit(true);
   }
 
@@ -324,7 +334,7 @@ export class AddTask implements OnChanges, OnDestroy {
    * @returns void
    */
   resetDirtyState(): void {
-    this.hasUserEdited = false;
+    this.hasUserEdited.set(false);
     this.dirtyChange.emit(false);
   }
 
@@ -336,7 +346,7 @@ export class AddTask implements OnChanges, OnDestroy {
   confirmDeleteAllAttachments(): void {
     this.taskData.attachments = [];
     this.markAsEdited();
-    this.showDeleteAllConfirm = false;
+    this.showDeleteAllConfirm.set(false);
   }
 
   /**
@@ -346,8 +356,10 @@ export class AddTask implements OnChanges, OnDestroy {
    * @returns void
    */
   showErrorToast(flag: 'imageTypeError' | 'taskSizeError'): void {
-    this[flag] = true;
-    setTimeout(() => (this[flag] = false), 2500);
+    this[flag].set(true);
+    setTimeout(() => {
+      this[flag].set(false);
+    }, 2500);
   }
 
   /**
@@ -356,11 +368,11 @@ export class AddTask implements OnChanges, OnDestroy {
    * @returns void
    */
   private showToast(): void {
-    this.addTaskSuccess = true;
+    this.addTaskSuccess.set(true);
     if (this.toastTimer) clearTimeout(this.toastTimer);
 
     this.toastTimer = setTimeout(() => {
-      this.addTaskSuccess = false;
+      this.addTaskSuccess.set(false);
 
       if (this.isOverlay()) {
         this.closeDialogRequested.emit();

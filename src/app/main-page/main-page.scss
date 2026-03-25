@@ -40,7 +40,9 @@
   img {
     grid-area: 1/1/2/2;
     width: 64px;
-    transition: transform 1.2s ease 0s, opacity 0.4s ease 0s;
+    transition:
+      transform 1.2s ease 0s,
+      opacity 0.4s ease 0s;
     transform: translate(34dvw, 40dvh) scale(1.6);
 
     @include styles.up-xxl {

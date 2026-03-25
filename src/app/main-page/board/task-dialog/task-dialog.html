@@ -57,15 +57,17 @@
             <div class="assignee-list scroll-shadows" tabindex="-1">
               @for (assignee of task().assignees; track $index) {
                 <div class="assignee-item">
+                  @let contact = contactService.getContactById(assignee);
+
                   <app-avatar
-                    [name]="getAssigneeName(assignee)"
-                    [color]="getUserColor(assignee)"
-                    [avatar]="getAssigneeAvatar(assignee)"
+                    [name]="contact?.name || 'Unknown'"
+                    [color]="contact?.userColor || '#9327ff'"
+                    [avatar]="contact?.avatar?.base64 ?? null"
                     [size]="38"
                   ></app-avatar>
 
                   <p class="name">
-                    {{ getAssigneeName(assignee) }}
+                    {{ contact?.name }}
                   </p>
                 </div>
               }
@@ -142,7 +144,7 @@
       </footer>
 
       <app-confirm-dialog
-        [open]="showDeleteConfirm"
+        [open]="showDeleteConfirm()"
         [highlight]="'Delete'"
         [highlightObject]="task().title ? task().title : 'this task'"
         [confirmText]="'Delete'"
@@ -152,11 +154,11 @@
       >
       </app-confirm-dialog>
 
-      @if (showViewer) {
+      @if (showViewer()) {
         <app-image-viewer
-          [attachments]="viewerAttachments"
-          [startIndex]="viewerStartIndex"
-          (close)="showViewer = false"
+          [attachments]="viewerAttachments()"
+          [startIndex]="viewerStartIndex()"
+          (close)="showViewer.set(false)"
         >
         </app-image-viewer>
       }

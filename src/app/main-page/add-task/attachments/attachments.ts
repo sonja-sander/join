@@ -1,4 +1,4 @@
-import { Component, ElementRef, inject, input, output, viewChild } from '@angular/core';
+import { Component, ElementRef, inject, input, output, signal, viewChild } from '@angular/core';
 import { Attachment } from '../../../shared/interfaces/task';
 import { FileService } from '../../../shared/services/file-service';
 import { ImageViewer } from '../../../shared/components/image-viewer/image-viewer';
@@ -19,9 +19,9 @@ import { Icon } from '../../../shared/components/icon/icon';
  */
 export class Attachments {
   fileService = inject(FileService);
-  
+
   attachments = input<Array<Attachment>>([]);
-  
+
   deleteAll = output<void>();
   attachmentsChange = output<Array<Attachment>>();
   viewerStateChange = output<boolean>();
@@ -31,9 +31,9 @@ export class Attachments {
   filePicker = viewChild<ElementRef<HTMLInputElement>>('filePicker');
   gallery = viewChild<ElementRef<HTMLDivElement>>('gallery');
 
-  isDragging: boolean = false;
-  showViewer: boolean = false;
-  viewerStartIndex: number = 0;
+  isDragging = signal(false);
+  showViewer = signal(false);
+  viewerStartIndex = signal(0);
 
   /**
    * Handles drag-over events for the drop zone.
@@ -43,7 +43,7 @@ export class Attachments {
    */
   onDragOver(event: DragEvent): void {
     event.preventDefault();
-    this.isDragging = true;
+    this.isDragging.set(true);
   }
 
   /**
@@ -54,7 +54,7 @@ export class Attachments {
    */
   onDragLeave(event: DragEvent): void {
     event.preventDefault();
-    this.isDragging = false;
+    this.isDragging.set(false);
   }
 
   /**
@@ -74,7 +74,7 @@ export class Attachments {
    */
   onDrop(event: DragEvent): void {
     event.preventDefault();
-    this.isDragging = false;
+    this.isDragging.set(false);
     if (!event.dataTransfer?.files) return;
 
     this.handleFiles(event.dataTransfer.files);
@@ -134,10 +134,7 @@ export class Attachments {
     const isInvalid = !this.fileService.isValidFileType(file);
     if (isInvalid) {
       this.imageTypeError.emit();
-      const filePickerEl = this.filePicker()?.nativeElement;
-      if (filePickerEl) {
-        filePickerEl.value = '';
-      } 
+      this.resetFilePicker();
     }
     return isInvalid;
   }
@@ -149,10 +146,7 @@ export class Attachments {
    * @returns The total size in bytes
    */
   getTotalAttachmentsSize(attachments: Array<Attachment>): number {
-    return attachments.reduce(
-      (total, attachment) => total + attachment.base64Size,
-      0
-    );
+    return attachments.reduce((total, attachment) => total + attachment.base64Size, 0);
   }
 
   /**
@@ -167,10 +161,7 @@ export class Attachments {
     const exceeds = !this.fileService.isWithinSizeLimit(totalSize);
     if (exceeds) {
       this.taskSizeError.emit();
-      const filePickerEl = this.filePicker()?.nativeElement;
-      if (filePickerEl) {
-        filePickerEl.value = '';
-      } 
+      this.resetFilePicker();
     }
     return exceeds;
   }
@@ -189,7 +180,7 @@ export class Attachments {
       fileName: file.name,
       fileType: file.type,
       base64Size: size,
-      base64: base64
+      base64: base64,
     });
   }
 
@@ -201,7 +192,7 @@ export class Attachments {
   scrollToRight(): void {
     setTimeout(() => {
       const galleryEl = this.gallery()?.nativeElement;
-      if(!galleryEl) return;
+      if (!galleryEl) return;
       galleryEl.scrollLeft = galleryEl.scrollWidth;
     });
   }
@@ -213,10 +204,7 @@ export class Attachments {
    */
   deleteAllAttachments(): void {
     this.deleteAll.emit();
-    const filePickerEl = this.filePicker()?.nativeElement;
-    if (filePickerEl) {
-      filePickerEl.value = '';
-    } 
+    this.resetFilePicker();
   }
 
   /**
@@ -230,7 +218,7 @@ export class Attachments {
     event.stopPropagation();
 
     const updatedAttachments = this.attachments().filter(
-      attachment => attachment !== attachmentToDelete
+      (attachment) => attachment !== attachmentToDelete,
     );
 
     this.attachmentsChange.emit(updatedAttachments);
@@ -243,8 +231,8 @@ export class Attachments {
    * @returns void
    */
   openImageViewer(index: number): void {
-    this.viewerStartIndex = index;
-    this.showViewer = true;
+    this.viewerStartIndex.set(index);
+    this.showViewer.set(true);
   }
 
   /**
@@ -253,6 +241,21 @@ export class Attachments {
    * @returns void
    */
   closeImageViewer(): void {
-    this.showViewer = false;
+    this.showViewer.set(false);
+  }
+
+  /**
+   * Resets the file input element.
+   *
+   * Clears the currently selected file(s) by setting the input value to an empty string.
+   * This allows the same file to be selected again if needed.
+   *
+   * @returns void
+   */
+  resetFilePicker(): void {
+    const filePickerEl = this.filePicker()?.nativeElement;
+    if (filePickerEl) {
+      filePickerEl.value = '';
+    }
   }
 }

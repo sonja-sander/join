@@ -78,13 +78,13 @@ section {
       padding: 0;
       background-color: transparent;
       color: styles.$gray-dark;
-      
+
       app-icon {
         border-radius: 50%;
         padding: 4px;
       }
 
-      &:hover app-icon{
+      &:hover app-icon {
         background-color: #eeeeee;
       }
     }

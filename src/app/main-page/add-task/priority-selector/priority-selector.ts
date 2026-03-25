@@ -21,7 +21,7 @@ type PriorityOption = {
 })
 export class PrioritySelector {
   selectedPriority = input<Task['priority']>('medium');
-  
+
   selectedPriorityChange = output<Task['priority']>();
 
   options: PriorityOption[] = [

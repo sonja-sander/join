@@ -1,16 +1,16 @@
 <div class="layout-wrapper">
   <main class="layout">
-    @if (!showMobileGreeting) {
-      <header class="logo" [class.logo--move]="logoMoving">
+    @if (!showMobileGreeting()) {
+      <header class="logo" [class.logo--move]="logoMoving()">
         <img class="logo-dark" src="assets/img/icons/logo-dark.svg" alt="Join logo" />
         <img class="logo-light" src="assets/img/icons/logo-light.svg" alt="" />
       </header>
 
-      @if (introActive) {
+      @if (introActive()) {
         <div class="intro-overlay" aria-hidden="true"></div>
       }
 
-      @if (!showSignUp) {
+      @if (!showSignUp()) {
         <section class="form-section log-in-form-section" aria-labelledby="login-title">
           <div class="form-wrapper log-in-form-wrapper">
             <header class="title">
@@ -39,7 +39,7 @@
                   autocomplete="email"
                   aria-describedby="login-email-error"
                 />
-                <app-icon name="email" aria-hidden="true"/>
+                <app-icon name="email" aria-hidden="true" />
                 <div class="input-error-wrapper">
                   <span id="login-email-error" class="form-error">
                     @if (logInEmail.invalid && logInEmail.touched) {
@@ -64,7 +64,7 @@
                   #logInPass="ngModel"
                   required
                   minlength="8"
-                  [type]="showLogInPassword ? 'text' : 'password'"
+                  [type]="showLogInPassword() ? 'text' : 'password'"
                   placeholder="Password"
                   autocomplete="current-password"
                   aria-describedby="login-password-error"
@@ -77,10 +77,13 @@
                       (click)="toggleLogInPassword()"
                       aria-label="Toggle password visibility"
                     >
-                      <app-icon [name]="showLogInPassword ? 'visibility' : 'visibility-off'" aria-hidden="true"/>
+                      <app-icon
+                        [name]="showLogInPassword() ? 'visibility' : 'visibility-off'"
+                        aria-hidden="true"
+                      />
                     </button>
                   } @else {
-                    <app-icon class="lock-icon" name="password" aria-hidden="true"/>
+                    <app-icon class="lock-icon" name="password" aria-hidden="true" />
                   }
                 </div>
                 <div class="input-error-wrapper">
@@ -96,13 +99,13 @@
                 </div>
               </div>
 
-              @if (submitLoginError) {
+              @if (submitLoginError()) {
                 <p class="form-error-summary sr-only" role="alert">
                   There are errors in the form. Please check the fields again.
                 </p>
               }
 
-              @if (loginError) {
+              @if (loginError()) {
                 <p class="login-error" role="alert">
                   Email or password is wrong. Please try again.
                 </p>
@@ -114,15 +117,15 @@
                   [class.button--disabled]="isLoggingIn || logInForm.invalid"
                   class="button button--primary"
                 >
-                  {{ isLoggingIn ? 'Logging in…' : 'Log in' }}
+                  {{ isLoggingIn() ? 'Logging in…' : 'Log in' }}
                 </button>
                 <button
                   type="button"
                   (click)="guestLogin()"
                   class="button button--secondary"
-                  [class.button--disabled]="isGuestLoggingIn"
+                  [class.button--disabled]="isGuestLoggingIn()"
                 >
-                  {{ isGuestLoggingIn ? 'Logging in…' : 'Guest Log in' }}
+                  {{ isGuestLoggingIn() ? 'Logging in…' : 'Guest Log in' }}
                 </button>
               </div>
             </form>
@@ -130,23 +133,19 @@
         </section>
       }
 
-      @if (!showSignUp) {
+      @if (!showSignUp()) {
         <section class="sign-up-option" aria-labelledby="signup-option-text">
           <p id="signup-option-text">Not a Join user?</p>
           <button class="button button--primary" (click)="openSignUp()">Sign up</button>
         </section>
       }
 
-      @if (showSignUp) {
+      @if (showSignUp()) {
         <section class="form-section sign-up-form-section" aria-labelledby="signup-title">
           <div class="form-wrapper sign-up-form-wrapper">
             <header class="title sign-title">
-              <button
-                class="back-btn"
-                (click)="closeSignUp()"
-                aria-label="Go back to login region"
-              >
-                <app-icon name="arrow-left" [size]="36" aria-hidden="true"/>
+              <button class="back-btn" (click)="closeSignUp()" aria-label="Go back to login region">
+                <app-icon name="arrow-left" [size]="36" aria-hidden="true" />
               </button>
               <div class="sign-up">
                 <h1 id="signup-title">Sign up</h1>
@@ -175,7 +174,7 @@
                   autocomplete="name"
                   aria-describedby="signup-name-error"
                 />
-                <app-icon name="name" aria-hidden="true"/>
+                <app-icon name="name" aria-hidden="true" />
                 <div class="input-error-wrapper">
                   <span id="signup-name-error" class="form-error">
                     @if (name.invalid && name.touched) {
@@ -205,7 +204,7 @@
                   autocomplete="email"
                   aria-describedby="signup-email-error"
                 />
-                <app-icon name="email" aria-hidden="true"/>
+                <app-icon name="email" aria-hidden="true" />
                 <div class="input-error-wrapper">
                   <span id="signup-email-error" class="form-error">
                     @if (signUpEmail.invalid && signUpEmail.touched) {
@@ -229,7 +228,7 @@
                   #signUpPass="ngModel"
                   required
                   minlength="8"
-                  [type]="showSignUpPassword ? 'text' : 'password'"
+                  [type]="showSignUpPassword() ? 'text' : 'password'"
                   placeholder="Password"
                   autocomplete="new-password"
                   aria-describedby="signup-password-error"
@@ -242,10 +241,13 @@
                       (click)="toggleSignUpPassword()"
                       aria-label="Toggle password visibility"
                     >
-                      <app-icon [name]="showSignUpPassword ? 'visibility' : 'visibility-off'" aria-hidden="true"/>
+                      <app-icon
+                        [name]="showSignUpPassword() ? 'visibility' : 'visibility-off'"
+                        aria-hidden="true"
+                      />
                     </button>
                   } @else {
-                    <app-icon class="lock-icon" name="password" aria-hidden="true"/>
+                    <app-icon class="lock-icon" name="password" aria-hidden="true" />
                   }
                 </div>
                 <div class="input-error-wrapper">
@@ -269,7 +271,7 @@
                   #confirmPass="ngModel"
                   required
                   minlength="8"
-                  [type]="showConfirmPassword ? 'text' : 'password'"
+                  [type]="showConfirmPassword() ? 'text' : 'password'"
                   placeholder="Confirm Password"
                   autocomplete="new-password"
                   aria-describedby="signup-confirm-password-error"
@@ -282,10 +284,13 @@
                       (click)="toggleConfirmPassword()"
                       aria-label="Toggle password visibility"
                     >
-                      <app-icon [name]="showConfirmPassword ? 'visibility' : 'visibility-off'" aria-hidden="true"/>
+                      <app-icon
+                        [name]="showConfirmPassword() ? 'visibility' : 'visibility-off'"
+                        aria-hidden="true"
+                      />
                     </button>
                   } @else {
-                    <app-icon class="lock-icon" name="password" aria-hidden="true"/>
+                    <app-icon class="lock-icon" name="password" aria-hidden="true" />
                   }
                 </div>
                 <div class="input-error-wrapper">
@@ -328,14 +333,14 @@
                 </p>
               </div>
 
-              @if (submitSignupError) {
+              @if (submitSignupError()) {
                 <p class="form-error-summary sr-only" role="alert">
                   There are errors in the form. Please check the fields again.
                 </p>
               }
 
               <div class="error-wrapper">
-                @if (signUpError) {
+                @if (signUpError()) {
                   <p class="login-error" role="alert">Email already in use.</p>
                 }
               </div>
@@ -343,10 +348,12 @@
               <div class="form-actions">
                 <button
                   type="submit"
-                  [class.button--disabled]="isSigningUp || signUpForm.invalid || signUpData.password !== confirmPassword"
+                  [class.button--disabled]="
+                    isSigningUp || signUpForm.invalid || signUpData.password !== confirmPassword
+                  "
                   class="button button--primary"
                 >
-                  {{ isSigningUp ? 'Signing up…' : 'Sign up' }}
+                  {{ isSigningUp() ? 'Signing up…' : 'Sign up' }}
                 </button>
               </div>
             </form>
@@ -368,14 +375,14 @@
       </footer>
     }
 
-    @if (showMobileGreeting) {
+    @if (showMobileGreeting()) {
       <aside class="mobile-greeting-overlay">
         @if (user$ | async; as user) {
           <div class="good-day-message">
             @if (user.isAnonymous) {
-              <p>{{ greeting }}!</p>
+              <p>{{ greeting() }}!</p>
             } @else {
-              <p>{{ greeting }},</p>
+              <p>{{ greeting() }},</p>
               <p class="user-name">{{ user.displayName }}</p>
             }
           </div>
@@ -385,8 +392,5 @@
   </main>
 </div>
 
-<app-toast 
-  [message]="'You signed up successfully'" 
-  [type]="'info'" 
-  [visible]="signUpSuccess">
+<app-toast [message]="'You signed up successfully'" [type]="'info'" [visible]="signUpSuccess()">
 </app-toast>

@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, computed, input } from '@angular/core';
 
 @Component({
   selector: 'app-avatar',
@@ -12,8 +12,8 @@ export class Avatar {
   avatar = input<string | null>(null);
   size = input<number>(40);
 
-  get initials(): string {
-    if (!this.name) return '';
+  initials = computed(() => {
+    if (!this.name()) return '';
 
     return this.name()
       .trim()
@@ -21,5 +21,5 @@ export class Avatar {
       .slice(0, 2)
       .map((word) => word[0].toUpperCase())
       .join('');
-  }
+  });
 }

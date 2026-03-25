@@ -1,4 +1,4 @@
-import { Component, HostListener, inject } from '@angular/core';
+import { Component, HostListener, inject, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth-service';
 import { AsyncPipe } from '@angular/common';
@@ -21,10 +21,10 @@ import { Icon } from '../icon/icon';
 export class Header {
   authService = inject(AuthService);
   router = inject(Router);
-  
+
+  menuOpen = signal(false);
+
   user$ = this.authService.user$;
-  loggedIn: boolean = true;
-  menuOpen: boolean = false;
 
   /**
    * Toggles the visibility of the navigation menu.
@@ -32,7 +32,7 @@ export class Header {
    * @returns void
    */
   toggleMenu(): void {
-    this.menuOpen = !this.menuOpen;
+    this.menuOpen.update((open) => !open);
   }
 
   /**
@@ -41,7 +41,7 @@ export class Header {
    * @returns void
    */
   closeMenu(): void {
-    this.menuOpen = false;
+    this.menuOpen.set(false);
   }
 
   /**
@@ -64,7 +64,7 @@ export class Header {
    * @returns void
    */
   logout(): void {
-    this.menuOpen = false;
+    this.menuOpen.set(false);
 
     this.authService.logout().subscribe(() => {
       this.router.navigateByUrl('/', { replaceUrl: true });

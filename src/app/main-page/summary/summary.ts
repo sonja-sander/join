@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TaskService } from '../../shared/services/task-service';
 import { AsyncPipe, DatePipe } from '@angular/common';
@@ -22,15 +22,8 @@ import { Icon } from '../../shared/components/icon/icon';
 export class Summary {
   taskService = inject(TaskService);
   authService = inject(AuthService);
-  
-  user$ = this.authService.user$;
 
-  /**
-   * Returns a contextual greeting message.
-   *
-   * @returns The greeting string
-   */
-  get greeting(): string {
-    return getGreeting();
-  }
+  greeting = computed(() => getGreeting());
+
+  user$ = this.authService.user$;
 }

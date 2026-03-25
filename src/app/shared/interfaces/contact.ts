@@ -1,4 +1,4 @@
-import { ContactAvatar } from "./contact-avatar";
+import { ContactAvatar } from './contact-avatar';
 
 export interface Contact {
   id?: string;

@@ -1,4 +1,4 @@
-import { Component, HostListener, inject } from '@angular/core';
+import { Component, HostListener, inject, signal } from '@angular/core';
 import { TaskList } from './task-list/task-list';
 import { TaskService } from '../../shared/services/task-service';
 import { FormsModule } from '@angular/forms';
@@ -25,15 +25,15 @@ import { Icon } from '../../shared/components/icon/icon';
  */
 export class Board {
   taskService = inject(TaskService);
-  
-  searchTerm: string = '';
-  isAddTaskOverlayOpen: boolean = false;
-  taskToEdit: Task | null = null;
-  addTaskStatus: Task['status'] = 'to-do';
-  selectedTask: Task | null = null;
-  showCloseConfirm: boolean = false;
-  isAddTaskDirty: boolean = false;
-  viewerOpen: boolean = false;
+
+  searchTerm = signal('');
+  isAddTaskOverlayOpen = signal(false);
+  taskToEdit = signal<Task | null>(null);
+  addTaskStatus = signal<Task['status']>('to-do');
+  selectedTask = signal<Task | null>(null);
+  showCloseConfirm = signal(false);
+  isAddTaskDirty = signal(false);
+  viewerOpen = signal(false);
 
   /**
    * Performs a search based on the current search term.
@@ -44,7 +44,7 @@ export class Board {
    * @returns void
    */
   search(): void {
-    this.taskService.setSearchTerm(this.searchTerm.trim().toLowerCase());
+    this.taskService.setSearchTerm(this.searchTerm().trim().toLowerCase());
   }
 
   /**
@@ -56,7 +56,7 @@ export class Board {
    * @returns void
    */
   openTask(task: Task): void {
-    this.selectedTask = task;
+    this.selectedTask.set(task);
   }
 
   /**
@@ -72,7 +72,7 @@ export class Board {
     if (!taskId) return;
 
     this.taskService.deleteDocument('tasks', taskId);
-    this.selectedTask = null as any;
+    this.selectedTask.set(null as any);
   }
 
   /**
@@ -85,9 +85,9 @@ export class Board {
    * @returns void
    */
   openAddTaskOverlay(status: Task['status'] = 'to-do'): void {
-    this.taskToEdit = null;
-    this.addTaskStatus = status;
-    this.isAddTaskOverlayOpen = true;
+    this.taskToEdit.set(null);
+    this.addTaskStatus.set(status);
+    this.isAddTaskOverlayOpen.set(true);
   }
 
   /**
@@ -100,9 +100,9 @@ export class Board {
    * @returns void
    */
   openEditTaskOverlay(task: Task): void {
-    this.taskToEdit = task;
-    this.addTaskStatus = task.status;
-    this.isAddTaskOverlayOpen = true;
+    this.taskToEdit.set(task);
+    this.addTaskStatus.set(task.status);
+    this.isAddTaskOverlayOpen.set(true);
   }
 
   /**
@@ -112,7 +112,7 @@ export class Board {
    * @returns void
    */
   onAddTaskDirtyChange(isDirty: boolean): void {
-    this.isAddTaskDirty = isDirty;
+    this.isAddTaskDirty.set(isDirty);
   }
 
   /**
@@ -123,7 +123,7 @@ export class Board {
    * @returns void
    */
   confirmClose(): void {
-    this.showCloseConfirm = false;
+    this.showCloseConfirm.set(false);
     this.closeAddTaskOverlay();
   }
 
@@ -133,7 +133,7 @@ export class Board {
    * @returns void
    */
   cancelClose(): void {
-    this.showCloseConfirm = false;
+    this.showCloseConfirm.set(false);
   }
 
   /**
@@ -144,12 +144,12 @@ export class Board {
    * @returns void
    */
   onCloseAddTaskClick(): void {
-    if (!this.isAddTaskDirty) {
+    if (!this.isAddTaskDirty()) {
       this.closeAddTaskOverlay();
       return;
     }
 
-    this.showCloseConfirm = true;
+    this.showCloseConfirm.set(true);
   }
 
   /**
@@ -164,12 +164,12 @@ export class Board {
   onAddTaskOverlayMouseDown(event: MouseEvent): void {
     if (event.target !== event.currentTarget) return;
 
-    if (!this.isAddTaskDirty) {
+    if (!this.isAddTaskDirty()) {
       this.closeAddTaskOverlay();
       return;
     }
 
-    this.showCloseConfirm = true;
+    this.showCloseConfirm.set(true);
   }
 
   /**
@@ -182,15 +182,15 @@ export class Board {
    */
   @HostListener('document:keydown.escape')
   onEscape(): void {
-    if (this.viewerOpen) return;
-    if (this.showCloseConfirm) return;
-    if (!this.isAddTaskOverlayOpen) return;
-    if (!this.isAddTaskDirty) {
+    if (this.viewerOpen()) return;
+    if (this.showCloseConfirm()) return;
+    if (!this.isAddTaskOverlayOpen()) return;
+    if (!this.isAddTaskDirty()) {
       this.closeAddTaskOverlay();
       return;
     }
 
-    this.showCloseConfirm = true;
+    this.showCloseConfirm.set(true);
   }
 
   /**
@@ -202,15 +202,15 @@ export class Board {
    * @returns void
    */
   closeAddTaskOverlay(): void {
-    const editedTask = this.taskToEdit;
-    this.isAddTaskOverlayOpen = false;
-    this.taskToEdit = null;
-    this.addTaskStatus = 'to-do';
-    this.isAddTaskDirty = false;
+    const editedTask = this.taskToEdit();
+    this.isAddTaskOverlayOpen.set(false);
+    this.taskToEdit.set(null);
+    this.addTaskStatus.set('to-do');
+    this.isAddTaskDirty.set(false);
 
     if (editedTask?.id) {
       this.openTask(
-        this.taskService.tasks.find((task) => task.id === editedTask.id) ?? editedTask
+        this.taskService.tasks().find((task) => task.id === editedTask.id) ?? editedTask,
       );
     }
   }

@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DropdownAssignee } from './dropdown-assignee';
-import { FirebaseService } from '../../../shared/services/firebase-service';
+import { ContactService } from '../../../shared/services/firebase-service';
 
 describe('DropdownAssignee', () => {
   let component: DropdownAssignee;
@@ -12,7 +12,7 @@ describe('DropdownAssignee', () => {
       imports: [DropdownAssignee],
       providers: [
         {
-          provide: FirebaseService,
+          provide: ContactService,
           useValue: {
             contacts: [],
             loading: false,

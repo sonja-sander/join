@@ -1,6 +1,6 @@
 <section class="add-task" [class.add-task--overlay]="isOverlay()">
   <header class="add-task__header">
-    <h1 id="add-task-title">{{ isEditMode ? 'Edit Task' : 'Add Task' }}</h1>
+    <h1 id="add-task-title">{{ isEditMode() ? 'Edit Task' : 'Add Task' }}</h1>
   </header>
 
   <form
@@ -12,19 +12,18 @@
   >
     <div class="add-task__content">
       <div class="add-task__column">
-
         <app-task-form-field
           label="Title"
           [isRequired]="true"
           placeholder="Enter a title"
-          (fieldBlur)="isTitleTouched = true"
-          [hasError]="isTitleTouched && !taskData.title.trim()"
+          (fieldBlur)="isTitleTouched.set(true)"
+          [hasError]="isTitleTouched() && !taskData.title.trim()"
           [(value)]="taskData.title"
         ></app-task-form-field>
 
         <span
           class="add-task__field-error"
-          [class.is-visible]="isTitleTouched && !taskData.title.trim()"
+          [class.is-visible]="isTitleTouched() && !taskData.title.trim()"
         >
           This field is required
         </span>
@@ -44,24 +43,22 @@
           type="text"
           [useFlatpickr]="true"
           [min]="minDueDate"
-          (fieldBlur)="isDueDateTouched = true"
-          [hasError]="isDueDateTouched && !taskData.dueDate.trim()"
+          (fieldBlur)="isDueDateTouched.set(true)"
+          [hasError]="isDueDateTouched() && !taskData.dueDate.trim()"
           [(value)]="taskData.dueDate"
           iconSrc="date"
         ></app-task-form-field>
 
         <span
           class="add-task__field-error"
-          [class.is-visible]="isDueDateTouched && !taskData.dueDate.trim()"
+          [class.is-visible]="isDueDateTouched() && !taskData.dueDate.trim()"
         >
           This field is required
         </span>
       </div>
 
       <div class="add-task__column add-task__column--divider">
-        <app-priority-selector
-          [(selectedPriority)]="taskData.priority"
-        ></app-priority-selector>
+        <app-priority-selector [(selectedPriority)]="taskData.priority"></app-priority-selector>
 
         <app-dropdown-assignee
           class="add-task__padding-top"
@@ -72,13 +69,13 @@
           class="add-task__padding-top"
           [selectedCategory]="taskData.category"
           (selectedCategoryChange)="taskData.category = $event"
-          (fieldBlur)="isCategoryTouched = true"
-          [hasError]="isCategoryTouched && !taskData.category"
+          (fieldBlur)="isCategoryTouched.set(true)"
+          [hasError]="isCategoryTouched() && !taskData.category"
         ></app-dropdown-category>
 
         <span
           class="add-task__field-error"
-          [class.is-visible]="isCategoryTouched && !taskData.category"
+          [class.is-visible]="isCategoryTouched() && !taskData.category"
         >
           This field is required
         </span>
@@ -89,13 +86,10 @@
           (viewerStateChange)="viewerStateChange.emit($event)"
           (imageTypeError)="showErrorToast('imageTypeError')"
           (taskSizeError)="showErrorToast('taskSizeError')"
-          (deleteAll)="showDeleteAllConfirm = true"
+          (deleteAll)="showDeleteAllConfirm.set(true)"
         ></app-attachments>
 
-        <app-subtask-composer
-          [(subtasks)]="taskData.subtasks"
-        ></app-subtask-composer>
-
+        <app-subtask-composer [(subtasks)]="taskData.subtasks"></app-subtask-composer>
       </div>
     </div>
 
@@ -105,14 +99,10 @@
       </span>
 
       <div class="add-task__actions">
-        @if (!isEditMode) {
-          <button
-            type="button"
-            class="button button--secondary button--icon"
-            (click)="resetForm()"
-          >
+        @if (!isEditMode()) {
+          <button type="button" class="button button--secondary button--icon" (click)="resetForm()">
             Clear
-            <app-icon class="button__icon" name="close" [size]="22" aria-hidden="true"/>
+            <app-icon class="button__icon" name="close" [size]="22" aria-hidden="true" />
           </button>
         }
 
@@ -123,13 +113,16 @@
           [attr.aria-disabled]="!isFormValid ? 'true' : null"
         >
           {{
-            isSubmitting
-              ? (isEditMode ? 'Saving...' : 'Creating...')
-              : (isEditMode ? 'Save' : 'Create Task')
+            isSubmitting()
+              ? isEditMode()
+                ? 'Saving...'
+                : 'Creating...'
+              : isEditMode()
+                ? 'Save'
+                : 'Create Task'
           }}
           <app-icon class="button__icon" name="check" aria-hidden="true" />
         </button>
-
       </div>
     </footer>
   </form>
@@ -138,29 +131,29 @@
 <app-toast
   [message]="'File format not allowed! You can only upload JPEG or PNG.'"
   type="error"
-  [visible]="imageTypeError"
-  (close)="imageTypeError = false"
+  [visible]="imageTypeError()"
+  (close)="imageTypeError.set(false)"
 ></app-toast>
 
 <app-toast
   [message]="'Attached files are too large in total. Max allowed is 1 MB.'"
   type="error"
-  [visible]="taskSizeError"
-  (close)="taskSizeError = false"
+  [visible]="taskSizeError()"
+  (close)="taskSizeError.set(false)"
 ></app-toast>
 
 <app-toast
-  [message]="isEditMode ? 'Task updated' : 'Task created'"
+  [message]="isEditMode() ? 'Task updated' : 'Task created'"
   type="info"
-  [visible]="addTaskSuccess"
+  [visible]="addTaskSuccess()"
 ></app-toast>
 
 <app-confirm-dialog
-  [open]="showDeleteAllConfirm"
+  [open]="showDeleteAllConfirm()"
   [highlight]="'Delete all attachments of'"
   [highlightObject]="taskData.title"
   confirmText="Delete"
   cancelText="Cancel"
   (confirm)="confirmDeleteAllAttachments()"
-  (cancel)="showDeleteAllConfirm = false"
+  (cancel)="showDeleteAllConfirm.set(false)"
 ></app-confirm-dialog>

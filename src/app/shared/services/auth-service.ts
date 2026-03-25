@@ -7,10 +7,10 @@ import {
   signInWithEmailAndPassword,
   signOut,
   updateProfile,
-  UserCredential
+  UserCredential,
 } from '@angular/fire/auth';
 import { BehaviorSubject, from, Observable, tap } from 'rxjs';
-import { FirebaseService } from './firebase-service';
+import { ContactService } from './contact-service';
 import { capitalizeFullname, setUserColor } from '../utilities/utils';
 
 @Injectable({
@@ -25,14 +25,12 @@ import { capitalizeFullname, setUserColor } from '../utilities/utils';
  */
 export class AuthService {
   firebaseAuth = inject(Auth);
-  contactService = inject(FirebaseService);
+  contactService = inject(ContactService);
 
   private authLoadingSubject = new BehaviorSubject<boolean>(true);
   authLoading$ = this.authLoadingSubject.asObservable();
 
-  user$ = authState(this.firebaseAuth).pipe(
-    tap(() => this.authLoadingSubject.next(false))
-  );
+  user$ = authState(this.firebaseAuth).pipe(tap(() => this.authLoadingSubject.next(false)));
 
   /**
    * Logs in a user using email and password.
@@ -68,24 +66,22 @@ export class AuthService {
    * @returns An observable emitting the user credentials
    */
   signUp(name: string, email: string, password: string): Observable<UserCredential> {
-    const promise = createUserWithEmailAndPassword(
-      this.firebaseAuth,
-      email,
-      password
-    ).then(async (response) => {
-      await updateProfile(response.user, { displayName: name });
+    const promise = createUserWithEmailAndPassword(this.firebaseAuth, email, password).then(
+      async (response) => {
+        await updateProfile(response.user, { displayName: name });
 
-      await this.contactService.addDocument({
-        name: capitalizeFullname(name),
-        email: email,
-        phone: '',
-        isAvailable: true,
-        userColor: setUserColor(),
-        avatar: null
-      });
+        await this.contactService.addDocument({
+          name: capitalizeFullname(name),
+          email: email,
+          phone: '',
+          isAvailable: true,
+          userColor: setUserColor(),
+          avatar: null,
+        });
 
-      return response;
-    });
+        return response;
+      },
+    );
 
     return from(promise);
   }

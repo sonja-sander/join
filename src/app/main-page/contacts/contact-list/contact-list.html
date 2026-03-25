@@ -1,11 +1,16 @@
 <section class="contact-list">
   <button class="contact-list__button" type="button" (click)="addContact.emit()">
     <span class="contact-list__btn-text">Add new contact</span>
-    <app-icon class="contact-list__btn-icon" name="add-contact" [size]="26" aria-hidden="true"></app-icon>
+    <app-icon
+      class="contact-list__btn-icon"
+      name="add-contact"
+      [size]="26"
+      aria-hidden="true"
+    ></app-icon>
   </button>
 
   <ul class="contact-list__scroll">
-    @if (loading() && !contacts().length){
+    @if (loading() && !contacts().length) {
       <li class="contact-list__empty">Loading contacts...</li>
     } @else if (!loading() && !contacts().length) {
       <li class="contact-list__empty">No contacts yet</li>

@@ -1,4 +1,13 @@
-import { Component, HostListener, inject, input, OnInit, output } from '@angular/core';
+import {
+  Component,
+  computed,
+  HostListener,
+  inject,
+  input,
+  OnInit,
+  output,
+  signal,
+} from '@angular/core';
 import { Attachment } from '../../interfaces/task';
 import { FileService } from '../../services/file-service';
 import { A11yModule } from '@angular/cdk/a11y';
@@ -21,12 +30,17 @@ export class ImageViewer implements OnInit {
 
   attachments = input<Array<Attachment>>([]);
   startIndex = input<number>(0);
-  
+
   viewerStateChange = output<boolean>();
   close = output<void>();
 
-  currentIndex: number = 0;
-  scale: number = 1;
+  currentIndex = signal(0);
+  scale = signal(1);
+
+  currentAttachment = computed(() => {
+    return this.attachments()[this.currentIndex()];
+  });
+
   minScale: number = 0.25;
   maxScale: number = 3;
   zoomStep: number = 0.25;
@@ -40,7 +54,7 @@ export class ImageViewer implements OnInit {
    * @returns void
    */
   ngOnInit(): void {
-    this.currentIndex = this.startIndex();
+    this.currentIndex.set(this.startIndex());
     this.viewerStateChange.emit(true);
   }
 
@@ -91,21 +105,12 @@ export class ImageViewer implements OnInit {
   }
 
   /**
-   * Returns the currently displayed attachment.
-   *
-   * @returns The current attachment
-   */
-  get currentAttachment(): Attachment {
-    return this.attachments()[this.currentIndex];
-  }
-
-  /**
    * Increases the zoom level of the image.
    *
    * @returns void
    */
   zoomIn(): void {
-    this.scale = Math.min(this.scale + this.zoomStep, this.maxScale);
+    this.scale.set(Math.min(this.scale() + this.zoomStep, this.maxScale));
   }
 
   /**
@@ -114,7 +119,7 @@ export class ImageViewer implements OnInit {
    * @returns void
    */
   zoomOut(): void {
-    this.scale = Math.max(this.scale - this.zoomStep, this.minScale);
+    this.scale.set(Math.max(this.scale() - this.zoomStep, this.minScale));
   }
 
   /**
@@ -145,13 +150,11 @@ export class ImageViewer implements OnInit {
    * @returns void
    */
   previousImage(): void {
-    if (this.attachments.length <= 1) return;
+    if (this.attachments().length <= 1) return;
 
-    this.currentIndex--;
-
-    if (this.currentIndex < 0) {
-      this.currentIndex = this.attachments.length - 1;
-    }
+    this.currentIndex.update(
+      (i) => (i - 1 + this.attachments().length) % this.attachments().length,
+    );
 
     this.resetZoom();
   }
@@ -165,14 +168,10 @@ export class ImageViewer implements OnInit {
    * @returns void
    */
   nextImage(): void {
-    if (this.attachments.length <= 1) return;
+    if (this.attachments().length <= 1) return;
+
+    this.currentIndex.update((i) => (i + 1) % this.attachments().length);
     
-    this.currentIndex++;
-
-    if (this.currentIndex >= this.attachments.length) {
-      this.currentIndex = 0;
-    }
-
     this.resetZoom();
   }
 
@@ -182,6 +181,6 @@ export class ImageViewer implements OnInit {
    * @returns void
    */
   resetZoom(): void {
-    this.scale = 1;
+    this.scale.set(1);
   }
 }

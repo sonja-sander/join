@@ -1,13 +1,6 @@
-import {
-  Component,
-  HostListener,
-  inject,
-  ElementRef,
-  input,
-  output,
-} from '@angular/core';
+import { Component, HostListener, inject, ElementRef, input, output, signal } from '@angular/core';
 import { Contact } from '../../../shared/interfaces/contact';
-import { FirebaseService } from '../../../shared/services/firebase-service';
+import { ContactService } from '../../../shared/services/contact-service';
 import { getTwoInitials } from '../../../shared/utilities/utils';
 import { Avatar } from '../../../shared/components/avatar/avatar';
 import { Icon } from '../../../shared/components/icon/icon';
@@ -23,23 +16,24 @@ import { Icon } from '../../../shared/components/icon/icon';
 })
 export class DropdownAssignee {
   elementRef = inject(ElementRef);
-  firebaseService = inject(FirebaseService);
+  contactService = inject(ContactService);
 
   selectedContacts = input<Array<Contact>>([]);
-  
+
   selectedContactsChange = output<Array<Contact>>();
 
+  isDropdownOpen = signal(false);
+  assigneeQuery = signal('');
+
   getTwoInitials = getTwoInitials;
-  isDropdownOpen: boolean = false;
-  assigneeQuery: string = '';
 
   /** Contacts filtered by the current search query. */
   get filteredContacts(): Contact[] {
-    const query = this.assigneeQuery.trim().toLowerCase();
-    if (!query) return this.firebaseService.contacts;
-    return this.firebaseService.contacts.filter((contact) =>
-      contact.name.toLowerCase().includes(query),
-    );
+    const query = this.assigneeQuery().trim().toLowerCase();
+    if (!query) return this.contactService.contacts();
+    return this.contactService
+      .contacts()
+      .filter((contact) => contact.name.toLowerCase().includes(query));
   }
 
   /**
@@ -48,9 +42,9 @@ export class DropdownAssignee {
    */
   toggleDropdownOpen(event?: Event): void {
     event?.stopPropagation();
-    if (event && this.isDropdownOpen && event.target instanceof HTMLInputElement) return;
-    this.isDropdownOpen = !this.isDropdownOpen;
-    if (!this.isDropdownOpen) this.assigneeQuery = '';
+    if (event && this.isDropdownOpen() && event.target instanceof HTMLInputElement) return;
+    this.isDropdownOpen.update((open) => !open);
+    if (!this.isDropdownOpen()) this.assigneeQuery.set('');
   }
 
   /**
@@ -59,11 +53,11 @@ export class DropdownAssignee {
    */
   @HostListener('document:pointerdown', ['$event'])
   closeOnOutsidePointerDown(event: Event): void {
-    if (!this.isDropdownOpen) return;
+    if (!this.isDropdownOpen()) return;
     const target = event.target;
     if (target && this.elementRef.nativeElement.contains(target)) return;
-    this.isDropdownOpen = false;
-    this.assigneeQuery = '';
+    this.isDropdownOpen.set(false);
+    this.assigneeQuery.set('');
   }
 
   /**
@@ -75,16 +69,14 @@ export class DropdownAssignee {
     event?.stopPropagation();
 
     const current = this.selectedContacts();
-    const exists = current.some(item => item.id === contact.id);
+    const exists = current.some((item) => item.id === contact.id);
 
     if (!exists) {
       this.selectedContactsChange.emit([...current, contact]);
       return;
     }
 
-    this.selectedContactsChange.emit(
-      current.filter(item => item.id !== contact.id)
-    );
+    this.selectedContactsChange.emit(current.filter((item) => item.id !== contact.id));
   }
 
   /**

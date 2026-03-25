@@ -17,11 +17,11 @@
 
         <button
           class="user-menu-button"
-          [class.is-open]="menuOpen"
+          [class.is-open]="menuOpen()"
           (click)="toggleMenu()"
           aria-label="Open user menu"
           aria-controls="user-menu"
-          [attr.aria-expanded]="menuOpen"
+          [attr.aria-expanded]="menuOpen()"
           aria-haspopup="menu"
         >
           @if (user.isAnonymous) {
@@ -33,10 +33,10 @@
           }
         </button>
 
-        @if (menuOpen) {
+        @if (menuOpen()) {
           <div class="menu-overlay" (click)="closeMenu()" aria-hidden="true"></div>
         }
-        <nav id="user-menu" class="user-menu" [class.is-open]="menuOpen" aria-label="User menu">
+        <nav id="user-menu" class="user-menu" [class.is-open]="menuOpen()" aria-label="User menu">
           <ul>
             <li class="mobile-only">
               <a routerLink="/help" (click)="closeMenu()">Help</a>
@@ -53,7 +53,6 @@
           </ul>
         </nav>
       }
-
     </div>
   </div>
 </header>

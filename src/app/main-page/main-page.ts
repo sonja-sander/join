@@ -1,5 +1,14 @@
-import { Component, ElementRef, inject, OnInit, viewChild } from '@angular/core';
-import { FirebaseService } from '../shared/services/firebase-service';
+import {
+  Component,
+  computed,
+  ElementRef,
+  HostListener,
+  inject,
+  OnInit,
+  signal,
+  viewChild,
+} from '@angular/core';
+import { ContactService } from '../shared/services/contact-service';
 import { Router, RouterLink } from '@angular/router';
 import { FormsModule, NgForm } from '@angular/forms';
 import { LogInFormData, SignUpFormData } from '../shared/interfaces/login-form-data';
@@ -24,32 +33,35 @@ import { Icon } from '../shared/components/icon/icon';
  * and introductory animations.
  */
 export class MainPage implements OnInit {
-  firebaseService = inject(FirebaseService);
+  contactService = inject(ContactService);
   authService = inject(AuthService);
   router = inject(Router);
 
   loginTitle = viewChild<ElementRef>('loginTitle');
+
+  isMobile = signal(window.innerWidth < 1025);
+  showMobileGreeting = signal(false);
+  introActive = signal(true);
+  logoMoving = signal(false);
   
+  showSignUp = signal(false);
+  isGuestLoggingIn = signal(false);
+  isLoggingIn = signal(false);
+  submitLoginError = signal(false);
+  loginError = signal(false);
+  isSigningUp = signal(false);
+  submitSignupError = signal(false);
+  signUpError = signal(false);
+  signUpSuccess = signal(false);
+  
+  showLogInPassword = signal(false);
+  showSignUpPassword = signal(false);
+  showConfirmPassword = signal(false);
+  
+  greeting = computed(() => getGreeting());
+
+  confirmPassword = '';
   user$ = this.authService.user$;
-  isMobile: boolean = false;
-  showSignUp: boolean = false;
-  isGuestLoggingIn: boolean = false;
-  isLoggingIn: boolean = false;
-  submitLoginError: boolean = false;
-  loginError: boolean = false;
-  isSigningUp: boolean = false;
-  submitSignupError: boolean = false;
-  signUpError: boolean = false;
-  signUpSuccess: boolean = false;
-  showMobileGreeting: boolean = false;
-
-  introActive: boolean = true;
-  logoMoving: boolean = false;
-
-  confirmPassword: string = '';
-  showLogInPassword: boolean = false;
-  showSignUpPassword: boolean = false;
-  showConfirmPassword: boolean = false;
 
   logInData: LogInFormData = {
     email: '',
@@ -71,21 +83,18 @@ export class MainPage implements OnInit {
    * @returns void
    */
   ngOnInit(): void {
-    this.checkScreen();
     const state = history.state;
 
     if (state?.openSignUp) {
-      this.showSignUp = true;
+      this.showSignUp.set(true);
     }
 
     if (!state?.skipIntro) {
       this.showIntro();
     } else {
-      this.introActive = false;
-      this.logoMoving = true;
+      this.introActive.set(false);
+      this.logoMoving.set(true);
     }
-
-    window.addEventListener('resize', () => this.checkScreen());
   }
 
   /**
@@ -96,8 +105,9 @@ export class MainPage implements OnInit {
    *
    * @returns void
    */
-  checkScreen(): void {
-    this.isMobile = window.innerWidth < 1025;
+  @HostListener('window:resize')
+  onResize(): void {
+    this.isMobile.set(window.innerWidth < 1025);
   }
 
   /**
@@ -107,11 +117,11 @@ export class MainPage implements OnInit {
    */
   showIntro(): void {
     setTimeout(() => {
-      this.logoMoving = true;
+      this.logoMoving.set(true);
     }, 300);
 
     setTimeout(() => {
-      this.introActive = false;
+      this.introActive.set(false);
     }, 1400);
   }
 
@@ -121,7 +131,7 @@ export class MainPage implements OnInit {
    * @returns void
    */
   openSignUp(): void {
-    this.showSignUp = true;
+    this.showSignUp.set(true);
   }
 
   /**
@@ -130,7 +140,7 @@ export class MainPage implements OnInit {
    * @returns void
    */
   closeSignUp(): void {
-    this.showSignUp = false;
+    this.showSignUp.set(false);
 
     setTimeout(() => {
       this.loginTitle()?.nativeElement.focus();
@@ -143,7 +153,8 @@ export class MainPage implements OnInit {
    * @returns void
    */
   toggleLogInPassword(): void {
-    this.showLogInPassword = !this.showLogInPassword;
+    // this.showLogInPassword = !this.showLogInPassword;
+    this.showLogInPassword.update((show) => !show);
   }
 
   /**
@@ -152,7 +163,8 @@ export class MainPage implements OnInit {
    * @returns void
    */
   toggleSignUpPassword(): void {
-    this.showSignUpPassword = !this.showSignUpPassword;
+    // this.showSignUpPassword = !this.showSignUpPassword;
+    this.showSignUpPassword.update((show) => !show);
   }
 
   /**
@@ -161,10 +173,11 @@ export class MainPage implements OnInit {
    * @returns void
    */
   toggleConfirmPassword(): void {
-    this.showConfirmPassword = !this.showConfirmPassword;
+    // this.showConfirmPassword = !this.showConfirmPassword;
+    this.showConfirmPassword.update((show) => !show);
   }
 
-    /**
+  /**
    * Handles the login process.
    *
    * Validates the login form, initiates authentication,
@@ -174,14 +187,13 @@ export class MainPage implements OnInit {
    * @returns void
    */
   onLogin(form: NgForm): void {
-    if (this.isLoggingIn) return;
+    if (this.isLoggingIn()) return;
     if (this.isLoginFormInvalid(form)) return;
 
-    this.isLoggingIn = true;
-    this.loginError = false;
+    this.isLoggingIn.set(true);
+    this.loginError.set(false);
 
-    this.authService.logIn(this.logInData.email, this.logInData.password
-    ).subscribe({
+    this.authService.logIn(this.logInData.email, this.logInData.password).subscribe({
       next: () => {
         this.onLoginSuccess();
       },
@@ -202,11 +214,11 @@ export class MainPage implements OnInit {
    */
   isLoginFormInvalid(form: NgForm): boolean {
     if (form.invalid) {
-      this.submitLoginError = true;
+      this.submitLoginError.set(true);
       form.control.markAllAsTouched();
       return true;
     }
-    this.submitLoginError = false;
+    this.submitLoginError.set(false);
     return false;
   }
 
@@ -219,7 +231,7 @@ export class MainPage implements OnInit {
    * @returns void
    */
   onLoginSuccess(): void {
-    this.isLoggingIn = false;
+    this.isLoggingIn.set(false);
     this.handleLoginNavigation();
   }
 
@@ -234,8 +246,8 @@ export class MainPage implements OnInit {
    */
   onLoginError(err: unknown): void {
     console.error('Login failed', err);
-    this.isLoggingIn = false;
-    this.loginError = true;
+    this.isLoggingIn.set(false);
+    this.loginError.set(true);
   }
 
   /**
@@ -244,17 +256,17 @@ export class MainPage implements OnInit {
    * @returns void
    */
   guestLogin(): void {
-    if (this.isGuestLoggingIn) return;
-    this.isGuestLoggingIn = true;
+    if (this.isGuestLoggingIn()) return;
+    this.isGuestLoggingIn.set(true);
 
     this.authService.guestLogIn().subscribe({
       next: () => {
         this.handleLoginNavigation();
-        this.isGuestLoggingIn = false;
+        this.isGuestLoggingIn.set(false);
       },
       error: (err) => {
         console.error('Guest login failed', err);
-        this.isGuestLoggingIn = false;
+        this.isGuestLoggingIn.set(false);
       },
     });
   }
@@ -268,11 +280,11 @@ export class MainPage implements OnInit {
    * @returns void
    */
   handleLoginNavigation(): void {
-    if (this.isMobile) {
-      this.showMobileGreeting = true;
+    if (this.isMobile()) {
+      this.showMobileGreeting.set(true);
 
       setTimeout(() => {
-        this.showMobileGreeting = false;
+        this.showMobileGreeting.set(false);
         this.router.navigateByUrl('/summary', { replaceUrl: true });
       }, 2000);
     } else {
@@ -290,21 +302,22 @@ export class MainPage implements OnInit {
    * @returns void
    */
   onSignUp(form: NgForm): void {
-    if (this.isSigningUp) return;
+    if (this.isSigningUp()) return;
     if (this.isSignUpFormInvalid(form)) return;
 
-    this.isSigningUp = true;
-    this.signUpError = false;
+    this.isSigningUp.set(true);
+    this.signUpError.set(false);
 
-    this.authService.signUp(this.signUpData.name, this.signUpData.email, this.signUpData.password
-    ).subscribe({
-      next: () => {
-        this.onSignUpSuccess();
-      },
-      error: (err) => {
-        this.onSignUpError(err);
-      },
-    });
+    this.authService
+      .signUp(this.signUpData.name, this.signUpData.email, this.signUpData.password)
+      .subscribe({
+        next: () => {
+          this.onSignUpSuccess();
+        },
+        error: (err) => {
+          this.onSignUpError(err);
+        },
+      });
   }
 
   /**
@@ -317,11 +330,11 @@ export class MainPage implements OnInit {
    */
   isSignUpFormInvalid(form: NgForm): boolean {
     if (form.invalid || this.signUpData.password !== this.confirmPassword) {
-      this.submitSignupError = true;
+      this.submitSignupError.set(true);
       form.control.markAllAsTouched();
       return true;
     }
-    this.submitSignupError = false;
+    this.submitSignupError.set(false);
     return false;
   }
 
@@ -334,7 +347,7 @@ export class MainPage implements OnInit {
    * @returns void
    */
   onSignUpSuccess(): void {
-    this.isSigningUp = false;
+    this.isSigningUp.set(false);
     this.confirmPassword = '';
     this.signUpData = {
       name: '',
@@ -356,8 +369,8 @@ export class MainPage implements OnInit {
    */
   onSignUpError(err: unknown): void {
     console.error('Sign up failed', err);
-    this.isSigningUp = false;
-    this.signUpError = true;
+    this.isSigningUp.set(false);
+    this.signUpError.set(true);
   }
 
   /**
@@ -366,19 +379,10 @@ export class MainPage implements OnInit {
    * @returns void
    */
   showToast(): void {
-    this.signUpSuccess = true;
+    this.signUpSuccess.set(true);
 
     setTimeout(() => {
-      this.signUpSuccess = false;
+      this.signUpSuccess.set(false);
     }, 2500);
-  }
-
-  /**
-   * Returns a contextual greeting message.
-   *
-   * @returns The greeting string
-   */
-  get greeting(): string {
-    return getGreeting();
   }
 }

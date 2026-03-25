@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import {
   addDoc,
   collection,
@@ -19,18 +19,19 @@ import { capitalizeFullname, setUserColor } from '../utilities/utils';
   providedIn: 'root',
 })
 /**
- * FirebaseService
+ * ContactService
  *
  * Manages contact data stored in Firestore.
  * Handles real-time synchronization, creation,
  * updates, and deletion of contact documents.
  */
-export class FirebaseService {
+export class ContactService {
   firestore: Firestore = inject(Firestore);
-  contacts: Array<Contact> = [];
-  contactsVersion: number = 0;
+
+  contacts = signal<Array<Contact>>([]);
+  loading = signal(true);
+
   unsubCollection!: Unsubscribe;
-  loading: boolean = true;
 
   constructor() {
     this.unsubCollection = this.subCollection();
@@ -45,7 +46,7 @@ export class FirebaseService {
    * @returns The unsubscribe function for the listener
    */
   subCollection(): Unsubscribe {
-    this.loading = true;
+    this.loading.set(true);
 
     const contactsQuery = query(
       this.getContactsRef(),
@@ -54,13 +55,14 @@ export class FirebaseService {
     );
 
     return onSnapshot(contactsQuery, (snapshot) => {
-      this.contacts.length = 0;
+      const loadedContacts: Array<Contact> = [];
+
       snapshot.forEach((contact) => {
-        this.contacts.push(this.mapContactObj(contact.data(), contact.id));
+        loadedContacts.push(this.mapContactObj(contact.data(), contact.id));
       });
 
-      this.loading = false;
-      this.contactsVersion += 1;
+      this.contacts.set(loadedContacts);
+      this.loading.set(false);
     });
   }
 
@@ -79,7 +81,7 @@ export class FirebaseService {
       phone: obj.phone || '',
       isAvailable: obj.isAvailable || false,
       userColor: obj.userColor ?? setUserColor(),
-      avatar: obj.avatar || null
+      avatar: obj.avatar || null,
     };
   }
 
@@ -106,7 +108,7 @@ export class FirebaseService {
   async updateDocument(item: Contact, colId: string): Promise<void> {
     if (item.id) {
       const docRef = this.getSingleDocRef(colId, item.id);
-      await updateDoc(docRef, this.getCleanJson(item))
+      await updateDoc(docRef, this.getCleanObj(item))
         .catch((err) => {
           console.log(err);
         })
@@ -115,22 +117,22 @@ export class FirebaseService {
   }
 
   /**
-   * Creates a clean JSON object from a contact.
+   * Creates a clean object from a contact.
    *
    * Used to remove unwanted properties before
    * sending data to Firestore.
    *
    * @param contact The contact to clean
-   * @returns A plain JSON object representing the contact
+   * @returns A plain object representing the contact
    */
-  getCleanJson(contact: Contact): {} {
+  getCleanObj(contact: Contact): {} {
     return {
       name: contact.name,
       email: contact.email,
       phone: contact.phone,
       isAvailable: contact.isAvailable,
       userColor: contact.userColor,
-      avatar: contact.avatar
+      avatar: contact.avatar,
     };
   }
 
@@ -148,6 +150,16 @@ export class FirebaseService {
       console.error(err);
       return null;
     }
+  }
+
+  /**
+   * Retrieves a contact by its unique identifier.
+   *
+   * @param id The contact identifier
+   * @returns The matching Contact object or undefined if not found
+   */
+  getContactById(id: string) {
+    return this.contacts().find((contact) => contact.id === id);
   }
 
   /**
