@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DropdownAssignee } from './dropdown-assignee';
-import { ContactService } from '../../../shared/services/firebase-service';
+import { ContactService } from '../../../shared/services/contact-service';
 
 describe('DropdownAssignee', () => {
   let component: DropdownAssignee;

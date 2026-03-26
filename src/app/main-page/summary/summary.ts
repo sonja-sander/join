@@ -23,7 +23,7 @@ export class Summary {
   taskService = inject(TaskService);
   authService = inject(AuthService);
 
-  greeting = computed(() => getGreeting());
+  greeting = computed<string>(() => getGreeting());
 
   user$ = this.authService.user$;
 }

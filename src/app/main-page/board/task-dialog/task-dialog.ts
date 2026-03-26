@@ -34,10 +34,10 @@ export class TaskDialog {
   editTask = output<Task>();
   close = output<void>();
 
-  showDeleteConfirm = signal(false);
-  showViewer = signal(false);
+  showDeleteConfirm = signal<boolean>(false);
+  showViewer = signal<boolean>(false);
   viewerAttachments = signal<Array<Attachment>>([]);
-  viewerStartIndex = signal(0);
+  viewerStartIndex = signal<number>(0);
 
   /**
    * Initiates the delete confirmation state.

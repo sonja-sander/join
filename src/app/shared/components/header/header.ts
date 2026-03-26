@@ -22,7 +22,7 @@ export class Header {
   authService = inject(AuthService);
   router = inject(Router);
 
-  menuOpen = signal(false);
+  menuOpen = signal<boolean>(false);
 
   user$ = this.authService.user$;
 

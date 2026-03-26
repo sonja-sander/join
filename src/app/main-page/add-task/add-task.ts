@@ -61,19 +61,19 @@ export class AddTask implements OnChanges, OnDestroy {
   dirtyChange = output<boolean>();
   viewerStateChange = output<boolean>();
 
-  hasUserEdited = signal(false);
-  isSubmitting = signal(false);
-  addTaskSuccess = signal(false);
-  imageTypeError = signal(false);
-  taskSizeError = signal(false);
-  showDeleteAllConfirm = signal(false);
-  isTitleTouched = signal(false);
-  isDueDateTouched = signal(false);
-  isCategoryTouched = signal(false);
+  hasUserEdited = signal<boolean>(false);
+  isSubmitting = signal<boolean>(false);
+  addTaskSuccess = signal<boolean>(false);
+  imageTypeError = signal<boolean>(false);
+  taskSizeError = signal<boolean>(false);
+  showDeleteAllConfirm = signal<boolean>(false);
+  isTitleTouched = signal<boolean>(false);
+  isDueDateTouched = signal<boolean>(false);
+  isCategoryTouched = signal<boolean>(false);
 
-  isEditMode = computed(() => Boolean(this.taskToEdit()?.id));
+  isEditMode = computed<boolean>(() => Boolean(this.taskToEdit()?.id));
 
-  minDueDate = getTodayDateString();
+  minDueDate: string = getTodayDateString();
   private toastTimer?: number;
 
   taskData: TaskFormData = {

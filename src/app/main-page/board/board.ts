@@ -26,14 +26,14 @@ import { Icon } from '../../shared/components/icon/icon';
 export class Board {
   taskService = inject(TaskService);
 
-  searchTerm = signal('');
-  isAddTaskOverlayOpen = signal(false);
+  searchTerm = signal<string>('');
+  isAddTaskOverlayOpen = signal<boolean>(false);
   taskToEdit = signal<Task | null>(null);
   addTaskStatus = signal<Task['status']>('to-do');
   selectedTask = signal<Task | null>(null);
-  showCloseConfirm = signal(false);
-  isAddTaskDirty = signal(false);
-  viewerOpen = signal(false);
+  showCloseConfirm = signal<boolean>(false);
+  isAddTaskDirty = signal<boolean>(false);
+  viewerOpen = signal<boolean>(false);
 
   /**
    * Performs a search based on the current search term.

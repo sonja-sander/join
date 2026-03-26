@@ -22,8 +22,8 @@ export class DropdownAssignee {
 
   selectedContactsChange = output<Array<Contact>>();
 
-  isDropdownOpen = signal(false);
-  assigneeQuery = signal('');
+  isDropdownOpen = signal<boolean>(false);
+  assigneeQuery = signal<string>('');
 
   getTwoInitials = getTwoInitials;
 

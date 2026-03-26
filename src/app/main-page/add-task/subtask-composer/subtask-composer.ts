@@ -28,7 +28,7 @@ export class SubtaskComposer implements OnChanges {
 
   subtasksChange = output<Array<Subtask>>();
 
-  showSubtaskDuplicateError = signal(false);
+  showSubtaskDuplicateError = signal<boolean>(false);
 
   readonly subtaskTitleMinLength: number = 3;
   readonly subtaskTitleMaxLength: number = 100;

@@ -29,9 +29,9 @@ export class ContactInfo implements OnChanges {
   editContact = output<void>();
   requestDelete = output<void>();
 
-  fabMenuOpen = signal(false);
-  profileAnimating = signal(false);
-  isDownLg = signal(window.innerWidth <= 768);
+  fabMenuOpen = signal<boolean>(false);
+  profileAnimating = signal<boolean>(false);
+  isDownLg = signal<boolean>(window.innerWidth <= 768);
 
   readonly getTwoInitials = getTwoInitials;
 

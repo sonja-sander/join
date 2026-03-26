@@ -13,14 +13,14 @@ import { Icon } from '../../../shared/components/icon/icon';
   styleUrl: './task-form-field.scss',
 })
 export class TaskFormField {
-  value = input('');
-  label = input('');
-  isRequired = input(false);
-  hasError = input(false);
-  placeholder = input('');
-  type = input('text');
-  useFlatpickr = input(false);
-  isTextarea = input(false);
+  value = input<string>('');
+  label = input<string>('');
+  isRequired = input<boolean>(false);
+  hasError = input<boolean>(false);
+  placeholder = input<string>('');
+  type = input<string>('text');
+  useFlatpickr = input<boolean>(false);
+  isTextarea = input<boolean>(false);
   min = input<string | null>(null);
   iconSrc = input<string | null>(null);
 

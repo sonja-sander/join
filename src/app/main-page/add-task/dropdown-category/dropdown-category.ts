@@ -21,7 +21,7 @@ export class DropdownCategory {
   selectedCategoryChange = output<TaskCategoryOption | null>();
   fieldBlur = output<void>();
 
-  isDropdownOpen = signal(false);
+  isDropdownOpen = signal<boolean>(false);
 
   /** Human-readable label of the selected category. */
   get selectedCategoryLabel(): string {

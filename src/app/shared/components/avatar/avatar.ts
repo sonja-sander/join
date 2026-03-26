@@ -12,7 +12,7 @@ export class Avatar {
   avatar = input<string | null>(null);
   size = input<number>(40);
 
-  initials = computed(() => {
+  initials = computed<string>(() => {
     if (!this.name()) return '';
 
     return this.name()

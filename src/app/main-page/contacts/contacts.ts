@@ -29,21 +29,21 @@ export class Contacts {
 
   dialog = viewChild<ContactDialog>(ContactDialog);
 
-  isMobile = signal(window.innerWidth <= 768);
-  isDetailOpen = signal(false);
-  addContactSuccess = signal(false);
-  showDeleteConfirm = signal(false);
+  isMobile = signal<boolean>(window.innerWidth <= 768);
+  isDetailOpen = signal<boolean>(false);
+  addContactSuccess = signal<boolean>(false);
+  showDeleteConfirm = signal<boolean>(false);
   contactToDelete = signal<Contact | null>(null);
   activeContactID = signal<string | null>(null);
 
-  activeContact = computed(() => {
+  activeContact = computed<Contact | null>(() => {
     const id = this.activeContactID();
     if (!id) return null;
 
     return this.contactService.contacts().find((contact) => contact.id === id) ?? null;
   });
 
-  canDeleteActiveContact = computed(() => this.canDeleteContact(this.activeContact()));
+  canDeleteActiveContact = computed<boolean>(() => this.canDeleteContact(this.activeContact()));
 
   /**
    * Updates the responsive state on viewport resize.

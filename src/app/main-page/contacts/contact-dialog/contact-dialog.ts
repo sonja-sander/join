@@ -42,9 +42,9 @@ export class ContactDialog {
   contactForm = viewChild<NgForm>('contactForm');
   filePicker = viewChild<ElementRef<HTMLInputElement>>('filePicker');
 
-  isOpen = signal(false);
-  imageTypeError = signal(false);
-  imageSizeError = signal(false);
+  isOpen = signal<boolean>(false);
+  imageTypeError = signal<boolean>(false);
+  imageSizeError = signal<boolean>(false);
 
   dialogMode: 'add' | 'edit' = 'add';
   userColor: string | null = null;

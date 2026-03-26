@@ -31,9 +31,9 @@ export class Attachments {
   filePicker = viewChild<ElementRef<HTMLInputElement>>('filePicker');
   gallery = viewChild<ElementRef<HTMLDivElement>>('gallery');
 
-  isDragging = signal(false);
-  showViewer = signal(false);
-  viewerStartIndex = signal(0);
+  isDragging = signal<boolean>(false);
+  showViewer = signal<boolean>(false);
+  viewerStartIndex = signal<number>(0);
 
   /**
    * Handles drag-over events for the drop zone.

@@ -29,11 +29,11 @@ export class SingleTask {
 
   openTask = output<Task>();
 
-  moveMenuOpen = signal(false);
-  isMobile = signal(this.checkIsMobile());
+  moveMenuOpen = signal<boolean>(false);
+  isMobile = signal<boolean>(this.checkIsMobile());
 
-  doneSubtasksCount = computed(() => this.task().subtasks?.filter((s) => s.done).length ?? 0);
-  totalSubtasksCount = computed(() => this.task().subtasks?.length ?? 0);
+  doneSubtasksCount = computed<number>(() => this.task().subtasks?.filter((s) => s.done).length ?? 0);
+  totalSubtasksCount = computed<number>(() => this.task().subtasks?.length ?? 0);
 
   statuses: Array<'to-do' | 'in-progress' | 'await-feedback' | 'done'> = [
     'to-do',

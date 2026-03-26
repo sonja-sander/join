@@ -34,10 +34,10 @@ export class ImageViewer implements OnInit {
   viewerStateChange = output<boolean>();
   close = output<void>();
 
-  currentIndex = signal(0);
-  scale = signal(1);
+  currentIndex = signal<number>(0);
+  scale = signal<number>(1);
 
-  currentAttachment = computed(() => {
+  currentAttachment = computed<Attachment>(() => {
     return this.attachments()[this.currentIndex()];
   });
 

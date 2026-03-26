@@ -29,7 +29,7 @@ export class TaskList {
   openTask = output<Task>();
   addTaskRequested = output<Task['status']>();
 
-  tasksByStatus = computed(() => {
+  tasksByStatus = computed<Array<Task>>(() => {
     return this.taskService.filteredTasks().filter((task) => task.status === this.status());
   });
 

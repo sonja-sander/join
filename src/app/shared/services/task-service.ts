@@ -30,10 +30,10 @@ export class TaskService {
   firestore: Firestore = inject(Firestore);
 
   tasks = signal<Array<Task>>([]);
-  loading = signal(true);
-  searchTerm = signal('');
+  loading = signal<boolean>(true);
+  searchTerm = signal<string>('');
 
-  filteredTasks = computed(() => {
+  filteredTasks = computed<Array<Task>>(() => {
     const term = this.searchTerm().toLowerCase();
     const tasks = this.tasks();
 
@@ -62,9 +62,9 @@ export class TaskService {
     return counts;
   });
 
-  urgentTaskCount = computed(() => this.tasks().filter((t) => t.priority === 'high').length);
+  urgentTaskCount = computed<number>(() => this.tasks().filter((t) => t.priority === 'high').length);
 
-  nextDeadline = computed(() => {
+  nextDeadline = computed<Date | null>(() => {
     let nextDate: Date | null = null;
 
     for (const task of this.tasks()) {
@@ -80,7 +80,7 @@ export class TaskService {
   });
 
   unsubCollection!: Unsubscribe;
-  taskCategories: TaskCategoryOption[] = [
+  taskCategories: Array<TaskCategoryOption> = [
     { value: 'technical-task', label: 'Technical Task' },
     { value: 'user-story', label: 'User Story' },
   ];

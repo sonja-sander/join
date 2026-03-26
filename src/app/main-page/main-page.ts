@@ -39,28 +39,28 @@ export class MainPage implements OnInit {
 
   loginTitle = viewChild<ElementRef>('loginTitle');
 
-  isMobile = signal(window.innerWidth < 1025);
-  showMobileGreeting = signal(false);
-  introActive = signal(true);
-  logoMoving = signal(false);
+  isMobile = signal<boolean>(window.innerWidth < 1025);
+  showMobileGreeting = signal<boolean>(false);
+  introActive = signal<boolean>(true);
+  logoMoving = signal<boolean>(false);
   
-  showSignUp = signal(false);
-  isGuestLoggingIn = signal(false);
-  isLoggingIn = signal(false);
-  submitLoginError = signal(false);
-  loginError = signal(false);
-  isSigningUp = signal(false);
-  submitSignupError = signal(false);
-  signUpError = signal(false);
-  signUpSuccess = signal(false);
+  showSignUp = signal<boolean>(false);
+  isGuestLoggingIn = signal<boolean>(false);
+  isLoggingIn = signal<boolean>(false);
+  submitLoginError = signal<boolean>(false);
+  loginError = signal<boolean>(false);
+  isSigningUp = signal<boolean>(false);
+  submitSignupError = signal<boolean>(false);
+  signUpError = signal<boolean>(false);
+  signUpSuccess = signal<boolean>(false);
   
-  showLogInPassword = signal(false);
-  showSignUpPassword = signal(false);
-  showConfirmPassword = signal(false);
+  showLogInPassword = signal<boolean>(false);
+  showSignUpPassword = signal<boolean>(false);
+  showConfirmPassword = signal<boolean>(false);
   
-  greeting = computed(() => getGreeting());
+  greeting = computed<string>(() => getGreeting());
 
-  confirmPassword = '';
+  confirmPassword: string = '';
   user$ = this.authService.user$;
 
   logInData: LogInFormData = {

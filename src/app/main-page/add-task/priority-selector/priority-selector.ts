@@ -24,7 +24,7 @@ export class PrioritySelector {
 
   selectedPriorityChange = output<Task['priority']>();
 
-  options: PriorityOption[] = [
+  options: Array<PriorityOption> = [
     {
       value: 'high',
       label: 'Urgent',
