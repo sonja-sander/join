@@ -165,7 +165,7 @@ nav {
 }
 
 .legal-nav {
-  display: none;
+  display: block;
 
   @include styles.up-xxl {
     display: block;
@@ -231,6 +231,12 @@ nav {
         }
       }
     }
+  }
+}
+
+.desktop-only {
+  @include styles.down-xxl {
+    display: none;
   }
 }
 

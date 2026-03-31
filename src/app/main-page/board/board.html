@@ -1,7 +1,7 @@
-<section>
+<section aria-labelledby="board-title">
   <div class="content-wrapper">
     <div class="title-section">
-      <h1>Board</h1>
+      <h1 id="board-title">Board</h1>
       <div class="search-bar" role="search">
         <label for="search-input" class="sr-only"
           >Search tasks by category, title or description</label
@@ -55,6 +55,11 @@
         (openTask)="openTask($event)"
         (addTaskRequested)="openAddTaskOverlay($event)"
       ></app-task-list>
+      <p class="sr-only" role="status" aria-live="polite">
+        @if (taskService.searchTerm()) {
+          {{ searchResult() }}
+        }
+      </p>
     </div>
 
     @if (selectedTask()) {

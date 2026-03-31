@@ -9,7 +9,6 @@ import {
   orderBy,
   query,
   updateDoc,
-  where,
 } from '@angular/fire/firestore';
 import { Task } from '../interfaces/task';
 import { Unsubscribe } from '@angular/fire/auth';
@@ -33,10 +32,9 @@ export class TaskService {
   loading = signal<boolean>(true);
   searchTerm = signal<string>('');
 
-  filteredTasks = computed<Array<Task>>(() => {
+  filteredSearchTasks = computed<Array<Task>>(() => {
     const term = this.searchTerm().toLowerCase();
     const tasks = this.tasks();
-
     if (!term) return tasks;
 
     return tasks.filter(
@@ -46,6 +44,8 @@ export class TaskService {
         task.category.toLowerCase().includes(term),
     );
   });
+
+  totalSearchResults = computed(() => this.filteredSearchTasks().length);
 
   taskCountByStatus = computed(() => {
     const counts = {
@@ -158,7 +158,7 @@ export class TaskService {
   async updateDocument(item: Task, colId: string): Promise<void> {
     if (item.id) {
       let docRef = this.getSingleDocRef(colId, item.id);
-      await updateDoc(docRef, this.getCleanJson(item))
+      await updateDoc(docRef, this.getCleanObj(item))
         .catch((err) => {
           console.log(err);
         })
@@ -175,7 +175,7 @@ export class TaskService {
    * @param task The task to clean
    * @returns A plain JSON object representing the task
    */
-  getCleanJson(task: Task): {} {
+  getCleanObj(task: Task): {} {
     return {
       status: task.status,
       order: task.order,
@@ -199,7 +199,7 @@ export class TaskService {
   async updateSubtasks(task: Task): Promise<void> {
     if (task.id) {
       const docRef = this.getSingleDocRef('tasks', task.id);
-      await updateDoc(docRef, this.getCleanJsonSubtasks(task))
+      await updateDoc(docRef, this.getCleanObjSubtasks(task))
         .catch((err) => {
           console.log(err);
         })
@@ -213,7 +213,7 @@ export class TaskService {
    * @param task The task containing subtasks
    * @returns A plain JSON object with subtasks only
    */
-  getCleanJsonSubtasks(task: Task): {} {
+  getCleanObjSubtasks(task: Task): {} {
     return {
       subtasks: task.subtasks,
     };
@@ -228,7 +228,7 @@ export class TaskService {
   async updateAttachments(task: Task): Promise<void> {
     if (task.id) {
       const docRef = this.getSingleDocRef('tasks', task.id);
-      await updateDoc(docRef, this.getCleanJsonAttachments(task))
+      await updateDoc(docRef, this.getCleanObjAttachments(task))
         .catch((err) => {
           console.log(err);
         })
@@ -242,7 +242,7 @@ export class TaskService {
    * @param task The task containing attachments
    * @returns A plain JSON object with attachments only
    */
-  getCleanJsonAttachments(task: Task): {} {
+  getCleanObjAttachments(task: Task): {} {
     return {
       attachments: task.attachments ?? [],
     };

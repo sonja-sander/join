@@ -63,8 +63,8 @@ article {
 
   .mobile-move-btn {
     @include styles.setFlex();
-    width: 28px;
-    height: 28px;
+    width: 34px;
+    height: 34px;
     background-color: transparent;
     color: styles.$gray-dark;
     z-index: 2;
@@ -130,7 +130,7 @@ article {
 
 .title {
   margin-bottom: 8px;
-  font-size: 16px;
+  font-size: 1.6rem;
 }
 
 .description {

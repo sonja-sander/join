@@ -36,7 +36,9 @@
     }
 
     .contacts__list {
-      display: none;
+      opacity: 0;
+      pointer-events: none;
+      position: absolute;
     }
   }
 }

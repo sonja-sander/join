@@ -5,7 +5,7 @@
   width: clamp(32rem, 40vw, 40rem);
   height: 100%;
   min-height: 0;
-  padding: clamp(1.2rem, 2vw, 1.8rem) 0 clamp(1.2rem, 2vw, 1.8rem) 0;
+  padding: clamp(1.2rem, 2vw, 1.8rem) 0 0 0;
   background-color: #ffffff;
   overflow: hidden;
 
@@ -98,9 +98,11 @@
     align-self: center;
   }
 }
+
 @include styles.down-xxl {
   .contact-list {
     height: calc(100dvh - 2 * styles.$header-height);
+    padding: 0;
   }
 }
 

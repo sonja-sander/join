@@ -1,11 +1,13 @@
 import {
   Component,
+  ElementRef,
   HostListener,
   OnChanges,
   SimpleChanges,
   input,
   output,
   signal,
+  viewChild,
 } from '@angular/core';
 import { Contact } from '../../../shared/interfaces/contact';
 import { getTwoInitials } from '../../../shared/utilities/utils';
@@ -29,7 +31,10 @@ export class ContactInfo implements OnChanges {
   editContact = output<void>();
   requestDelete = output<void>();
 
+  contactDetails = viewChild<ElementRef>('contactDetails');
+
   fabMenuOpen = signal<boolean>(false);
+  profileVisible = signal<boolean>(true);
   profileAnimating = signal<boolean>(false);
   isDownLg = signal<boolean>(window.innerWidth <= 768);
 
@@ -55,11 +60,20 @@ export class ContactInfo implements OnChanges {
    */
   ngOnChanges(changes: SimpleChanges): void {
     if (!changes['activeContact'] || !this.activeContact()) return;
+
+    if (this.isDownLg()) {
+      this.profileVisible.set(true);
+      this.profileAnimating.set(true);
+      return;
+    }
+
+    this.profileVisible.set(false);
     this.profileAnimating.set(false);
 
     setTimeout(() => {
+      this.profileVisible.set(true);
       this.profileAnimating.set(true);
-    }, 0);
+    }, 200);
   }
 
   /**
@@ -70,6 +84,14 @@ export class ContactInfo implements OnChanges {
    */
   hasPhoneNumber(phone: Contact['phone'] | null | undefined): boolean {
     return String(phone ?? '').trim().length > 0;
+  }
+
+  /**
+   * Moves focus to the contact details heading
+   * when a contact is opened.
+   */
+  focusDetails() {
+    this.contactDetails()?.nativeElement.focus();
   }
 
   /**

@@ -38,7 +38,8 @@ header {
   }
 
   .desktop-title {
-    font-size: 20px;
+    font-size: 2rem;
+    font-weight: normal;
   }
 }
 
@@ -92,7 +93,7 @@ header {
       @include styles.setFont($color: styles.$blue-sky, $weight: 900);
 
       @include styles.up-xxl {
-        font-size: 18px;
+        font-size: 1.8rem;
       }
     }
   }

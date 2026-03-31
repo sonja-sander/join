@@ -30,7 +30,7 @@ export class TaskList {
   addTaskRequested = output<Task['status']>();
 
   tasksByStatus = computed<Array<Task>>(() => {
-    return this.taskService.filteredTasks().filter((task) => task.status === this.status());
+    return this.taskService.filteredSearchTasks().filter((task) => task.status === this.status());
   });
 
   connectedLists: Array<string> = ['to-do', 'in-progress', 'await-feedback', 'done'];

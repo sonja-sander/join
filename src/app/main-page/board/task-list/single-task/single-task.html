@@ -33,7 +33,7 @@
 
       @for (status of statuses; track status) {
         @if (status !== task().status) {
-          <button (click)="moveTo(status, $event)">
+          <button (click)="moveTo(status, $event)" [attr.tabindex]="moveMenuOpen() ? 0 : -1">
             <app-icon
               [name]="
                 statuses.indexOf(status) > statuses.indexOf(task().status)
@@ -95,11 +95,11 @@
       </div>
 
       @if (task().priority === 'low') {
-        <app-icon class="priority-low" name="priority-low" aria-label="Low priority" />
+        <app-icon class="priority-low" name="priority-low" role="img" aria-label="Low priority" />
       } @else if (task().priority === 'medium') {
-        <app-icon class="priority-medium" name="priority-medium" aria-label="Medium priority" />
+        <app-icon class="priority-medium" name="priority-medium" role="img" aria-label="Medium priority" />
       } @else if (task().priority === 'high') {
-        <app-icon class="priority-low" name="priority-low" aria-label="High priority" />
+        <app-icon class="priority-high" name="priority-high" role="img" aria-label="High priority" />
       }
     </div>
   </article>

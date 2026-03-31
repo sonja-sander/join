@@ -27,6 +27,7 @@ export class Board {
   taskService = inject(TaskService);
 
   searchTerm = signal<string>('');
+  searchResult = signal<string>('');
   isAddTaskOverlayOpen = signal<boolean>(false);
   taskToEdit = signal<Task | null>(null);
   addTaskStatus = signal<Task['status']>('to-do');
@@ -38,13 +39,24 @@ export class Board {
   /**
    * Performs a search based on the current search term.
    *
-   * Updates the search term in the task service
-   * after trimming and normalizing the input.
+   * Normalizes the input and updates the search term in the task service.
+   * Sets a short feedback message for screenreaders depending on whether results were found.
    *
    * @returns void
    */
   search(): void {
-    this.taskService.setSearchTerm(this.searchTerm().trim().toLowerCase());
+    const term = this.searchTerm().trim().toLowerCase();
+    this.taskService.setSearchTerm(term);
+    if (!term) return this.searchResult.set('');
+
+    const count = this.taskService.totalSearchResults();
+    this.searchResult.set('');
+
+    setTimeout(() => {
+      this.searchResult.set(
+        count > 0 ? 'Search results found' : 'No search results found'
+      );
+    }, 50);
   }
 
   /**

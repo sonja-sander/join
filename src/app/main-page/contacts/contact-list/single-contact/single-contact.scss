@@ -45,14 +45,9 @@
 
   &--active {
     background-color: styles.$gray-dark;
-    transform: scale(1.02);
 
     .single-contact__name {
-      @include styles.setFont(
-        $size: clamp(1em, 1.25em, 1.5em),
-        $weight: 400,
-        $color: styles.$white-soft
-      );
+      color: styles.$white-soft;
     }
   }
 }

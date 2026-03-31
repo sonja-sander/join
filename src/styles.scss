@@ -32,10 +32,10 @@ body:has(.task-dialog-overlay) {
 }
 
 h1 {
-  font-size: 32px;
+  font-size: 3.2rem;
 
   @include styles.up-xxl {
-    font-size: 48px;
+    font-size: 4.8rem;
   }
 }
 
@@ -147,38 +147,38 @@ button {
 
     h2 {
       margin: 24px 0 16px;
-      font-size: 24px;
+      font-size: 2.4rem;
 
       @include styles.up-xxl {
-        font-size: 30px;
+        font-size: 3rem;
       }
     }
 
     h3 {
       margin-top: 16px;
-      font-size: 20px;
+      font-size: 2rem;
 
       @include styles.up-xxl {
-        font-size: 24px;
+        font-size: 2.4rem;
       }
     }
 
     h4 {
       margin-top: 16px;
-      font-size: 18px;
+      font-size: 1.8rem;
 
       @include styles.up-xxl {
-        font-size: 20px;
+        font-size: 2rem;
       }
     }
 
     h5,
     h6 {
       margin-top: 16px;
-      font-size: 16px;
+      font-size: 1.6rem;
 
       @include styles.up-xxl {
-        font-size: 18px;
+        font-size: 1.8rem;
       }
     }
 
@@ -203,7 +203,7 @@ button {
       &::before {
         content: counter(number-counter) '. ';
         font-weight: bold;
-        font-size: 20px;
+        font-size: 2rem;
       }
     }
 
@@ -212,7 +212,7 @@ button {
 
       > span {
         font-weight: bold;
-        font-size: 18px;
+        font-size: 1.8rem;
       }
     }
 
@@ -301,23 +301,23 @@ button {
 // #region Goodday message after login
 .good-day-message {
   @include styles.setFlex($d: column);
-  font-size: 30px;
+  font-size: 3rem;
   font-weight: 500;
   color: styles.$gray-dark;
   max-width: 100%;
 
   @include styles.up-xxl {
     align-items: flex-start;
-    font-size: 26px;
+    font-size: 2.6rem;
   }
 
   @media (min-width: 1200px) {
-    font-size: 40px;
+    font-size: 4rem;
   }
 
   .user-name {
     color: styles.$blue-sky;
-    font-size: 36px;
+    font-size: 3.6rem;
     font-weight: bold;
     text-align: center;
     align-self: center;
@@ -327,11 +327,11 @@ button {
     white-space: normal;
 
     @include styles.up-xxl {
-      font-size: 30px;
+      font-size: 3rem;
     }
 
     @media (min-width: 1200px) {
-      font-size: 48px;
+      font-size: 4.8rem;
     }
   }
 }

@@ -53,6 +53,7 @@ export class MainPage implements OnInit {
   submitSignupError = signal<boolean>(false);
   signUpError = signal<boolean>(false);
   signUpSuccess = signal<boolean>(false);
+  isNavigating = signal(false);
   
   showLogInPassword = signal<boolean>(false);
   showSignUpPassword = signal<boolean>(false);
@@ -62,6 +63,7 @@ export class MainPage implements OnInit {
 
   confirmPassword: string = '';
   user$ = this.authService.user$;
+  // navigationTimer?: any;
 
   logInData: LogInFormData = {
     email: '',
@@ -153,7 +155,6 @@ export class MainPage implements OnInit {
    * @returns void
    */
   toggleLogInPassword(): void {
-    // this.showLogInPassword = !this.showLogInPassword;
     this.showLogInPassword.update((show) => !show);
   }
 
@@ -163,7 +164,6 @@ export class MainPage implements OnInit {
    * @returns void
    */
   toggleSignUpPassword(): void {
-    // this.showSignUpPassword = !this.showSignUpPassword;
     this.showSignUpPassword.update((show) => !show);
   }
 
@@ -173,7 +173,6 @@ export class MainPage implements OnInit {
    * @returns void
    */
   toggleConfirmPassword(): void {
-    // this.showConfirmPassword = !this.showConfirmPassword;
     this.showConfirmPassword.update((show) => !show);
   }
 
@@ -197,8 +196,8 @@ export class MainPage implements OnInit {
       next: () => {
         this.onLoginSuccess();
       },
-      error: (err) => {
-        this.onLoginError(err);
+      error: () => {
+        this.onLoginError();
       },
     });
   }
@@ -244,8 +243,7 @@ export class MainPage implements OnInit {
    * @param err The error returned during login
    * @returns void
    */
-  onLoginError(err: unknown): void {
-    console.error('Login failed', err);
+  onLoginError(): void {
     this.isLoggingIn.set(false);
     this.loginError.set(true);
   }
@@ -280,6 +278,8 @@ export class MainPage implements OnInit {
    * @returns void
    */
   handleLoginNavigation(): void {
+    this.isNavigating.set(true);
+    
     if (this.isMobile()) {
       this.showMobileGreeting.set(true);
 

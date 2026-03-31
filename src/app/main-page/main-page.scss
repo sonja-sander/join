@@ -1,40 +1,34 @@
 @use '../../styles/index.scss' as styles;
 
 .layout-wrapper {
-  @include styles.setFlex();
-  height: 100dvh;
+  @include styles.setFlex($ai: stretch);
+  min-height: 100dvh;
 
   @include styles.up-xxl {
+    min-height: 0;
     height: 100%;
   }
 
   .layout {
     @include styles.setGrid($rows: auto 1fr auto auto, $columns: 1fr);
     width: 93%;
-    height: 100%;
-    padding: 3rem 0 2rem;
-
-    @media (max-width: 400px) {
-      padding: 2rem 0 1rem;
-    }
 
     @include styles.up-xxl {
       @include styles.setGrid($rows: auto 1fr auto, $columns: auto 1fr);
       width: 90%;
-      padding: 7rem 0 2rem;
     }
   }
 }
 
-.logo {
+.logo-header {
   grid-area: 1/1/2/2;
   @include styles.setGrid();
-  padding-left: 16px;
+  padding: 16px 0 0 16px;
   z-index: 11;
 
   @include styles.up-xxl {
     grid-area: 1/1/4/2;
-    padding: 2rem 0 0 0;
+    padding: 3rem 0 0 0;
   }
 
   img {
@@ -43,11 +37,11 @@
     transition:
       transform 1.2s ease 0s,
       opacity 0.4s ease 0s;
-    transform: translate(34dvw, 40dvh) scale(1.6);
+    transform: translate(37dvw, 40dvh) scale(1.6);
 
     @include styles.up-xxl {
       width: 100px;
-      transform: translate(40dvw, 33dvh) scale(1.6);
+      transform: translate(580%, 280%) scale(1.6);
     }
 
     @media (max-width: 400px) {
@@ -93,19 +87,19 @@
 .sign-up-option {
   grid-area: 3/1/4/2;
   @include styles.setFlex($gap: 28px);
-  margin-bottom: 40px;
-  font-size: 20px;
+  margin-bottom: 30px;
+  font-size: 2rem;
 
   @media (max-width: 400px) {
     gap: 20px;
     margin-bottom: 20px;
-    font-size: 16px;
+    font-size: 1.6rem;
   }
 
   @include styles.up-xxl {
     grid-area: 1/2/2/3;
     @include styles.setFlex($jc: flex-end, $gap: 24px);
-    padding-right: 4.5rem;
+    padding: 2rem 3rem 0 0;
   }
 
   button {
@@ -115,59 +109,56 @@
 
 .form-section {
   grid-area: 2/1/3/2;
-  @include styles.setFlex();
+  place-self: center;
+  @include styles.setFlex($d: column, $jc: flex-start, $gap: 20px);
+  width: 90dvw;
+  max-width: 500px;
+  padding: 16px 16px 26px;
   margin: 16px 0;
+  border-radius: 20px;
+  background-color: white;
+  box-shadow: 0px 0px 14px 3px #0000000a;
 
-  .form-wrapper {
-    @include styles.setFlex($d: column, $jc: flex-start, $gap: 20px);
-    width: 90dvw;
-    max-width: 500px;
-    padding: 16px 16px 26px;
-    border-radius: 20px;
-    background-color: white;
-    box-shadow: 0px 0px 14px 3px #0000000a;
+  @include styles.up-xxl {
+    gap: 30px;
+    width: 650px;
+    max-width: unset;
+    padding: 36px 16px;
+  }
+
+  .title {
+    @include styles.setFlex($d: column, $gap: 12px);
 
     @include styles.up-xxl {
-      gap: 30px;
-      width: 650px;
-      max-width: unset;
-      padding: 36px 16px;
+      gap: 16px;
     }
 
-    .title {
-      @include styles.setFlex($d: column, $gap: 12px);
+    .divider {
+      width: 80px;
+      height: 3px;
+      background-color: styles.$blue-sky;
 
       @include styles.up-xxl {
-        gap: 16px;
-      }
-
-      .divider {
-        width: 80px;
-        height: 3px;
-        background-color: styles.$blue-sky;
-
-        @include styles.up-xxl {
-          width: 150px;
-        }
+        width: 150px;
       }
     }
+  }
 
-    .sign-title {
-      @include styles.setGrid($rows: auto, $columns: 60px 1fr);
-      width: 100%;
+  .sign-title {
+    @include styles.setGrid($rows: auto, $columns: 60px 1fr);
+    width: 100%;
 
-      .back-btn {
-        grid-area: 1/1/2/2;
-        align-self: start;
-        background-color: transparent;
-        color: styles.$blue-sky;
-        z-index: 2;
-      }
+    .back-btn {
+      grid-area: 1/1/2/2;
+      align-self: start;
+      background-color: transparent;
+      color: styles.$blue-sky;
+      z-index: 2;
+    }
 
-      .sign-up {
-        grid-area: 1/1/2/3;
-        @include styles.setFlex($d: column, $gap: 8px);
-      }
+    .sign-up {
+      grid-area: 1/1/2/3;
+      @include styles.setFlex($d: column, $gap: 8px);
     }
   }
 
@@ -183,7 +174,7 @@
     width: 70%;
   }
 
-  .input-box {
+  .form-field {
     @include styles.setGrid($rows: auto auto, $columns: 1fr 40px, $jc: center, $ai: center);
 
     @include styles.up-xxl {
@@ -205,7 +196,7 @@
 
       @include styles.up-xxl {
         height: 50px;
-        font-size: 20px;
+        font-size: 2rem;
       }
 
       &:-webkit-autofill {
@@ -261,11 +252,12 @@
 
   .form-actions {
     @include styles.setFlex($d: column, $gap: 12px);
+    height: auto;
 
     @include styles.up-xxl {
       @include styles.setFlex($gap: 28px);
       margin-top: 16px;
-      font-size: 20px;
+      font-size: 2rem;
     }
 
     button {
@@ -293,7 +285,7 @@
     cursor: pointer;
 
     @include styles.up-xxl {
-      font-size: 16px;
+      font-size: 1.6rem;
       gap: 14px;
       margin-bottom: 6px;
     }
@@ -355,7 +347,7 @@
 footer {
   grid-area: 4/1/5/2;
   width: 100%;
-  height: 35px;
+  height: 45px;
 
   @include styles.up-xxl {
     grid-area: 3/1/4/3;

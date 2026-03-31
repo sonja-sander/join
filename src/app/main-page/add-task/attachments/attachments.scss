@@ -24,7 +24,7 @@ section {
     color: styles.$gray-dark;
 
     @include styles.up-xxl {
-      font-size: 16px;
+      font-size: 1.6rem;
     }
 
     &:hover {

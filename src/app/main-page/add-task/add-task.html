@@ -1,4 +1,4 @@
-<section class="add-task" [class.add-task--overlay]="isOverlay()">
+<section class="add-task" [class.add-task--overlay]="isOverlay()" aria-labelledby="add-task-title">
   <header class="add-task__header">
     <h1 id="add-task-title">{{ isEditMode() ? 'Edit Task' : 'Add Task' }}</h1>
   </header>
@@ -16,16 +16,28 @@
           label="Title"
           [isRequired]="true"
           placeholder="Enter a title"
-          (fieldBlur)="isTitleTouched.set(true)"
-          [hasError]="isTitleTouched() && !taskData.title.trim()"
+          (fieldBlur)="titleInteracted.set(true)"
+          [hasError]="showTitleError || showTitleRequiredError"
           [(value)]="taskData.title"
+          [describedBy]="'title-error'"
         ></app-task-form-field>
 
         <span
+          id="title-error"
           class="add-task__field-error"
-          [class.is-visible]="isTitleTouched() && !taskData.title.trim()"
+          [class.is-visible]="showTitleError || showTitleRequiredError"
         >
-          This field is required
+          @let title = taskData.title.trim();
+
+          @if (!title) {
+            This field is required
+          } @else if (title.length > 100) {
+            Max 100 characters
+          } @else if (title.length < 3) {
+            At least 3 characters
+          } @else if (!validTitlePattern(title)) {
+            Only letters are allowed (a-z)
+          }
         </span>
 
         <app-task-form-field
@@ -47,9 +59,11 @@
           [hasError]="isDueDateTouched() && !taskData.dueDate.trim()"
           [(value)]="taskData.dueDate"
           iconSrc="date"
+          [describedBy]="'due-date-error'"
         ></app-task-form-field>
 
         <span
+          id="due-date-error"
           class="add-task__field-error"
           [class.is-visible]="isDueDateTouched() && !taskData.dueDate.trim()"
         >
@@ -84,8 +98,8 @@
           [attachments]="taskData.attachments"
           (attachmentsChange)="taskData.attachments = $event; markAsEdited()"
           (viewerStateChange)="viewerStateChange.emit($event)"
-          (imageTypeError)="showErrorToast('imageTypeError')"
-          (taskSizeError)="showErrorToast('taskSizeError')"
+          (imageTypeError)="showErrorToast(imageTypeError)"
+          (taskSizeError)="showErrorToast(taskSizeError)"
           (deleteAll)="showDeleteAllConfirm.set(true)"
         ></app-attachments>
 
@@ -109,8 +123,7 @@
         <button
           type="submit"
           class="button button--primary button--icon"
-          [class.add-task__submit-button--disabled]="!isFormValid || isSubmitting"
-          [attr.aria-disabled]="!isFormValid ? 'true' : null"
+          [class.add-task__submit-button--disabled]="!isFormValid || isSubmitting()"
         >
           {{
             isSubmitting()
@@ -125,22 +138,27 @@
         </button>
       </div>
     </footer>
+
+    @if (submitError()) {
+      <p class="form-error-summary sr-only" role="alert">
+        There are errors in the form. Please check the fields again.
+      </p>
+    }
+    
   </form>
 </section>
 
-<app-toast
-  [message]="'File format not allowed! You can only upload JPEG or PNG.'"
-  type="error"
-  [visible]="imageTypeError()"
-  (close)="imageTypeError.set(false)"
-></app-toast>
-
-<app-toast
-  [message]="'Attached files are too large in total. Max allowed is 1 MB.'"
-  type="error"
-  [visible]="taskSizeError()"
-  (close)="taskSizeError.set(false)"
-></app-toast>
+@if (imageTypeError() || taskSizeError()) {
+  <app-toast
+    [message]="
+      imageTypeError()
+        ? 'File format not allowed! You can only upload JPEG or PNG.'
+        : 'Attached files are too large in total. Max allowed is 1 MB.'
+    "
+    type="error"
+    [visible]="true"
+  />
+}
 
 <app-toast
   [message]="isEditMode() ? 'Task updated' : 'Task created'"

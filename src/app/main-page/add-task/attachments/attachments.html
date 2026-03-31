@@ -22,7 +22,7 @@
     (click)="openFilePicker()"
     aria-describedby="attachment-description"
   >
-    <p>Drag file or browse</p>
+    <p id="file-upload-label">Drag file or browse</p>
     <app-icon class="add-attachment-icon" name="add" aria-hidden="true"></app-icon>
   </button>
 
@@ -34,6 +34,7 @@
     (change)="onFileSelect($event)"
     multiple
     hidden
+    aria-labelledby="file-upload-label"
   />
 
   <div class="gallery" #gallery>

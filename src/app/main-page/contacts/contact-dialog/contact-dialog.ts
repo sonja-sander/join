@@ -7,6 +7,7 @@ import {
   output,
   signal,
   viewChild,
+  WritableSignal,
 } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { Contact } from '../../../shared/interfaces/contact';
@@ -45,6 +46,7 @@ export class ContactDialog {
   isOpen = signal<boolean>(false);
   imageTypeError = signal<boolean>(false);
   imageSizeError = signal<boolean>(false);
+  submitError = signal<boolean>(false);
 
   dialogMode: 'add' | 'edit' = 'add';
   userColor: string | null = null;
@@ -140,17 +142,13 @@ export class ContactDialog {
    */
   onSubmit(form: NgForm): void {
     if (form.invalid) {
+      this.submitError.set(true);
       form.control.markAllAsTouched();
       return;
     }
 
-    this.saveContact.emit({
-      name: this.contactData.name,
-      email: this.contactData.email,
-      phone: this.contactData.phone,
-      avatar: this.contactData.avatar,
-    });
-
+    this.submitError.set(false);
+    this.saveContact.emit(this.contactData);
     this.closeDialog();
 
     if (this.dialogMode === 'add') {
@@ -187,7 +185,7 @@ export class ContactDialog {
   closeDialog(): void {
     this.isOpen.set(false);
 
-    queueMicrotask(() => {
+    setTimeout(() => {
       this.contactForm()?.resetForm({
         name: '',
         email: '',
@@ -288,7 +286,7 @@ export class ContactDialog {
   hasInvalidFileType(file: File): boolean {
     const isInvalid = !this.fileService.isValidFileType(file);
     if (isInvalid) {
-      this.showTypeErrorToast();
+      this.showErrorToast(this.imageTypeError);
       this.resetFilePicker();
     }
     return isInvalid;
@@ -306,36 +304,22 @@ export class ContactDialog {
   exceedsSizeLimit(size: number): boolean {
     const exceeds = !this.fileService.isWithinSizeLimit(size);
     if (exceeds) {
-      this.showSizeErrorToast();
+      this.showErrorToast(this.imageSizeError);
       this.resetFilePicker();
     }
     return exceeds;
   }
 
   /**
-   * Displays a temporary error notification for invalid file types.
+   * Displays a temporary error notification for invalid file types and size.
    *
    * @returns void
    */
-  showTypeErrorToast(): void {
-    this.imageTypeError.set(true);
+  showErrorToast(signal: WritableSignal<boolean>): void {
+    signal.set(true);
 
     setTimeout(() => {
-      this.imageTypeError.set(false);
-    }, 2500);
-  }
-
-  /**
-   * Displays a temporary error notification for files
-   * exceeding the size limit.
-   *
-   * @returns void
-   */
-  showSizeErrorToast(): void {
-    this.imageSizeError.set(true);
-
-    setTimeout(() => {
-      this.imageSizeError.set(false);
+      signal.set(false);
     }, 2500);
   }
 

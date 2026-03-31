@@ -9,7 +9,7 @@
       class="form-field__input"
       type="text"
       [placeholder]="isDropdownOpen() ? '' : 'Select contacts to assign'"
-      [value]="isDropdownOpen() ? assigneeQuery : ''"
+      [value]="isDropdownOpen() ? assigneeQuery() : ''"
       [readonly]="!isDropdownOpen()"
       #input
       (input)="assigneeQuery.set(input.value)"

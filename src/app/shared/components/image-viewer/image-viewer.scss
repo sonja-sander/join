@@ -76,7 +76,7 @@ header {
 
   .metadata {
     color: white;
-    font-size: 16px;
+    font-size: 1.6rem;
 
     @include styles.up-xxl {
       grid-column: 1/2;
@@ -88,7 +88,7 @@ header {
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
-      font-size: 16px;
+      font-size: 1.6rem;
 
       @include styles.up-xxl {
         max-width: 300px;

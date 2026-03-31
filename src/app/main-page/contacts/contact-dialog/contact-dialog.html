@@ -74,6 +74,7 @@
                 aria-label="Upload contact profile picture"
               >
                 <app-icon name="add-avatar" aria-hidden="true"></app-icon>
+                <p id="avatar-input-label" class="sr-only">Upload contact profile picture</p>
               </button>
             </div>
 
@@ -98,22 +99,21 @@
             accept="image/png, image/jpeg"
             (change)="onAvatarSelected($event)"
             hidden
+            aria-labelledby="avatar-input-label"
           />
         </div>
 
-        <app-toast
-          [message]="'File format not allowed! You can only upload JPEG or PNG.'"
-          [type]="'error'"
-          [visible]="imageTypeError()"
-        >
-        </app-toast>
-
-        <app-toast
-          [message]="'File is too large. Max allowed is 1 MB.'"
-          [type]="'error'"
-          [visible]="imageSizeError()"
-        >
-        </app-toast>
+        @if (imageTypeError() || imageSizeError()) {
+          <app-toast
+            [message]="
+              imageTypeError()
+                ? 'File format not allowed! You can only upload JPEG or PNG.'
+                : 'File is too large. Max allowed is 1 MB.'
+            "
+            type="error"
+            [visible]="true"
+          ></app-toast>
+        }
 
         <form
           class="form"
@@ -129,6 +129,7 @@
               placeholder="Name"
               name="name"
               aria-label="Name"
+              aria-describedby="name-error-message"
               required
               minlength="2"
               pattern="^[a-zA-Z\xC0-\uFFFF]+([ \-']{0,1}[a-zA-Z\xC0-\uFFFF]+){0,2}[.]{0,1}$"
@@ -138,7 +139,7 @@
             <app-icon class="form__icon" name="name" [size]="20" aria-hidden="true"></app-icon>
             <div class="input-error-wrapper">
               @if (name.invalid && name.touched) {
-                <span class="form__error" aria-live="assertive">
+                <span id="name-error-message" class="form__error">
                   @if (name.errors?.['required']) {
                     Name is required.
                   } @else if (name.errors?.['pattern']) {
@@ -158,6 +159,7 @@
               placeholder="Email"
               name="email"
               aria-label="Email"
+              aria-describedby="email-error-message"
               required
               minlength="5"
               pattern="[a-zA-Z0-9](?:[a-zA-Z0-9._%+\-]*[a-zA-Z0-9])?@[a-zA-Z0-9\-]+(?:\.[a-zA-Z0-9\-]+)*\.[a-zA-Z]{2,}"
@@ -169,7 +171,7 @@
             <app-icon class="form__icon" name="email" [size]="20" aria-hidden="true"></app-icon>
             <div class="input-error-wrapper">
               @if (email.invalid && email.touched) {
-                <span class="form__error" aria-live="assertive">
+                <span id="email-error-message" class="form__error">
                   @if (email.errors?.['required']) {
                     Email is required.
                   } @else if (email.errors?.['minlength']) {
@@ -189,6 +191,7 @@
               placeholder="Phone"
               name="phone"
               aria-label="Phone"
+              aria-describedby="phone-error-message"
               required
               minlength="5"
               pattern="^\+?[0-9 ]+$"
@@ -198,7 +201,7 @@
             <app-icon class="form__icon" name="phone" [size]="20" aria-hidden="true"></app-icon>
             <div class="input-error-wrapper">
               @if (phone.invalid && phone.touched) {
-                <span class="form__error" aria-live="assertive">
+                <span id="phone-error-message" class="form__error">
                   @if (phone.errors?.['required']) {
                     Phone number is required.
                   } @else if (phone.errors?.['pattern']) {
@@ -239,6 +242,13 @@
               <app-icon name="check" [size]="22" aria-hidden="true"></app-icon>
             </button>
           </div>
+
+          @if (submitError()) {
+            <p class="form-error-summary sr-only" role="alert">
+              There are errors in the form. Please check the fields again.
+            </p>
+          }
+
         </form>
       </section>
     </div>

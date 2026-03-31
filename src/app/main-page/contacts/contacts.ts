@@ -28,6 +28,8 @@ export class Contacts {
   authService = inject(AuthService);
 
   dialog = viewChild<ContactDialog>(ContactDialog);
+  contactInfo = viewChild<ContactInfo>(ContactInfo);
+  contactList = viewChild<ContactList>(ContactList);
 
   isMobile = signal<boolean>(window.innerWidth <= 768);
   isDetailOpen = signal<boolean>(false);
@@ -56,7 +58,7 @@ export class Contacts {
   }
 
   /**
-   * Sets the active contact and opens the detail view.
+   * Sets the active contact and opens and focuses on the detail view.
    *
    * @param selection The selected contact and its identifier
    * @returns void
@@ -64,15 +66,23 @@ export class Contacts {
   setActiveContact(selection: { id: string; contact: Contact }): void {
     this.activeContactID.set(selection.id);
     this.isDetailOpen.set(true);
+
+    setTimeout(() => {
+      this.contactInfo()?.focusDetails();
+    }, 0);
   }
 
   /**
-   * Closes the contact detail view.
+   * Closes the contact detail view and sets focus back on the contact in the list.
    *
    * @returns void
    */
   closeContactInfo(): void {
     this.isDetailOpen.set(false);
+
+    setTimeout(() => {
+      this.contactList()?.focusActiveContact(this.activeContactID());
+    }, 0);
   }
 
   /**
@@ -192,6 +202,7 @@ export class Contacts {
     };
 
     this.contactService.updateDocument(contact, 'contacts');
+    this.showToast();
   }
 
   /**

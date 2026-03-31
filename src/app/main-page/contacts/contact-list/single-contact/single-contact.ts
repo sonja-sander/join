@@ -1,4 +1,4 @@
-import { Component, input, output } from '@angular/core';
+import { Component, ElementRef, input, output, viewChild } from '@angular/core';
 import { Contact } from '../../../../shared/interfaces/contact';
 import { getTwoInitials } from '../../../../shared/utilities/utils';
 import { Avatar } from '../../../../shared/components/avatar/avatar';
@@ -18,12 +18,19 @@ export class SingleContact {
 
   selected = output<Contact>();
 
+  buttonRef = viewChild<ElementRef>('contactButton');
+
   readonly getTwoInitials = getTwoInitials;
 
   /**
-   * Emits the current contact as the selected item.
+   * Emits the current contact as selected and removes focus from the trigger.
+   *
+   * Prevents the button from keeping focus so it does not override
+   * the focus shift to the contact info view.
    */
-  setContactAsSelected() {
+  setContactAsSelected(event: Event): void {
+    (event.currentTarget as HTMLElement).blur();
+
     this.selected.emit(this.contact());
   }
 }

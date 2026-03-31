@@ -19,16 +19,16 @@ section {
   @include styles.setFlex($d: column, $ai: flex-start, $gap: 5px);
   margin-bottom: 20px;
 
-  @include styles.up-xxl {
-    @include styles.setFlex($jc: flex-start, $gap: 30px);
-    margin-bottom: 40px;
+  @include styles.up-lg {
+    @include styles.setFlex($jc: flex-start, $gap: 16px);
+    margin-bottom: 30px;
   }
 
   p {
-    font-size: 20px;
+    font-size: 2rem;
 
     @include styles.up-xxl {
-      font-size: 24px;
+      font-size: 2.4rem;
     }
   }
 
@@ -36,12 +36,20 @@ section {
     width: 80px;
     height: 3px;
     background-color: styles.$blue-sky;
+
+    @include styles.up-lg{
+      display: none;
+    }
   }
 
   .desktop-divider {
     width: 3px;
-    height: 50px;
+    height: 40px;
     background-color: styles.$blue-sky;
+
+    @include styles.down-lg{
+      display: none;
+    }
   }
 }
 
@@ -135,11 +143,11 @@ section {
 }
 
 .number {
-  font-size: 38px;
+  font-size: 3.8rem;
   font-weight: 600;
 
   @include styles.up-xxl {
-    font-size: 56px;
+    font-size: 5.6rem;
   }
 }
 
@@ -237,7 +245,7 @@ section {
       margin-bottom: 2px;
 
       @include styles.up-xxl {
-        font-size: 21px;
+        font-size: 2.1rem;
         margin-bottom: 8px;
       }
     }

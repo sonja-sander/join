@@ -23,6 +23,8 @@ export class TaskFormField {
   isTextarea = input<boolean>(false);
   min = input<string | null>(null);
   iconSrc = input<string | null>(null);
+  id = input<string>(`field-${Math.random().toString(36).slice(2)}`);
+  describedBy = input<string | null>(null);
 
   valueChange = output<string>();
   fieldBlur = output<void>();

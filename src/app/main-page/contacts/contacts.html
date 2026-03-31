@@ -26,7 +26,7 @@
 ></app-contact-dialog>
 
 <app-toast
-  [message]="'Contact successfully created'"
+  [message]="dialog()?.dialogMode === 'edit' ? 'Contact saved' : 'Contact successfully created'"
   [type]="'info'"
   [visible]="addContactSuccess()"
 >

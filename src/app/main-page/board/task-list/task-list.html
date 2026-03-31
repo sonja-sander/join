@@ -26,7 +26,7 @@
         <p>Loading...</p>
       </div>
     } @else if (tasksByStatus().length === 0 && taskService.searchTerm()) {
-      <div class="no-tasks-box" role="status" aria-live="polite">
+      <div class="no-tasks-box">
         <p>No search results for "{{ taskService.searchTerm() }}"</p>
       </div>
     } @else if (tasksByStatus().length > 0) {

@@ -21,7 +21,7 @@
   }
 
   &__header-divider {
-    width: 0.4rem;
+    width: 3px;
     height: 100%;
     border-radius: 100rem;
     background-color: styles.$blue-sky;
@@ -41,6 +41,12 @@
 
     &--animating {
       animation: contact-info-profile-in 0.3s ease-out;
+    }
+
+    &--hidden {
+      opacity: 0;
+      position: absolute;
+      pointer-events: none;
     }
   }
 
@@ -263,7 +269,7 @@
 
 @include styles.down-xs {
   .contact-info__header {
-    @include styles.setFlex($d: column, $ai: flex-start, $gap: 2rem);
+    @include styles.setFlex($d: column, $ai: flex-start, $gap: 4px);
   }
 
   .contact-info__title {

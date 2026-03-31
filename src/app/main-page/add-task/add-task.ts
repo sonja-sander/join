@@ -1,14 +1,4 @@
-import {
-  Component,
-  OnChanges,
-  OnDestroy,
-  SimpleChanges,
-  computed,
-  inject,
-  input,
-  output,
-  signal,
-} from '@angular/core';
+import {Component, OnChanges, OnDestroy, SimpleChanges, WritableSignal, computed, inject, input, output, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { Timestamp } from '@angular/fire/firestore';
@@ -33,18 +23,7 @@ import { TaskFormData } from '../../shared/interfaces/task-form-data';
  */
 @Component({
   selector: 'app-add-task',
-  imports: [
-    FormsModule,
-    TaskFormField,
-    PrioritySelector,
-    DropdownAssignee,
-    DropdownCategory,
-    Attachments,
-    SubtaskComposer,
-    Toast,
-    ConfirmDialog,
-    Icon,
-  ],
+  imports: [FormsModule, TaskFormField, PrioritySelector, DropdownAssignee, DropdownCategory, Attachments, SubtaskComposer, Toast, ConfirmDialog, Icon],
   templateUrl: './add-task.html',
   styleUrl: './add-task.scss',
 })
@@ -70,6 +49,8 @@ export class AddTask implements OnChanges, OnDestroy {
   isTitleTouched = signal<boolean>(false);
   isDueDateTouched = signal<boolean>(false);
   isCategoryTouched = signal<boolean>(false);
+  submitError = signal<boolean>(false);
+  titleInteracted = signal<boolean>(false);
 
   isEditMode = computed<boolean>(() => Boolean(this.taskToEdit()?.id));
 
@@ -91,7 +72,6 @@ export class AddTask implements OnChanges, OnDestroy {
 
   /**
    * Reacts to input changes and updates the form state.
-   *
    * If a task is provided, the form is populated for edit mode.
    * Otherwise, the form is reset to its default state.
    *
@@ -110,9 +90,7 @@ export class AddTask implements OnChanges, OnDestroy {
   }
 
   /**
-   * Resets the form to its initial empty state.
-   *
-   * Clears all form values and validation states.
+   * Resets the form to its initial empty state. Clears all form values and validation states.
    *
    * @returns void
    */
@@ -133,7 +111,6 @@ export class AddTask implements OnChanges, OnDestroy {
 
   /**
    * Populates the form with an existing task for editing.
-   *
    * Maps backend data to UI-friendly form state.
    *
    * @param task The task to edit
@@ -154,14 +131,12 @@ export class AddTask implements OnChanges, OnDestroy {
     this.resetTouchedStates();
     this.resetDirtyState();
   }
-
   // #endregion
 
   // #region Submit Flow
 
   /**
    * Handles form submission.
-   *
    * Validates input, then creates or updates a task
    * depending on the current mode.
    *
@@ -169,12 +144,13 @@ export class AddTask implements OnChanges, OnDestroy {
    */
   async createTask(): Promise<void> {
     if (this.isSubmitting()) return;
-
     if (!this.isFormValid) {
+      this.submitError.set(true);
       this.markInvalidFields();
       return;
     }
 
+    this.submitError.set(false);
     this.isSubmitting.set(true);
 
     if (this.isEditMode()) {
@@ -189,7 +165,6 @@ export class AddTask implements OnChanges, OnDestroy {
 
   /**
    * Creates a new task entry in the database.
-   *
    * Calculates the correct order based on current column.
    *
    * @returns Promise resolving after task creation
@@ -210,7 +185,6 @@ export class AddTask implements OnChanges, OnDestroy {
 
   /**
    * Updates an existing task in the database.
-   *
    * Merges updated form data into the existing task.
    *
    * @returns Promise resolving after update
@@ -228,7 +202,6 @@ export class AddTask implements OnChanges, OnDestroy {
 
   /**
    * Builds a task payload from the current form state.
-   *
    * Transforms UI values into backend-compatible format.
    *
    * @returns Task payload without id, status and order
@@ -245,10 +218,43 @@ export class AddTask implements OnChanges, OnDestroy {
       subtasks: [...this.taskData.subtasks],
     };
   }
-
   // #endregion
 
   // #region Validation
+
+  /**
+   * True if title is invalid after user interaction.
+   */
+  get showTitleError(): boolean {
+    const title = this.taskData.title.trim();
+    return this.titleInteracted() && title.length > 0 && this.isTitleInvalidValue(title);
+  }
+
+  /**
+   * True if title is empty after user interaction.
+   */
+  get showTitleRequiredError(): boolean {
+    const title = this.taskData.title.trim();
+    return this.titleInteracted() && title.length === 0;
+  }
+
+  /**
+   * Checks if title violates validation rules.
+   */
+  isTitleInvalidValue(title: string): boolean {
+    return (
+      title.length < 3 ||
+      title.length > 100 ||
+      !this.validTitlePattern(title)
+    );
+  }
+
+  /**
+   * Validates the title pattern (only letters are allowed).
+   */
+  validTitlePattern(value: string): boolean {
+    return /^[a-zA-Z\s]+$/.test(value);
+  }
 
   /**
    * Validates required form fields.
@@ -263,13 +269,12 @@ export class AddTask implements OnChanges, OnDestroy {
 
   /**
    * Marks invalid form fields as touched.
-   *
    * Used to trigger validation messages in the UI.
    *
    * @returns void
    */
   private markInvalidFields(): void {
-    if (!this.taskData.title.trim()) this.isTitleTouched.set(true);
+    this.titleInteracted.set(true);
     if (!this.taskData.dueDate.trim()) this.isDueDateTouched.set(true);
     if (!this.taskData.category) this.isCategoryTouched.set(true);
   }
@@ -284,14 +289,12 @@ export class AddTask implements OnChanges, OnDestroy {
     this.isDueDateTouched.set(false);
     this.isCategoryTouched.set(false);
   }
-
   // #endregion
 
   // #region Mapping
 
   /**
    * Maps assignee IDs to full contact objects.
-   *
    * Filters out invalid or missing contacts.
    *
    * @param ids Array of contact IDs
@@ -312,7 +315,6 @@ export class AddTask implements OnChanges, OnDestroy {
   private findCategory(value: Task['category']): TaskCategoryOption | null {
     return this.taskService.taskCategories.find((c) => c.value === value) ?? null;
   }
-
   // #endregion
 
   // #region UI Actions
@@ -350,15 +352,16 @@ export class AddTask implements OnChanges, OnDestroy {
   }
 
   /**
-   * Shows a temporary error toast.
+   * Shows a temporary error toast for invalid file types and size.
    *
    * @param flag Type of error to display
    * @returns void
    */
-  showErrorToast(flag: 'imageTypeError' | 'taskSizeError'): void {
-    this[flag].set(true);
+  showErrorToast(signal: WritableSignal<boolean>): void {
+    signal.set(true);
+
     setTimeout(() => {
-      this[flag].set(false);
+      signal.set(false);
     }, 2500);
   }
 

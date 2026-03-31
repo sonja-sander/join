@@ -1,4 +1,4 @@
-<label class="form-field" [class.form-field--textarea]="isTextarea()">
+<label [attr.for]="id()" class="form-field" [class.form-field--textarea]="isTextarea()">
   <span class="form-field__label">
     {{ label() }}
     @if (isRequired()) {
@@ -9,6 +9,7 @@
     @if (!isTextarea()) {
       @if (useFlatpickr()) {
         <input
+          [id]="id()"
           class="form-field__input"
           appFlatpickr
           [fpOptions]="{ minDate: min() ?? undefined }"
@@ -20,9 +21,12 @@
           [ngModel]="value()"
           (ngModelChange)="valueChange.emit($event)"
           (blur)="fieldBlur.emit()"
+          aria-label="Pick a due date using the date picker"
+          [attr.aria-describedby]="describedBy()"
         />
       } @else {
         <input
+          [id]="id()"
           class="form-field__input"
           [type]="type()"
           [placeholder]="placeholder()"
@@ -32,10 +36,12 @@
           [ngModel]="value()"
           (ngModelChange)="valueChange.emit($event)"
           (blur)="fieldBlur.emit()"
+          [attr.aria-describedby]="describedBy()"
         />
       }
     } @else {
       <textarea
+        [id]="id()"
         class="form-field__input form-field__input--textarea"
         [placeholder]="placeholder()"
         [required]="isRequired()"

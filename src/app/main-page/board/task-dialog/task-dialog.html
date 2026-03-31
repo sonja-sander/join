@@ -16,7 +16,7 @@
         </button>
       </div>
 
-      <div class="dialog-body scroll-shadows">
+      <div class="dialog-body scroll-shadows" tabindex="0">
         <div class="topic">
           <h2 class="title" id="task-dialog-title">{{ task().title }}</h2>
           <p class="description">
@@ -54,7 +54,7 @@
           <div class="assignees">
             <p class="subtitle">Assigned To:</p>
 
-            <div class="assignee-list scroll-shadows" tabindex="-1">
+            <div class="assignee-list scroll-shadows" tabindex="0">
               @for (assignee of task().assignees; track $index) {
                 <div class="assignee-item">
                   @let contact = contactService.getContactById(assignee);

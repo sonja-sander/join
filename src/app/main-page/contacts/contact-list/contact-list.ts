@@ -1,4 +1,4 @@
-import { Component, input, output } from '@angular/core';
+import { Component, input, output, viewChildren } from '@angular/core';
 import { SingleContact } from './single-contact/single-contact';
 import { Contact } from '../../../shared/interfaces/contact';
 import { Icon } from '../../../shared/components/icon/icon';
@@ -19,6 +19,8 @@ export class ContactList {
 
   selected = output<{ contact: Contact; id: string }>();
   addContact = output<void>();
+
+  singleContacts = viewChildren<SingleContact>(SingleContact);
 
   /**
    * Returns the first letter of a contact name, or a fallback symbol.
@@ -53,5 +55,18 @@ export class ContactList {
   setActiveContact(contact: Contact, index: number): void {
     const id = this.getContactId(contact, index);
     this.selected.emit({ contact, id });
+  }
+
+  /**
+   * Moves focus to the currently active contact button.
+   *
+   * Used when returning from the contact details view.
+   */
+  focusActiveContact(id?: string | null) {
+    if (!id) return;
+
+    setTimeout(() =>
+      this.singleContacts().find(c => c.contact().id === id)?.buttonRef()?.nativeElement?.focus()
+    );
   }
 }

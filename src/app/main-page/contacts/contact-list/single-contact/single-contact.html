@@ -1,13 +1,17 @@
 <button
+  #contactButton
+  [attr.data-id]="contact().id"
   class="single-contact"
   [class.single-contact--active]="isActive()"
-  (click)="setContactAsSelected()"
+  (click)="setContactAsSelected($event)"
+  [attr.aria-label]="'Open contact ' + contact().name"
 >
   <app-avatar
     [name]="contact().name || 'Unknown'"
     [color]="contact().userColor || '#9327ff'"
     [avatar]="contact().avatar?.base64 ?? null"
     [size]="50"
+    aria-hidden="true"
   ></app-avatar>
 
   <div class="single-contact__text">

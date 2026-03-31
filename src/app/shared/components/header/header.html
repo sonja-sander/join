@@ -2,7 +2,7 @@
   <div class="content-wrapper">
     <div class="content-left">
       <img class="mobile-logo mobile-only" src="assets/img/icons/logo-dark.svg" alt="Join logo" />
-      <p class="desktop-title desktop-only">Kanban Project Management Tool</p>
+      <h2 class="desktop-title desktop-only">Kanban Project Management Tool</h2>
     </div>
     <div class="content-right">
       @if (user$ | async; as user) {
@@ -19,7 +19,7 @@
           class="user-menu-button"
           [class.is-open]="menuOpen()"
           (click)="toggleMenu()"
-          aria-label="Open user menu"
+          [attr.aria-label]="menuOpen() ? 'Close user menu' : 'Open user menu'"
           aria-controls="user-menu"
           [attr.aria-expanded]="menuOpen()"
           aria-haspopup="menu"
@@ -36,19 +36,24 @@
         @if (menuOpen()) {
           <div class="menu-overlay" (click)="closeMenu()" aria-hidden="true"></div>
         }
-        <nav id="user-menu" class="user-menu" [class.is-open]="menuOpen()" aria-label="User menu">
+        <nav
+          id="user-menu"
+          class="user-menu"
+          [class.is-open]="menuOpen()"
+          aria-label="User menu"
+        >
           <ul>
             <li class="mobile-only">
-              <a routerLink="/help" (click)="closeMenu()">Help</a>
+              <a routerLink="/help" (click)="closeMenu()" [attr.tabindex]="menuOpen() ? 0 : -1">Help</a>
             </li>
             <li>
-              <a routerLink="/imprint" (click)="closeMenu()">Legal Notice</a>
+              <a routerLink="/imprint" (click)="closeMenu()" [attr.tabindex]="menuOpen() ? 0 : -1">Legal Notice</a>
             </li>
             <li>
-              <a routerLink="/privacy" (click)="closeMenu()">Privacy Policy</a>
+              <a routerLink="/privacy" (click)="closeMenu()" [attr.tabindex]="menuOpen() ? 0 : -1">Privacy Policy</a>
             </li>
             <li>
-              <button type="button" (click)="logout()">Log out</button>
+              <button type="button" (click)="logout()" [attr.tabindex]="menuOpen() ? 0 : -1">Log out</button>
             </li>
           </ul>
         </nav>

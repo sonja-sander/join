@@ -1,18 +1,18 @@
 <div class="layout-wrapper">
   <main class="layout">
-    @if (!showMobileGreeting()) {
-      <header class="logo" [class.logo--move]="logoMoving()">
-        <img class="logo-dark" src="assets/img/icons/logo-dark.svg" alt="Join logo" />
-        <img class="logo-light" src="assets/img/icons/logo-light.svg" alt="" />
-      </header>
+    @if (!isNavigating()) {
+      @if (!showMobileGreeting()) {
+        <header class="logo-header" [class.logo--move]="logoMoving()" role="banner">
+          <img class="logo-dark" src="assets/img/icons/logo-dark.svg" alt="Join logo" />
+          <img class="logo-light" src="assets/img/icons/logo-light.svg" alt="" />
+        </header>
 
-      @if (introActive()) {
-        <div class="intro-overlay" aria-hidden="true"></div>
-      }
+        @if (introActive()) {
+          <div class="intro-overlay" aria-hidden="true"></div>
+        }
 
-      @if (!showSignUp()) {
-        <section class="form-section log-in-form-section" aria-labelledby="login-title">
-          <div class="form-wrapper log-in-form-wrapper">
+        @if (!showSignUp()) {
+          <section class="form-section log-in-form-section" aria-labelledby="login-title">
             <header class="title">
               <h1 #loginTitle id="login-title" tabindex="-1">Log in</h1>
               <div class="divider" aria-hidden="true"></div>
@@ -24,8 +24,8 @@
               (ngSubmit)="onLogin(logInForm)"
               novalidate
             >
-              <label for="login-email" class="sr-only">Email</label>
-              <div class="input-box">
+              <div class="form-field">
+                <label for="login-email" class="sr-only">Email</label>
                 <input
                   id="login-email"
                   type="email"
@@ -55,8 +55,8 @@
                 </div>
               </div>
 
-              <label for="login-password-input" class="sr-only">Password</label>
-              <div class="input-box">
+              <div class="form-field">
+                <label for="login-password-input" class="sr-only">Password</label>
                 <input
                   id="login-password-input"
                   [(ngModel)]="logInData.password"
@@ -75,7 +75,7 @@
                       type="button"
                       class="visibility-btn"
                       (click)="toggleLogInPassword()"
-                      aria-label="Toggle password visibility"
+                      [attr.aria-label]="showLogInPassword() ? 'Hide password' : 'Show password'"
                     >
                       <app-icon
                         [name]="showLogInPassword() ? 'visibility' : 'visibility-off'"
@@ -111,10 +111,10 @@
                 </p>
               }
 
-              <div class="form-actions">
+              <footer class="form-actions">
                 <button
                   type="submit"
-                  [class.button--disabled]="isLoggingIn || logInForm.invalid"
+                  [class.button--disabled]="isLoggingIn() || logInForm.invalid"
                   class="button button--primary"
                 >
                   {{ isLoggingIn() ? 'Logging in…' : 'Log in' }}
@@ -127,29 +127,27 @@
                 >
                   {{ isGuestLoggingIn() ? 'Logging in…' : 'Guest Log in' }}
                 </button>
-              </div>
+              </footer>
             </form>
-          </div>
-        </section>
-      }
+          </section>
+        }
 
-      @if (!showSignUp()) {
-        <section class="sign-up-option" aria-labelledby="signup-option-text">
-          <p id="signup-option-text">Not a Join user?</p>
-          <button class="button button--primary" (click)="openSignUp()">Sign up</button>
-        </section>
-      }
+        @if (!showSignUp()) {
+          <section class="sign-up-option" aria-labelledby="signup-option-text">
+            <p id="signup-option-text">Not a Join user?</p>
+            <button class="button button--primary" (click)="openSignUp()">Sign up</button>
+          </section>
+        }
 
-      @if (showSignUp()) {
-        <section class="form-section sign-up-form-section" aria-labelledby="signup-title">
-          <div class="form-wrapper sign-up-form-wrapper">
+        @if (showSignUp()) {
+          <section class="form-section sign-up-form-section" aria-labelledby="signup-title">
             <header class="title sign-title">
               <button class="back-btn" (click)="closeSignUp()" aria-label="Go back to login region">
                 <app-icon name="arrow-left" [size]="36" aria-hidden="true" />
               </button>
               <div class="sign-up">
                 <h1 id="signup-title">Sign up</h1>
-                <div class="divider"></div>
+                <div class="divider" aria-hidden="true"></div>
               </div>
             </header>
 
@@ -159,8 +157,8 @@
               (ngSubmit)="onSignUp(signUpForm)"
               novalidate
             >
-              <label for="signup-name-input" class="sr-only">Name</label>
-              <div class="input-box">
+              <div class="form-field">
+                <label for="signup-name-input" class="sr-only">Name</label>
                 <input
                   id="signup-name-input"
                   type="text"
@@ -189,8 +187,9 @@
                   </span>
                 </div>
               </div>
-              <label for="signup-email-input" class="sr-only">Email</label>
-              <div class="input-box">
+
+              <div class="form-field">
+                <label for="signup-email-input" class="sr-only">Email</label>
                 <input
                   id="signup-email-input"
                   type="email"
@@ -219,8 +218,9 @@
                   </span>
                 </div>
               </div>
-              <label for="signup-password-input" class="sr-only">Password</label>
-              <div class="input-box">
+
+              <div class="form-field">
+                <label for="signup-password-input" class="sr-only">Password</label>
                 <input
                   id="signup-password-input"
                   [(ngModel)]="signUpData.password"
@@ -239,7 +239,7 @@
                       type="button"
                       class="visibility-btn"
                       (click)="toggleSignUpPassword()"
-                      aria-label="Toggle password visibility"
+                      [attr.aria-label]="showSignUpPassword() ? 'Hide password' : 'Show password'"
                     >
                       <app-icon
                         [name]="showSignUpPassword() ? 'visibility' : 'visibility-off'"
@@ -262,8 +262,9 @@
                   </span>
                 </div>
               </div>
-              <label for="signup-confirm-password-input" class="sr-only">Confirm password</label>
-              <div class="input-box">
+
+              <div class="form-field">
+                <label for="signup-confirm-password-input" class="sr-only">Confirm password</label>
                 <input
                   id="signup-confirm-password-input"
                   [(ngModel)]="confirmPassword"
@@ -282,7 +283,7 @@
                       type="button"
                       class="visibility-btn"
                       (click)="toggleConfirmPassword()"
-                      aria-label="Toggle password visibility"
+                      [attr.aria-label]="showConfirmPassword() ? 'Hide password' : 'Show password'"
                     >
                       <app-icon
                         [name]="showConfirmPassword() ? 'visibility' : 'visibility-off'"
@@ -307,6 +308,7 @@
                   </span>
                 </div>
               </div>
+
               <label class="checkbox-wrapper">
                 <input
                   class="checkbox"
@@ -345,34 +347,33 @@
                 }
               </div>
 
-              <div class="form-actions">
+              <footer class="form-actions">
                 <button
                   type="submit"
                   [class.button--disabled]="
-                    isSigningUp || signUpForm.invalid || signUpData.password !== confirmPassword
-                  "
-                  class="button button--primary"
+                    isSigningUp() || signUpForm.invalid || signUpData.password !== confirmPassword"
+                    class="button button--primary"
                 >
                   {{ isSigningUp() ? 'Signing up…' : 'Sign up' }}
                 </button>
-              </div>
+              </footer>
             </form>
-          </div>
-        </section>
-      }
+          </section>
+        }
 
-      <footer>
-        <nav aria-label="Legal">
-          <ul>
-            <li>
-              <a routerLink="/privacy">Privacy Policy</a>
-            </li>
-            <li>
-              <a routerLink="/imprint">Legal notice</a>
-            </li>
-          </ul>
-        </nav>
-      </footer>
+        <footer>
+          <nav aria-label="Legal">
+            <ul>
+              <li>
+                <a routerLink="/privacy">Privacy Policy</a>
+              </li>
+              <li>
+                <a routerLink="/imprint">Legal notice</a>
+              </li>
+            </ul>
+          </nav>
+        </footer>
+      }
     }
 
     @if (showMobileGreeting()) {
@@ -392,5 +393,8 @@
   </main>
 </div>
 
-<app-toast [message]="'You signed up successfully'" [type]="'info'" [visible]="signUpSuccess()">
-</app-toast>
+<app-toast
+  [message]="'You signed up successfully'"
+  [type]="'info'"
+  [visible]="signUpSuccess()"
+></app-toast>

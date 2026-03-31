@@ -24,10 +24,10 @@
 
   .confirm-text {
     font-weight: 500;
-    font-size: 18px;
+    font-size: 1.8rem;
 
     @include styles.up-xxl {
-      font-size: 20px;
+      font-size: 2rem;
     }
 
     .confirm-highlight {

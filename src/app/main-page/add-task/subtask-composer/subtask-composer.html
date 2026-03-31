@@ -12,6 +12,7 @@
       #input
       (input)="onSubtaskTitleInput(input.value)"
       (keydown.enter)="handleEnter($event)"
+      aria-describedby="subtask-error"
     />
 
     @if (hasSubtaskInput) {
@@ -37,16 +38,14 @@
     }
   </div>
 
-  @if (showSubtaskPatternError) {
-    <span class="subtask-pattern-error">
+  <span id="subtask-error" class="subtask-pattern-error">
+    @if (showSubtaskPatternError) {
       Use up to {{ subtaskTitleMaxLength }} chars with at least {{ subtaskTitleMinLetters }} letters
       (a-z)
-    </span>
-  }
-
-  @if (showSubtaskDuplicateError()) {
-    <span class="subtask-pattern-error"> This subtask already exists! </span>
-  }
+    } @else if (showSubtaskDuplicateError()) {
+      This subtask already exists!
+    }
+  </span>
 
   @if (subtasks().length) {
     <ul class="subtask-list scroll-shadows">
@@ -62,7 +61,7 @@
             <button
               type="button"
               class="icon-button icon-button--small"
-              aria-label="Edit subtask"
+              [attr.aria-label]="'Edit subtask ' + subtask.title"
               (click)="startEditSubtask($index)"
             >
               <app-icon name="edit" [size]="22" aria-hidden="true"></app-icon>
@@ -73,7 +72,7 @@
             <button
               type="button"
               class="icon-button icon-button--small"
-              aria-label="Delete subtask"
+              [attr.aria-label]="'Delete subtask ' + subtask.title"
               (click)="removeSubtask($index)"
             >
               <app-icon name="delete" [size]="22" aria-hidden="true"></app-icon>
